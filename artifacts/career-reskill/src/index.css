@@ -231,6 +231,7 @@ html { @apply scroll-smooth; }
 .match-badge { @apply flex items-center gap-[5px] whitespace-nowrap rounded-full bg-[#e9f1e8] px-2 py-[6px] font-mono text-[10px] text-[#2e6b5d]; }
 .role-metrics { @apply my-[13px] mb-[17px] flex flex-wrap gap-[7px]; }
 .metric-tag { @apply flex items-center gap-[6px] rounded-md bg-[#f1efe5] px-2 py-[6px] text-[10px] text-[#586660]; }
+.scenario-sdg { @apply relative my-[12px] inline-flex items-center gap-2 rounded-md bg-[#edf3ef] px-2 py-[6px] text-[9px] font-medium text-[#42675d]; }
 .gap-label { @apply mb-[9px] font-mono text-[10px] uppercase tracking-[0.08em] text-[#718078]; }
 .skill-chips { @apply flex flex-wrap gap-[6px]; }
 .skill-chip { @apply rounded-full bg-[#edf3ef] px-2 py-[5px] text-[9px] text-[#42675d]; }
@@ -244,6 +245,8 @@ html { @apply scroll-smooth; }
 .learning-path ol { @apply mt-[14px] grid gap-[10px] pl-[18px]; }
 .learning-path li { @apply pl-1 text-[10px] leading-relaxed text-[#64716b]; }
 .learning-path li::marker { @apply font-mono text-[#3d8376]; }
+.scenario-step { @apply flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between; }
+.scenario-step-hours { @apply inline-flex shrink-0 items-center gap-1 font-mono text-[9px] text-[#34796d]; }
 .section-header { @apply my-[28px] mb-[13px] flex items-end justify-between gap-[15px]; }
 .section-header h2 { @apply m-0 font-serif text-[19px] font-bold tracking-[-0.04em]; }
 .section-header p { @apply mt-[5px] text-[10px] text-muted-foreground; }

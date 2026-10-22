@@ -5,11 +5,14 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import type { PathwayRecommendation } from './pathwayRecommendation';
+import type { PathwayScenario } from './pathwayScenario';
 
 export interface GeneratedPathway {
-  /** @maxItems 3 */
-  recommendations: PathwayRecommendation[];
-  /** @minimum 0 */
-  roleCount: number;
+  profileId: string;
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  scenarios: PathwayScenario[];
+  generatedAt: Date;
 }

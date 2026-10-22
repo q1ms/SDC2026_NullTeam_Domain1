@@ -76,6 +76,46 @@ export const SaveCareerProfileResponse = zod.object({
 
 
 /**
+ * @summary Get the latest generated pathway for a career profile
+ */
+export const GetGeneratedPathwayParams = zod.object({
+  "profileId": zod.coerce.string().uuid()
+})
+
+
+export const getGeneratedPathwayResponseOneScenariosItemMatchScoreMax = 100;
+
+export const getGeneratedPathwayResponseOneScenariosItemExplainableReasonMax = 500;
+
+
+export const getGeneratedPathwayResponseOneScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMin = 3;
+export const getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMax = 3;
+
+export const getGeneratedPathwayResponseOneScenariosMin = 3;
+export const getGeneratedPathwayResponseOneScenariosMax = 3;
+
+
+
+export const GetGeneratedPathwayResponse = zod.union([zod.object({
+  "profileId": zod.string().uuid(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "matchScore": zod.number().int().min(1).max(getGeneratedPathwayResponseOneScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(getGeneratedPathwayResponseOneScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayItemEstimatedHoursMax)
+})).min(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMin).max(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(getGeneratedPathwayResponseOneScenariosMin).max(getGeneratedPathwayResponseOneScenariosMax),
+  "generatedAt": zod.coerce.date()
+}),zod.null()])
+
+
+/**
  * @summary List reskilling roles
  */
 export const ListJobRolesResponseItem = zod.object({
@@ -94,46 +134,58 @@ export const ListJobRolesResponse = zod.array(ListJobRolesResponseItem)
  * @summary Recommend career pathways from a user's profile
  */
 
-export const generatePathwayBodyYearsExperienceMin = 0;
-export const generatePathwayBodyYearsExperienceMax = 60;
+export const generatePathwayBodyProfileYearsExperienceMin = 0;
+export const generatePathwayBodyProfileYearsExperienceMax = 60;
 
 
 
 
-export const generatePathwayBodyWeeklyHoursMax = 80;
+export const generatePathwayBodyProfileWeeklyHoursMax = 80;
 
 
 
 export const GeneratePathwayBody = zod.object({
+  "profileId": zod.string().uuid(),
+  "profile": zod.object({
   "currentRole": zod.string().min(1),
-  "yearsExperience": zod.number().int().min(generatePathwayBodyYearsExperienceMin).max(generatePathwayBodyYearsExperienceMax),
+  "yearsExperience": zod.number().int().min(generatePathwayBodyProfileYearsExperienceMin).max(generatePathwayBodyProfileYearsExperienceMax),
   "industry": zod.string().min(1),
   "skills": zod.array(zod.string()).min(1),
   "interests": zod.array(zod.string()).min(1),
-  "weeklyHours": zod.number().int().min(1).max(generatePathwayBodyWeeklyHoursMax)
+  "weeklyHours": zod.number().int().min(1).max(generatePathwayBodyProfileWeeklyHoursMax)
+})
 })
 
-export const generatePathwayResponseRecommendationsItemMatchMin = 0;
-export const generatePathwayResponseRecommendationsItemMatchMax = 100;
 
-export const generatePathwayResponseRecommendationsMax = 3;
+export const generatePathwayResponseScenariosItemMatchScoreMax = 100;
 
-export const generatePathwayResponseRoleCountMin = 0;
+export const generatePathwayResponseScenariosItemExplainableReasonMax = 500;
+
+
+export const generatePathwayResponseScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const generatePathwayResponseScenariosItemReskillingPathwayMin = 3;
+export const generatePathwayResponseScenariosItemReskillingPathwayMax = 3;
+
+export const generatePathwayResponseScenariosMin = 3;
+export const generatePathwayResponseScenariosMax = 3;
 
 
 
 export const GeneratePathwayResponse = zod.object({
-  "recommendations": zod.array(zod.object({
-  "id": zod.string(),
-  "title": zod.string(),
-  "description": zod.string(),
-  "salary": zod.string(),
-  "timeToReady": zod.string(),
-  "skills": zod.array(zod.string()),
-  "steps": zod.array(zod.string()),
-  "match": zod.number().int().min(generatePathwayResponseRecommendationsItemMatchMin).max(generatePathwayResponseRecommendationsItemMatchMax)
-})).max(generatePathwayResponseRecommendationsMax),
-  "roleCount": zod.number().int().min(generatePathwayResponseRoleCountMin)
+  "profileId": zod.string().uuid(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "matchScore": zod.number().int().min(1).max(generatePathwayResponseScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(generatePathwayResponseScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(generatePathwayResponseScenariosItemReskillingPathwayItemEstimatedHoursMax)
+})).min(generatePathwayResponseScenariosItemReskillingPathwayMin).max(generatePathwayResponseScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(generatePathwayResponseScenariosMin).max(generatePathwayResponseScenariosMax),
+  "generatedAt": zod.coerce.date()
 })
 
 

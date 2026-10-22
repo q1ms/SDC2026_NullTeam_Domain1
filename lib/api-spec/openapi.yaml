@@ -64,6 +64,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CareerProfile"
+  /profiles/{profileId}/pathway:
+    parameters:
+      - name: profileId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getGeneratedPathway
+      tags: [career]
+      summary: Get the latest generated pathway for a career profile
+      responses:
+        "200":
+          description: Saved pathway, or null when one has not been generated
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/GeneratedPathway"
+                  - type: "null"
   /roles:
     get:
       operationId: listJobRoles
@@ -88,16 +109,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CareerProfileInput"
+              $ref: "#/components/schemas/PathwayGenerationInput"
       responses:
         "200":
-          description: Ranked role recommendations for the supplied profile
+          description: Generated pathway saved for the supplied profile
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GeneratedPathway"
         "400":
           description: Invalid career profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Career profile not found
           content:
             application/json:
               schema:
@@ -236,6 +263,17 @@ components:
         - skills
         - interests
         - weeklyHours
+    PathwayGenerationInput:
+      type: object
+      properties:
+        profileId:
+          type: string
+          format: uuid
+        profile:
+          $ref: "#/components/schemas/CareerProfileInput"
+      required:
+        - profileId
+        - profile
     JobRole:
       type: object
       properties:
@@ -265,54 +303,104 @@ components:
         - timeToReady
         - skills
         - steps
-    PathwayRecommendation:
+    ReskillingStep:
       type: object
+      additionalProperties: false
       properties:
-        id:
+        step:
           type: string
-        title:
-          type: string
-        description:
-          type: string
-        salary:
-          type: string
-        timeToReady:
-          type: string
-        skills:
-          type: array
-          items:
-            type: string
-        steps:
-          type: array
-          items:
-            type: string
-        match:
+          minLength: 1
+        estimatedHours:
           type: integer
-          minimum: 0
-          maximum: 100
+          minimum: 1
+          maximum: 200
       required:
-        - id
-        - title
-        - description
-        - salary
-        - timeToReady
-        - skills
-        - steps
-        - match
-    GeneratedPathway:
+        - step
+        - estimatedHours
+    PathwayScenario:
       type: object
+      additionalProperties: false
       properties:
-        recommendations:
+        roleTitle:
+          type: string
+          minLength: 1
+        matchScore:
+          type: integer
+          minimum: 1
+          maximum: 100
+        explainableReason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        skillsGap:
           type: array
+          items:
+            type: string
+        reskillingPathway:
+          type: array
+          minItems: 3
           maxItems: 3
           items:
-            $ref: "#/components/schemas/PathwayRecommendation"
-        roleCount:
-          type: integer
-          minimum: 0
+            $ref: "#/components/schemas/ReskillingStep"
+        unSdgTag:
+          type: string
+          enum:
+            - "SDG 1: No Poverty"
+            - "SDG 2: Zero Hunger"
+            - "SDG 3: Good Health and Well-Being"
+            - "SDG 4: Quality Education"
+            - "SDG 5: Gender Equality"
+            - "SDG 6: Clean Water and Sanitation"
+            - "SDG 7: Affordable and Clean Energy"
+            - "SDG 8: Decent Work and Economic Growth"
+            - "SDG 9: Industry, Innovation and Infrastructure"
+            - "SDG 10: Reduced Inequalities"
+            - "SDG 11: Sustainable Cities and Communities"
+            - "SDG 12: Responsible Consumption and Production"
+            - "SDG 13: Climate Action"
+            - "SDG 14: Life Below Water"
+            - "SDG 15: Life on Land"
+            - "SDG 16: Peace, Justice and Strong Institutions"
+            - "SDG 17: Partnerships for the Goals"
       required:
-        - recommendations
-        - roleCount
+        - roleTitle
+        - matchScore
+        - explainableReason
+        - skillsGap
+        - reskillingPathway
+        - unSdgTag
+    PathwayGenerationOutput:
+      type: object
+      additionalProperties: false
+      properties:
+        scenarios:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PathwayScenario"
+      required:
+        - scenarios
+    GeneratedPathway:
+      type: object
+      additionalProperties: false
+      properties:
+        profileId:
+          type: string
+          format: uuid
+        scenarios:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PathwayScenario"
+        generatedAt:
+          type: string
+          format: date-time
+      required:
+        - profileId
+        - scenarios
+        - generatedAt
     SdgSkillMapping:
       type: object
       properties:

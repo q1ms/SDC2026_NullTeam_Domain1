@@ -1,6 +1,7 @@
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import type { PathwayScenario } from "@workspace/api-zod";
 import { JOB_ROLES, SDGS } from "./career-seed";
 
 export type CareerProfileInput = {
@@ -34,6 +35,12 @@ export type SdgSkillMapping = {
   skills: string[];
 };
 
+export type StoredGeneratedPathway = {
+  profileId: string;
+  scenarios: unknown;
+  generatedAt: string;
+};
+
 const databasePath =
   process.env.CAREER_DB_PATH ??
   resolve(process.cwd(), "data", "career-reskilling.sqlite");
@@ -64,6 +71,12 @@ database.exec(`
     profile_id TEXT NOT NULL REFERENCES career_profiles(id) ON DELETE CASCADE,
     interest TEXT NOT NULL,
     PRIMARY KEY (profile_id, interest)
+  );
+
+  CREATE TABLE IF NOT EXISTS generated_pathways (
+    profile_id TEXT PRIMARY KEY REFERENCES career_profiles(id) ON DELETE CASCADE,
+    scenarios_json TEXT NOT NULL,
+    generated_at TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS job_roles (
@@ -297,4 +310,43 @@ export function listSdgSkillMappings(): SdgSkillMapping[] {
       (item) => item.skill_name,
     ),
   }));
+}
+
+export function getGeneratedPathway(profileId: string): StoredGeneratedPathway | null {
+  const row = database
+    .prepare(
+      "SELECT profile_id, scenarios_json, generated_at FROM generated_pathways WHERE profile_id = ?",
+    )
+    .get(profileId) as
+    | { profile_id: string; scenarios_json: string; generated_at: string }
+    | undefined;
+
+  if (!row) return null;
+
+  const scenarios: unknown = JSON.parse(row.scenarios_json);
+  return {
+    profileId: row.profile_id,
+    scenarios,
+    generatedAt: row.generated_at,
+  };
+}
+
+export function saveGeneratedPathway(
+  profileId: string,
+  scenarios: PathwayScenario[],
+): StoredGeneratedPathway {
+  const generatedAt = new Date().toISOString();
+  database
+    .prepare(`
+      INSERT INTO generated_pathways (profile_id, scenarios_json, generated_at)
+      VALUES (?, ?, ?)
+      ON CONFLICT(profile_id) DO UPDATE SET
+        scenarios_json = excluded.scenarios_json,
+        generated_at = excluded.generated_at
+    `)
+    .run(profileId, JSON.stringify(scenarios), generatedAt);
+
+  const saved = getGeneratedPathway(profileId);
+  if (!saved) throw new Error("Generated pathway could not be read back.");
+  return saved;
 }

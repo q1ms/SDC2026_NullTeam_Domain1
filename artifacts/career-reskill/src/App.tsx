@@ -77,8 +77,8 @@ function Router() {
       <RoutedErrorBoundary>
         <Switch>
           <Route path="/" component={() => <RadarPage profile={profile} />} />
-          <Route path="/intake" component={() => <IntakePage profile={profile} profileLoading={profileLoading} onSave={updateProfile} isSaving={saveMutation.isPending && !isMigrating} />} />
-          <Route path="/pathway" component={() => <PathwayPage profile={profile} profileLoading={profileLoading} />} />
+          <Route path="/intake" component={() => <IntakePage profileId={profileId} profile={profile} profileLoading={profileLoading} onSave={updateProfile} isSaving={saveMutation.isPending && !isMigrating} />} />
+          <Route path="/pathway" component={() => <PathwayPage profileId={profileId} profile={profile} profileLoading={profileLoading} />} />
           <Route component={NotFound} />
         </Switch>
       </RoutedErrorBoundary>

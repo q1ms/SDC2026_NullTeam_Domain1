@@ -32,6 +32,7 @@ import type {
   HealthStatus,
   JobRole,
   LiveTrendsResponse,
+  PathwayGenerationInput,
   SdgSkillMapping
 } from './api.schemas';
 
@@ -354,6 +355,107 @@ export const useSaveCareerProfile = <TError = ErrorType<unknown>,
       return useMutation(getSaveCareerProfileMutationOptions(options), queryClient);
     }
 
+export const getGetGeneratedPathwayUrl = (profileId: string,) => {
+
+
+
+
+  return `/api/profiles/${profileId}/pathway`
+}
+
+/**
+ * @summary Get the latest generated pathway for a career profile
+ */
+export const getGeneratedPathway = async (profileId: string, options?: Parameters<typeof customFetch>[1]): Promise<GeneratedPathway | null> => {
+
+  return customFetch<GeneratedPathway | null>(getGetGeneratedPathwayUrl(profileId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetGeneratedPathwayQueryKey = (profileId: string,) => {
+    return [
+    `/api/profiles/${profileId}/pathway`
+    ] as const;
+    }
+
+
+export const getGetGeneratedPathwayQueryOptions = <TData = Awaited<ReturnType<typeof getGeneratedPathway>>, TError = ErrorType<unknown>>(profileId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetGeneratedPathwayQueryKey(profileId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGeneratedPathway>>> = ({ signal }) => getGeneratedPathway(profileId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: profileId !== null && profileId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetGeneratedPathwayQueryResult = NonNullable<Awaited<ReturnType<typeof getGeneratedPathway>>>
+export type GetGeneratedPathwayQueryError = ErrorType<unknown>
+
+
+export function useGetGeneratedPathway<TData = Awaited<ReturnType<typeof getGeneratedPathway>>, TError = ErrorType<unknown>>(
+ profileId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getGeneratedPathway>>,
+          TError,
+          Awaited<ReturnType<typeof getGeneratedPathway>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetGeneratedPathway<TData = Awaited<ReturnType<typeof getGeneratedPathway>>, TError = ErrorType<unknown>>(
+ profileId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getGeneratedPathway>>,
+          TError,
+          Awaited<ReturnType<typeof getGeneratedPathway>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetGeneratedPathway<TData = Awaited<ReturnType<typeof getGeneratedPathway>>, TError = ErrorType<unknown>>(
+ profileId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get the latest generated pathway for a career profile
+ */
+
+export function useGetGeneratedPathway<TData = Awaited<ReturnType<typeof getGeneratedPathway>>, TError = ErrorType<unknown>>(
+ profileId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGeneratedPathway>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetGeneratedPathwayQueryOptions(profileId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getListJobRolesUrl = () => {
 
 
@@ -466,7 +568,7 @@ export const getGeneratePathwayUrl = () => {
 /**
  * @summary Recommend career pathways from a user's profile
  */
-export const generatePathway = async (careerProfileInput: CareerProfileInput, options?: Parameters<typeof customFetch>[1]): Promise<GeneratedPathway> => {
+export const generatePathway = async (pathwayGenerationInput: PathwayGenerationInput, options?: Parameters<typeof customFetch>[1]): Promise<GeneratedPathway> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -487,7 +589,7 @@ return customFetch<GeneratedPathway>(getGeneratePathwayUrl(),
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(careerProfileInput)
+    body: JSON.stringify(pathwayGenerationInput)
   }
 );}
 
@@ -525,9 +627,9 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type GeneratePathwayMutationResult = NonNullable<Awaited<ReturnType<typeof generatePathway>>>
-    export type GeneratePathwayMutationBody = BodyType<CareerProfileInput>
+    export type GeneratePathwayMutationBody = BodyType<PathwayGenerationInput>
     export type GeneratePathwayMutationError = ErrorType<ApiError>
-    export type GeneratePathwayMutationVariables = {data: BodyType<CareerProfileInput>}
+    export type GeneratePathwayMutationVariables = {data: BodyType<PathwayGenerationInput>}
 
     /**
  * @summary Recommend career pathways from a user's profile

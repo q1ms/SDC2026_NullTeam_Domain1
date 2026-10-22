@@ -45,6 +45,11 @@ export interface CareerProfileInput {
   weeklyHours: number;
 }
 
+export interface PathwayGenerationInput {
+  profileId: string;
+  profile: CareerProfileInput;
+}
+
 export interface JobRole {
   id: string;
   title: string;
@@ -55,26 +60,77 @@ export interface JobRole {
   steps: string[];
 }
 
-export interface PathwayRecommendation {
-  id: string;
-  title: string;
-  description: string;
-  salary: string;
-  timeToReady: string;
-  skills: string[];
-  steps: string[];
+export interface ReskillingStep {
+  /** @minLength 1 */
+  step: string;
   /**
-     * @minimum 0
+     * @minimum 1
+     * @maximum 200
+     */
+  estimatedHours: number;
+}
+
+export type PathwayScenarioUnSdgTag = typeof PathwayScenarioUnSdgTag[keyof typeof PathwayScenarioUnSdgTag];
+
+
+export const PathwayScenarioUnSdgTag = {
+  'SDG_1:_No_Poverty': 'SDG 1: No Poverty',
+  'SDG_2:_Zero_Hunger': 'SDG 2: Zero Hunger',
+  'SDG_3:_Good_Health_and_Well-Being': 'SDG 3: Good Health and Well-Being',
+  'SDG_4:_Quality_Education': 'SDG 4: Quality Education',
+  'SDG_5:_Gender_Equality': 'SDG 5: Gender Equality',
+  'SDG_6:_Clean_Water_and_Sanitation': 'SDG 6: Clean Water and Sanitation',
+  'SDG_7:_Affordable_and_Clean_Energy': 'SDG 7: Affordable and Clean Energy',
+  'SDG_8:_Decent_Work_and_Economic_Growth': 'SDG 8: Decent Work and Economic Growth',
+  'SDG_9:_Industry,_Innovation_and_Infrastructure': 'SDG 9: Industry, Innovation and Infrastructure',
+  'SDG_10:_Reduced_Inequalities': 'SDG 10: Reduced Inequalities',
+  'SDG_11:_Sustainable_Cities_and_Communities': 'SDG 11: Sustainable Cities and Communities',
+  'SDG_12:_Responsible_Consumption_and_Production': 'SDG 12: Responsible Consumption and Production',
+  'SDG_13:_Climate_Action': 'SDG 13: Climate Action',
+  'SDG_14:_Life_Below_Water': 'SDG 14: Life Below Water',
+  'SDG_15:_Life_on_Land': 'SDG 15: Life on Land',
+  'SDG_16:_Peace,_Justice_and_Strong_Institutions': 'SDG 16: Peace, Justice and Strong Institutions',
+  'SDG_17:_Partnerships_for_the_Goals': 'SDG 17: Partnerships for the Goals',
+} as const;
+
+export interface PathwayScenario {
+  /** @minLength 1 */
+  roleTitle: string;
+  /**
+     * @minimum 1
      * @maximum 100
      */
-  match: number;
+  matchScore: number;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  explainableReason: string;
+  skillsGap: string[];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  reskillingPathway: ReskillingStep[];
+  unSdgTag: PathwayScenarioUnSdgTag;
+}
+
+export interface PathwayGenerationOutput {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  scenarios: PathwayScenario[];
 }
 
 export interface GeneratedPathway {
-  /** @maxItems 3 */
-  recommendations: PathwayRecommendation[];
-  /** @minimum 0 */
-  roleCount: number;
+  profileId: string;
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  scenarios: PathwayScenario[];
+  generatedAt: string;
 }
 
 export interface SdgSkillMapping {

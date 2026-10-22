@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { Link } from "wouter";
 import {
+  getGetGeneratedPathwayQueryKey,
   getListSdgSkillMappingsQueryKey,
-  useGeneratePathway,
+  useGetGeneratedPathway,
   useListSdgSkillMappings,
-  type PathwayRecommendation,
+  type PathwayScenario,
 } from "@workspace/api-client-react";
 import {
   ArrowRight,
@@ -15,27 +15,28 @@ import {
   GraduationCap,
   Globe2,
   Sparkles,
-  Wallet,
 } from "lucide-react";
 import type { CareerProfile } from "../data/catalog";
 
 export function PathwayPage({
+  profileId,
   profile,
   profileLoading,
 }: {
+  profileId: string;
   profile: CareerProfile | null;
   profileLoading: boolean;
 }) {
-  const pathwayMutation = useGeneratePathway();
+  const pathwayQuery = useGetGeneratedPathway(profileId, {
+    query: {
+      queryKey: getGetGeneratedPathwayQueryKey(profileId),
+      enabled: Boolean(profile && !profileLoading),
+      retry: false,
+    },
+  });
   const sdgsQuery = useListSdgSkillMappings({
     query: { queryKey: getListSdgSkillMappingsQueryKey(), retry: false },
   });
-
-  useEffect(() => {
-    if (profile) {
-      pathwayMutation.mutate({ data: profile });
-    }
-  }, [profile, pathwayMutation.mutate]);
 
   if (profileLoading) {
     return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
@@ -56,26 +57,38 @@ export function PathwayPage({
     );
   }
 
-  if (pathwayMutation.isIdle || pathwayMutation.isPending) {
-    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-roles-loading">Generating role recommendations…</div></div>;
+  if (pathwayQuery.isLoading) {
+    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-pathway-loading">Loading your saved career paths…</div></div>;
   }
 
-  if (pathwayMutation.isError || !pathwayMutation.data) {
+  if (pathwayQuery.isError) {
     return (
       <div className="page-content">
-        <div className="form-errors" role="alert" data-testid="status-roles-error">
-          <p>Could not generate your recommendations. Check the API or RunPod configuration and try again.</p>
-          <button className="button-quiet" onClick={() => pathwayMutation.mutate({ data: profile })}>Try again</button>
+        <div className="form-errors" role="alert" data-testid="status-pathway-error">
+          <p>Could not load your saved career paths. Check the API server and try again.</p>
+          <button className="button-quiet" onClick={() => void pathwayQuery.refetch()}>Try again</button>
         </div>
       </div>
     );
   }
 
-  const recommendations = pathwayMutation.data.recommendations;
-  const top = recommendations[0];
-  const averageMatch = recommendations.length
-    ? Math.round(recommendations.reduce((sum, role) => sum + role.match, 0) / recommendations.length)
-    : 0;
+  if (!pathwayQuery.data) {
+    return (
+      <div className="page-content">
+        <div className="eyebrow">Career pathways</div>
+        <h1 className="page-title">Your next steps<br />start here.</h1>
+        <div className="empty-card" style={{ marginTop: 28 }} data-testid="empty-pathway-generated">
+          <div className="empty-mark"><Compass size={23} /></div>
+          <h2>No career paths have been generated yet.</h2>
+          <p>Submit your profile to generate three personalized career scenarios and learning steps.</p>
+          <Link href="/intake" className="button-primary" data-testid="link-pathway-generate">Build your pathways <ArrowRight size={15} /></Link>
+        </div>
+      </div>
+    );
+  }
+
+  const scenarios = pathwayQuery.data.scenarios;
+  const top = scenarios[0];
 
   return (
     <div className="page-content">
@@ -98,23 +111,23 @@ export function PathwayPage({
         <section className="rec-banner fade-in delay-1" data-testid="card-top-recommendation">
           <div>
             <div className="eyebrow" style={{ marginBottom: 9 }}>Your strongest starting point</div>
-            <h2>{top.title}</h2>
-            <p>{top.description}</p>
+            <h2>{top.roleTitle}</h2>
+            <p>{top.explainableReason}</p>
           </div>
-          <div className="banner-figure">{averageMatch}%<small>profile alignment</small></div>
+          <div className="banner-figure">{top.matchScore}%<small>profile match</small></div>
         </section>
       )}
 
       <div className="section-header fade-in delay-2">
-        <div><h2>Directions to explore</h2><p>Ranked by alignment with your skills and stated interests</p></div>
-        <span className="field-hint" data-testid="text-role-source">{pathwayMutation.data.roleCount} roles in SQLite</span>
+        <div><h2>Career scenarios</h2><p>Three AI-generated options with the skills and learning steps to explore</p></div>
+        <span className="field-hint" data-testid="text-scenario-count">{scenarios.length} pathways</span>
       </div>
-      {recommendations.length ? (
+      {scenarios.length ? (
         <div className="role-grid">
-          {recommendations.map((role, index) => <RoleCard key={role.id} role={role} index={index} knownSkills={profile.skills} />)}
+          {scenarios.map((scenario, index) => <ScenarioCard key={`${scenario.roleTitle}-${index}`} scenario={scenario} index={index} />)}
         </div>
       ) : (
-        <div className="section-card loading-card" data-testid="empty-role-recommendations">No role records are available yet.</div>
+        <div className="section-card loading-card" data-testid="empty-role-recommendations">No career scenarios are available yet.</div>
       )}
 
       <div className="section-header sdg-header fade-in delay-2">
@@ -148,25 +161,39 @@ export function PathwayPage({
         </div>
       )}
 
-      <div className="footer-note" data-testid="text-pathway-disclaimer">Role details and salary ranges are illustrative catalog examples. Explore local requirements before making decisions.</div>
+      <div className="footer-note" data-testid="text-pathway-generated-at">Generated {new Date(pathwayQuery.data.generatedAt).toLocaleString()}</div>
+      <div className="footer-note" data-testid="text-pathway-disclaimer">AI suggestions are starting points, not guarantees. Check local role requirements and learning options before making decisions.</div>
     </div>
   );
 }
 
-function RoleCard({ role, index, knownSkills }: { role: PathwayRecommendation; index: number; knownSkills: string[] }) {
-  const normalize = (text: string) => text.toLowerCase();
-  const isKnown = (skill: string) => knownSkills.some((known) => normalize(known).includes(normalize(skill)) || normalize(skill).includes(normalize(known)) && known.length > 3);
-  const knownCount = role.skills.filter(isKnown).length;
+function ScenarioCard({ scenario, index }: { scenario: PathwayScenario; index: number }) {
   return (
-    <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-role-${index}`}>
-      <div className="role-head"><h3 className="role-title" data-testid={`text-role-title-${index}`}>{role.title}</h3><span className="match-badge" data-testid={`status-role-match-${index}`}><Check size={11} /> {role.match}% fit</span></div>
-      <p className="role-description">{role.description}</p>
-      <div className="role-metrics"><span className="metric-tag"><Wallet size={12} />{role.salary}</span><span className="metric-tag"><Clock3 size={12} />{role.timeToReady}</span></div>
-      <div className="gap-label">Skills to build · {knownCount} of {role.skills.length} recognized</div>
-      <div className="skill-chips">{role.skills.map((skill) => <span className={`skill-chip ${isKnown(skill) ? 'known' : 'missing'}`} key={skill} data-testid={`chip-role-${index}-${skill.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}>{isKnown(skill) ? '✓ ' : '+ '}{skill}</span>)}</div>
-      <details className="learning-path" data-testid={`details-learning-steps-${index}`}>
-        <summary><span><GraduationCap size={14} style={{ verticalAlign: 'middle', marginRight: 7, color: '#347a70' }} />Learning steps</span><span className="field-hint">{role.steps.length} steps</span></summary>
-        <ol>{role.steps.map((step, stepIndex) => <li key={step} data-testid={`text-learning-step-${index}-${stepIndex}`}>{step}</li>)}</ol>
+    <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-scenario-${index}`}>
+      <div className="role-head">
+        <h3 className="role-title" data-testid={`text-scenario-title-${index}`}>{scenario.roleTitle}</h3>
+        <span className="match-badge" data-testid={`status-scenario-match-${index}`}><Check size={11} /> {scenario.matchScore}% match</span>
+      </div>
+      <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{scenario.explainableReason}</p>
+      <div className="scenario-sdg" data-testid={`text-scenario-sdg-${index}`}><Globe2 size={13} />{scenario.unSdgTag}</div>
+      <div className="gap-label">Skills to build</div>
+      {scenario.skillsGap.length ? (
+        <div className="skill-chips">
+          {scenario.skillsGap.map((skill) => <span className="skill-chip missing" key={skill}>{skill}</span>)}
+        </div>
+      ) : (
+        <p className="role-description">Your current skills already cover this pathway’s listed gaps.</p>
+      )}
+      <details className="learning-path" data-testid={`details-scenario-steps-${index}`}>
+        <summary><span><GraduationCap size={14} style={{ verticalAlign: 'middle', marginRight: 7, color: '#347a70' }} />Reskilling pathway</span><span className="field-hint">3 steps</span></summary>
+        <ol>
+          {scenario.reskillingPathway.map((step, stepIndex) => (
+            <li className="scenario-step" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
+              <span>{step.step}</span>
+              <span className="scenario-step-hours"><Clock3 size={11} /> {step.estimatedHours} hours</span>
+            </li>
+          ))}
+        </ol>
       </details>
     </article>
   );

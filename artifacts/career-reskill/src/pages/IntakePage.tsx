@@ -1,27 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  getGetGeneratedPathwayQueryKey,
+  useGeneratePathway,
+} from '@workspace/api-client-react';
 import { ArrowRight, Check, Clock3, UserRound } from 'lucide-react';
 import { INTEREST_OPTIONS, type CareerProfile } from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
 
 export function IntakePage({
+  profileId,
   profile,
   profileLoading,
   onSave,
   isSaving,
 }: {
+  profileId: string;
   profile: CareerProfile | null;
   profileLoading: boolean;
   onSave: (profile: CareerProfile) => Promise<void>;
   isSaving: boolean;
 }) {
   const [, navigate] = useLocation();
+  const queryClient = useQueryClient();
+  const pathwayMutation = useGeneratePathway();
   const [form, setForm] = useState<CareerProfile>(profile ?? EMPTY_PROFILE);
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
   const [errors, setErrors] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [pathwayFailed, setPathwayFailed] = useState(false);
+  const isSubmitting = isSaving || pathwayMutation.isPending;
 
   useEffect(() => {
     if (profile) {
@@ -41,16 +52,28 @@ export function IntakePage({
     if (!form.interests.length) issues.push('Choose at least one area of interest.');
     if (issues.length) { setErrors(issues); setSaved(false); return; }
     const cleaned = { ...form, currentRole: form.currentRole.trim(), industry: form.industry.trim(), skills: skillsText.split(',').map((skill) => skill.trim()).filter(Boolean) };
+    setErrors([]);
+    setSaved(false);
+    setSaveFailed(false);
+    setPathwayFailed(false);
+
     try {
       await onSave(cleaned);
       setForm(cleaned);
-      setErrors([]);
-      setSaveFailed(false);
+    } catch {
+      setSaveFailed(true);
+      return;
+    }
+
+    try {
+      const generated = await pathwayMutation.mutateAsync({
+        data: { profileId, profile: cleaned },
+      });
+      queryClient.setQueryData(getGetGeneratedPathwayQueryKey(profileId), generated);
       setSaved(true);
       navigate('/pathway');
     } catch {
-      setSaveFailed(true);
-      setSaved(false);
+      setPathwayFailed(true);
     }
   };
 
@@ -103,10 +126,15 @@ export function IntakePage({
           </div>
           {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors">{errors.map((error) => <div key={error}>{error}</div>)}</div>}
           {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">Your profile could not be saved. Check the API server and try again.</div>}
+          {pathwayMutation.isPending && <div className="form-success" role="status" data-testid="status-pathway-generating">Your profile is saved. Generating three career paths…</div>}
+          {pathwayFailed && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed. Check the API or RunPod configuration and try again.</div>}
           {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
           <div className="form-footer">
             <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
-            <button type="submit" className="button-primary" disabled={isSaving} data-testid="button-save-profile">{isSaving ? 'Saving…' : profile ? 'Save changes' : 'Build my pathway'} <ArrowRight size={15} /></button>
+            <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
+              {isSaving ? 'Saving profile…' : pathwayMutation.isPending ? 'Generating pathways…' : profile ? 'Save changes' : 'Build my pathway'}
+              <ArrowRight size={15} />
+            </button>
           </div>
         </section>
         <aside className="aside-panel">
