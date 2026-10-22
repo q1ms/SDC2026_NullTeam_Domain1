@@ -126,7 +126,7 @@ export const GetLiveTrendsResponse = zod.object({
   "summary": zod.string(),
   "sourceName": zod.string(),
   "articleUrl": zod.string().url(),
-  "publishedAt": zod.coerce.date().nullable()
+  "publishedAt": zod.coerce.date()
 })).min(getLiveTrendsResponseTrendsMin).max(getLiveTrendsResponseTrendsMax)
 })
 

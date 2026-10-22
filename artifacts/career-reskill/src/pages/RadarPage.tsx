@@ -102,7 +102,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
                     <div className="coverage-meta">
                       <span>{trend.sourceName}</span>
                       <span aria-hidden="true">·</span>
-                      <time dateTime={trend.publishedAt ?? undefined}>{formatPublishedAt(trend.publishedAt)}</time>
+                      <time dateTime={trend.publishedAt}>{formatPublishedAt(trend.publishedAt)}</time>
                     </div>
                   </div>
                 </article>
@@ -126,8 +126,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
   );
 }
 
-function formatPublishedAt(value: string | null): string {
-  if (!value) return 'Date unavailable';
+function formatPublishedAt(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? 'Date unavailable'

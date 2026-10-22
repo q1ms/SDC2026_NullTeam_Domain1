@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
 
 const FEED_URL =
-  "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation&hl=en-US&gl=US&ceid=US:en";
+  "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
 const CACHE_DURATION_MS = 10 * 60 * 1000;
 const MAX_FEED_BYTES = 2_000_000;
 const parser = new XMLParser({
@@ -62,7 +62,7 @@ type FeedArticle = {
   summary: string;
   sourceName: string;
   articleUrl: string;
-  publishedAt: Date | null;
+  publishedAt: Date;
 };
 
 type TopicAccumulator = {
@@ -127,6 +127,7 @@ function parseArticle(item: unknown): FeedArticle | null {
 
   const dateText = readText(record.pubDate);
   const parsedDate = dateText ? new Date(dateText) : null;
+  if (!parsedDate || Number.isNaN(parsedDate.getTime())) return null;
   const sourceName =
     cleanHtml(readText(record.source)) || new URL(articleUrl).hostname.replace(/^www\./, "");
 
@@ -135,13 +136,12 @@ function parseArticle(item: unknown): FeedArticle | null {
     summary: cleanHtml(readText(record.description)).slice(0, 320) || title,
     sourceName,
     articleUrl,
-    publishedAt:
-      parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate : null,
+    publishedAt: parsedDate,
   };
 }
 
 function articleTime(article: FeedArticle): number {
-  return article.publishedAt?.getTime() ?? 0;
+  return article.publishedAt.getTime();
 }
 
 function toLiveTrend(topic: string, value: TopicAccumulator): LiveTrend {

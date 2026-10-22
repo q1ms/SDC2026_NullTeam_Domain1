@@ -74,8 +74,7 @@ export interface LiveTrend {
   summary: string;
   sourceName: string;
   articleUrl: string;
-  /** @nullable */
-  publishedAt: string | null;
+  publishedAt: string;
 }
 
 export interface LiveTrendsResponse {
