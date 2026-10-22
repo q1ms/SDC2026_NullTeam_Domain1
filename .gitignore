@@ -53,3 +53,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Local SQLite data files (created at runtime)
+artifacts/api-server/data/*.sqlite*

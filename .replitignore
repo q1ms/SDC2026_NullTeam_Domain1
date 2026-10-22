@@ -3,3 +3,6 @@
 
 # No need to store the pnpm store twice.
 .local
+
+# Runtime SQLite data is generated locally and is not durable in published apps.
+artifacts/api-server/data/*.sqlite*
