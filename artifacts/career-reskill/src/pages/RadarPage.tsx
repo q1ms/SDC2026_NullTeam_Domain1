@@ -7,7 +7,9 @@ import type { CareerProfile } from '../data/catalog';
 const COLORS = ['#36796e', '#578f7f', '#729f89', '#8cb197', '#a9c1a0', '#c7c798', '#d8c795'];
 
 export function RadarPage({ profile }: { profile: CareerProfile | null }) {
-  const trendsQuery = useGetLiveTrends({ query: { staleTime: 10 * 60 * 1000 } });
+  const trendsQuery = useGetLiveTrends({
+    query: { staleTime: 10 * 60 * 1000, refetchOnMount: 'always' },
+  });
   const trends = trendsQuery.data?.trends ?? [];
   const fetchedAt = trendsQuery.data?.fetchedAt
     ? new Date(trendsQuery.data.fetchedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
