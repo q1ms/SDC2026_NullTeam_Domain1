@@ -92,8 +92,33 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/SdgSkillMapping"
+  /trends:
+    get:
+      operationId: getLiveTrends
+      tags: [career]
+      summary: Get five current AI topics from recent news coverage
+      responses:
+        "200":
+          description: Five current AI topics with source articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LiveTrendsResponse"
+        "502":
+          description: The public news feed is unavailable or returned no usable articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
     HealthStatus:
       type: object
       properties:
@@ -218,4 +243,54 @@ components:
         - title
         - description
         - skills
+    LiveTrend:
+      type: object
+      properties:
+        topic:
+          type: string
+        mentions:
+          type: integer
+          minimum: 1
+        headline:
+          type: string
+        summary:
+          type: string
+        sourceName:
+          type: string
+        articleUrl:
+          type: string
+          format: uri
+        publishedAt:
+          type: ["string", "null"]
+          format: date-time
+      required:
+        - topic
+        - mentions
+        - headline
+        - summary
+        - sourceName
+        - articleUrl
+        - publishedAt
+    LiveTrendsResponse:
+      type: object
+      properties:
+        source:
+          type: string
+        feedUrl:
+          type: string
+          format: uri
+        fetchedAt:
+          type: string
+          format: date-time
+        trends:
+          type: array
+          minItems: 5
+          maxItems: 5
+          items:
+            $ref: "#/components/schemas/LiveTrend"
+      required:
+        - source
+        - feedUrl
+        - fetchedAt
+        - trends
 

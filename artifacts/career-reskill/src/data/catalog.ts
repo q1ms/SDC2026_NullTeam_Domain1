@@ -9,26 +9,9 @@ export type CareerProfile = {
   weeklyHours: number;
 };
 
-export type SkillTrend = {
-  name: string;
-  growth: number;
-  demand: string;
-  category: string;
-};
-
 export type RoleRecommendation = JobRole & {
   match: number;
 };
-
-export const TREND_CATALOG: SkillTrend[] = [
-  { name: 'AI literacy & workflow design', growth: 38, demand: 'Very high', category: 'AI & automation' },
-  { name: 'Data storytelling', growth: 31, demand: 'High', category: 'Data fluency' },
-  { name: 'Cybersecurity fundamentals', growth: 27, demand: 'Very high', category: 'Digital trust' },
-  { name: 'Systems thinking', growth: 24, demand: 'High', category: 'Human advantage' },
-  { name: 'Climate risk analysis', growth: 21, demand: 'Growing', category: 'Climate resilience' },
-  { name: 'Product discovery', growth: 18, demand: 'Growing', category: 'Human advantage' },
-  { name: 'Cloud operations', growth: 16, demand: 'High', category: 'Digital foundations' },
-];
 
 export const INTEREST_OPTIONS = [
   'AI & automation', 'Data & analytics', 'People & learning', 'Climate & sustainability',

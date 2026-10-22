@@ -106,3 +106,28 @@ export const ListSdgSkillMappingsResponseItem = zod.object({
 export const ListSdgSkillMappingsResponse = zod.array(ListSdgSkillMappingsResponseItem)
 
 
+/**
+ * @summary Get five current AI topics from recent news coverage
+ */
+
+export const getLiveTrendsResponseTrendsMin = 5;
+export const getLiveTrendsResponseTrendsMax = 5;
+
+
+
+export const GetLiveTrendsResponse = zod.object({
+  "source": zod.string(),
+  "feedUrl": zod.string().url(),
+  "fetchedAt": zod.coerce.date(),
+  "trends": zod.array(zod.object({
+  "topic": zod.string(),
+  "mentions": zod.number().int().min(1),
+  "headline": zod.string(),
+  "summary": zod.string(),
+  "sourceName": zod.string(),
+  "articleUrl": zod.string().url(),
+  "publishedAt": zod.coerce.date().nullable()
+})).min(getLiveTrendsResponseTrendsMin).max(getLiveTrendsResponseTrendsMax)
+})
+
+

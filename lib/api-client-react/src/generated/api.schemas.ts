@@ -5,6 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface ApiError {
+  error: string;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -60,5 +64,28 @@ export interface SdgSkillMapping {
   title: string;
   description: string;
   skills: string[];
+}
+
+export interface LiveTrend {
+  topic: string;
+  /** @minimum 1 */
+  mentions: number;
+  headline: string;
+  summary: string;
+  sourceName: string;
+  articleUrl: string;
+  /** @nullable */
+  publishedAt: string | null;
+}
+
+export interface LiveTrendsResponse {
+  source: string;
+  feedUrl: string;
+  fetchedAt: string;
+  /**
+     * @minItems 5
+     * @maxItems 5
+     */
+  trends: LiveTrend[];
 }
 

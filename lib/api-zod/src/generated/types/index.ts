@@ -6,8 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './apiError';
 export * from './careerProfile';
 export * from './careerProfileInput';
 export * from './healthStatus';
 export * from './jobRole';
+export * from './liveTrend';
+export * from './liveTrendsResponse';
 export * from './sdgSkillMapping';

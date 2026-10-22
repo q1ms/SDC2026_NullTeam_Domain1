@@ -25,10 +25,12 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ApiError,
   CareerProfile,
   CareerProfileInput,
   HealthStatus,
   JobRole,
+  LiveTrendsResponse,
   SdgSkillMapping
 } from './api.schemas';
 
@@ -541,6 +543,107 @@ export function useListSdgSkillMappings<TData = Awaited<ReturnType<typeof listSd
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getListSdgSkillMappingsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetLiveTrendsUrl = () => {
+
+
+
+
+  return `/api/trends`
+}
+
+/**
+ * @summary Get five current AI topics from recent news coverage
+ */
+export const getLiveTrends = async ( options?: Parameters<typeof customFetch>[1]): Promise<LiveTrendsResponse> => {
+
+  return customFetch<LiveTrendsResponse>(getGetLiveTrendsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLiveTrendsQueryKey = () => {
+    return [
+    `/api/trends`
+    ] as const;
+    }
+
+
+export const getGetLiveTrendsQueryOptions = <TData = Awaited<ReturnType<typeof getLiveTrends>>, TError = ErrorType<ApiError>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLiveTrendsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLiveTrends>>> = ({ signal }) => getLiveTrends({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetLiveTrendsQueryResult = NonNullable<Awaited<ReturnType<typeof getLiveTrends>>>
+export type GetLiveTrendsQueryError = ErrorType<ApiError>
+
+
+export function useGetLiveTrends<TData = Awaited<ReturnType<typeof getLiveTrends>>, TError = ErrorType<ApiError>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLiveTrends>>,
+          TError,
+          Awaited<ReturnType<typeof getLiveTrends>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLiveTrends<TData = Awaited<ReturnType<typeof getLiveTrends>>, TError = ErrorType<ApiError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getLiveTrends>>,
+          TError,
+          Awaited<ReturnType<typeof getLiveTrends>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetLiveTrends<TData = Awaited<ReturnType<typeof getLiveTrends>>, TError = ErrorType<ApiError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get five current AI topics from recent news coverage
+ */
+
+export function useGetLiveTrends<TData = Awaited<ReturnType<typeof getLiveTrends>>, TError = ErrorType<ApiError>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getLiveTrends>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetLiveTrendsQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

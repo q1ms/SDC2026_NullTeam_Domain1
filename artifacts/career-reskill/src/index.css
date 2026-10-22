@@ -266,6 +266,20 @@ html { @apply scroll-smooth; }
 .banner-figure { @apply whitespace-nowrap font-mono text-[22px] text-[#34796d]; }
 .banner-figure small { @apply mt-[3px] block text-right font-mono text-[9px] uppercase text-[#708077]; }
 .footer-note { @apply mt-7 text-center text-[10px] text-muted-foreground; }
+.live-banner { @apply border-[#cbded2] bg-[#e8f1e8] text-[#42675d]; }
+.trend-state { @apply rounded-lg border border-dashed border-[#d8d7cb] bg-[#faf8f0] px-4 py-8 text-center text-xs text-muted-foreground; }
+.trend-error { @apply flex items-center justify-between gap-4 rounded-lg border border-[#e6c4b7] bg-[#faeee8] p-4 text-xs text-[#97513c]; }
+.coverage-list { @apply mt-[14px] grid; }
+.coverage-item { @apply border-t border-border py-4; }
+.coverage-copy { @apply min-w-0; }
+.coverage-topic { @apply mb-2 flex flex-wrap items-center gap-2; }
+.topic-badge { @apply rounded-full bg-[#e8f1e8] px-2.5 py-1 text-[10px] font-semibold text-[#42675d]; }
+.coverage-count { @apply font-mono text-[9px] text-muted-foreground; }
+.coverage-headline { @apply flex items-start gap-2 text-[11px] font-semibold leading-relaxed text-foreground no-underline; }
+.coverage-headline:hover { @apply text-primary underline; }
+.coverage-headline svg { @apply mt-0.5 shrink-0 text-muted-foreground; }
+.coverage-copy p { @apply mt-1.5 text-[10px] leading-relaxed text-muted-foreground; }
+.coverage-meta { @apply mt-2 flex flex-wrap items-center gap-1.5 text-[9px] text-muted-foreground; }
 .fade-in { animation:fade-up .45s cubic-bezier(.2,.7,.2,1) both; }
 .delay-1 { animation-delay:.08s; }
 .delay-2 { animation-delay:.16s; }
