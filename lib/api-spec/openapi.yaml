@@ -102,6 +102,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+        "502":
+          description: RunPod returned an error or an invalid pathway response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: RunPod credentials are not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "504":
+          description: RunPod pathway generation timed out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /sdgs/skills:
     get:
       operationId: listSdgSkillMappings

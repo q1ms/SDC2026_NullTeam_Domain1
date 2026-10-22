@@ -64,7 +64,7 @@ export function PathwayPage({
     return (
       <div className="page-content">
         <div className="form-errors" role="alert" data-testid="status-roles-error">
-          <p>Could not generate your recommendations. Check the API server and try again.</p>
+          <p>Could not generate your recommendations. Check the API or RunPod configuration and try again.</p>
           <button className="button-quiet" onClick={() => pathwayMutation.mutate({ data: profile })}>Try again</button>
         </div>
       </div>
