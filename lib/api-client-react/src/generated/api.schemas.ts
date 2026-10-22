@@ -55,6 +55,28 @@ export interface JobRole {
   steps: string[];
 }
 
+export interface PathwayRecommendation {
+  id: string;
+  title: string;
+  description: string;
+  salary: string;
+  timeToReady: string;
+  skills: string[];
+  steps: string[];
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  match: number;
+}
+
+export interface GeneratedPathway {
+  /** @maxItems 3 */
+  recommendations: PathwayRecommendation[];
+  /** @minimum 0 */
+  roleCount: number;
+}
+
 export interface SdgSkillMapping {
   /**
      * @minimum 1

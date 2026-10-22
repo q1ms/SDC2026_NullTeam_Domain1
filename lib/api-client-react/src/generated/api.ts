@@ -28,6 +28,7 @@ import type {
   ApiError,
   CareerProfile,
   CareerProfileInput,
+  GeneratedPathway,
   HealthStatus,
   JobRole,
   LiveTrendsResponse,
@@ -453,6 +454,94 @@ export function useListJobRoles<TData = Awaited<ReturnType<typeof listJobRoles>>
 
 
 
+
+export const getGeneratePathwayUrl = () => {
+
+
+
+
+  return `/api/generate-pathway`
+}
+
+/**
+ * @summary Recommend career pathways from a user's profile
+ */
+export const generatePathway = async (careerProfileInput: CareerProfileInput, options?: Parameters<typeof customFetch>[1]): Promise<GeneratedPathway> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<GeneratedPathway>(getGeneratePathwayUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(careerProfileInput)
+  }
+);}
+
+
+
+
+
+export const getGeneratePathwayMutationKey = () => ['generatePathway'] as const;
+
+export const getGeneratePathwayMutationOptions = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generatePathway>>, TError,GeneratePathwayMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof generatePathway>>, TError,GeneratePathwayMutationVariables, TContext> => {
+
+const mutationKey = getGeneratePathwayMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof generatePathway>>, GeneratePathwayMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  generatePathway(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GeneratePathwayMutationResult = NonNullable<Awaited<ReturnType<typeof generatePathway>>>
+    export type GeneratePathwayMutationBody = BodyType<CareerProfileInput>
+    export type GeneratePathwayMutationError = ErrorType<ApiError>
+    export type GeneratePathwayMutationVariables = {data: BodyType<CareerProfileInput>}
+
+    /**
+ * @summary Recommend career pathways from a user's profile
+ */
+export const useGeneratePathway = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof generatePathway>>, TError,GeneratePathwayMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof generatePathway>>,
+        TError,
+        GeneratePathwayMutationVariables,
+        TContext
+      > => {
+      return useMutation(getGeneratePathwayMutationOptions(options), queryClient);
+    }
 
 export const getListSdgSkillMappingsUrl = () => {
 

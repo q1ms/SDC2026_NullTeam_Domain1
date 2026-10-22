@@ -78,6 +78,30 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/JobRole"
+  /generate-pathway:
+    post:
+      operationId: generatePathway
+      tags: [career]
+      summary: Recommend career pathways from a user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CareerProfileInput"
+      responses:
+        "200":
+          description: Ranked role recommendations for the supplied profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratedPathway"
+        "400":
+          description: Invalid career profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
   /sdgs/skills:
     get:
       operationId: listSdgSkillMappings
@@ -223,6 +247,54 @@ components:
         - timeToReady
         - skills
         - steps
+    PathwayRecommendation:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        salary:
+          type: string
+        timeToReady:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        steps:
+          type: array
+          items:
+            type: string
+        match:
+          type: integer
+          minimum: 0
+          maximum: 100
+      required:
+        - id
+        - title
+        - description
+        - salary
+        - timeToReady
+        - skills
+        - steps
+        - match
+    GeneratedPathway:
+      type: object
+      properties:
+        recommendations:
+          type: array
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PathwayRecommendation"
+        roleCount:
+          type: integer
+          minimum: 0
+      required:
+        - recommendations
+        - roleCount
     SdgSkillMapping:
       type: object
       properties:

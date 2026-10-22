@@ -91,6 +91,53 @@ export const ListJobRolesResponse = zod.array(ListJobRolesResponseItem)
 
 
 /**
+ * @summary Recommend career pathways from a user's profile
+ */
+
+export const generatePathwayBodyYearsExperienceMin = 0;
+export const generatePathwayBodyYearsExperienceMax = 60;
+
+
+
+
+export const generatePathwayBodyWeeklyHoursMax = 80;
+
+
+
+export const GeneratePathwayBody = zod.object({
+  "currentRole": zod.string().min(1),
+  "yearsExperience": zod.number().int().min(generatePathwayBodyYearsExperienceMin).max(generatePathwayBodyYearsExperienceMax),
+  "industry": zod.string().min(1),
+  "skills": zod.array(zod.string()).min(1),
+  "interests": zod.array(zod.string()).min(1),
+  "weeklyHours": zod.number().int().min(1).max(generatePathwayBodyWeeklyHoursMax)
+})
+
+export const generatePathwayResponseRecommendationsItemMatchMin = 0;
+export const generatePathwayResponseRecommendationsItemMatchMax = 100;
+
+export const generatePathwayResponseRecommendationsMax = 3;
+
+export const generatePathwayResponseRoleCountMin = 0;
+
+
+
+export const GeneratePathwayResponse = zod.object({
+  "recommendations": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "salary": zod.string(),
+  "timeToReady": zod.string(),
+  "skills": zod.array(zod.string()),
+  "steps": zod.array(zod.string()),
+  "match": zod.number().int().min(generatePathwayResponseRecommendationsItemMatchMin).max(generatePathwayResponseRecommendationsItemMatchMax)
+})).max(generatePathwayResponseRecommendationsMax),
+  "roleCount": zod.number().int().min(generatePathwayResponseRoleCountMin)
+})
+
+
+/**
  * @summary List UN SDG skill mappings
  */
 export const listSdgSkillMappingsResponseNumberMax = 17;

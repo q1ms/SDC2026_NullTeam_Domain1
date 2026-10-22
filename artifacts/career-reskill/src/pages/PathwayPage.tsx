@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { Link } from "wouter";
 import {
-  getListJobRolesQueryKey,
   getListSdgSkillMappingsQueryKey,
-  useListJobRoles,
+  useGeneratePathway,
   useListSdgSkillMappings,
+  type PathwayRecommendation,
 } from "@workspace/api-client-react";
 import {
   ArrowRight,
@@ -17,8 +17,7 @@ import {
   Sparkles,
   Wallet,
 } from "lucide-react";
-import type { CareerProfile, RoleRecommendation } from "../data/catalog";
-import { getRecommendations } from "../data/catalog";
+import type { CareerProfile } from "../data/catalog";
 
 export function PathwayPage({
   profile,
@@ -27,16 +26,16 @@ export function PathwayPage({
   profile: CareerProfile | null;
   profileLoading: boolean;
 }) {
-  const rolesQuery = useListJobRoles({
-    query: { queryKey: getListJobRolesQueryKey(), retry: false },
-  });
+  const pathwayMutation = useGeneratePathway();
   const sdgsQuery = useListSdgSkillMappings({
     query: { queryKey: getListSdgSkillMappingsQueryKey(), retry: false },
   });
-  const recommendations = useMemo(
-    () => (profile && rolesQuery.data ? getRecommendations(profile, rolesQuery.data) : []),
-    [profile, rolesQuery.data],
-  );
+
+  useEffect(() => {
+    if (profile) {
+      pathwayMutation.mutate({ data: profile });
+    }
+  }, [profile, pathwayMutation.mutate]);
 
   if (profileLoading) {
     return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
@@ -57,14 +56,22 @@ export function PathwayPage({
     );
   }
 
-  if (rolesQuery.isLoading) {
-    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-roles-loading">Loading role recommendations…</div></div>;
+  if (pathwayMutation.isIdle || pathwayMutation.isPending) {
+    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-roles-loading">Generating role recommendations…</div></div>;
   }
 
-  if (rolesQuery.isError || !rolesQuery.data) {
-    return <div className="page-content"><div className="form-errors" role="alert" data-testid="status-roles-error">Could not load job roles from the career database. Check the API server and refresh this page.</div></div>;
+  if (pathwayMutation.isError || !pathwayMutation.data) {
+    return (
+      <div className="page-content">
+        <div className="form-errors" role="alert" data-testid="status-roles-error">
+          <p>Could not generate your recommendations. Check the API server and try again.</p>
+          <button className="button-quiet" onClick={() => pathwayMutation.mutate({ data: profile })}>Try again</button>
+        </div>
+      </div>
+    );
   }
 
+  const recommendations = pathwayMutation.data.recommendations;
   const top = recommendations[0];
   const averageMatch = recommendations.length
     ? Math.round(recommendations.reduce((sum, role) => sum + role.match, 0) / recommendations.length)
@@ -100,7 +107,7 @@ export function PathwayPage({
 
       <div className="section-header fade-in delay-2">
         <div><h2>Directions to explore</h2><p>Ranked by alignment with your skills and stated interests</p></div>
-        <span className="field-hint" data-testid="text-role-source">{rolesQuery.data.length} roles in SQLite</span>
+        <span className="field-hint" data-testid="text-role-source">{pathwayMutation.data.roleCount} roles in SQLite</span>
       </div>
       {recommendations.length ? (
         <div className="role-grid">
@@ -146,7 +153,7 @@ export function PathwayPage({
   );
 }
 
-function RoleCard({ role, index, knownSkills }: { role: RoleRecommendation; index: number; knownSkills: string[] }) {
+function RoleCard({ role, index, knownSkills }: { role: PathwayRecommendation; index: number; knownSkills: string[] }) {
   const normalize = (text: string) => text.toLowerCase();
   const isKnown = (skill: string) => knownSkills.some((known) => normalize(known).includes(normalize(skill)) || normalize(skill).includes(normalize(known)) && known.length > 3);
   const knownCount = role.skills.filter(isKnown).length;

@@ -2,6 +2,8 @@ import { Router, type IRouter } from "express";
 import {
   GetCareerProfileParams,
   GetCareerProfileResponse,
+  GeneratePathwayBody,
+  GeneratePathwayResponse,
   ListJobRolesResponse,
   ListSdgSkillMappingsResponse,
   SaveCareerProfileBody,
@@ -14,6 +16,7 @@ import {
   listSdgSkillMappings,
   saveCareerProfile,
 } from "../lib/career-db";
+import { generatePathway } from "../lib/career-pathway";
 
 const router: IRouter = Router();
 
@@ -43,6 +46,17 @@ router.put("/profiles/:profileId", (req, res): void => {
 
   const profile = saveCareerProfile(params.data.profileId, body.data);
   res.json(SaveCareerProfileResponse.parse(profile));
+});
+
+router.post("/generate-pathway", (req, res): void => {
+  const body = GeneratePathwayBody.safeParse(req.body);
+  if (!body.success) {
+    req.log.warn({ errors: body.error.message }, "Invalid career profile for pathway generation");
+    res.status(400).json({ error: body.error.message });
+    return;
+  }
+
+  res.json(GeneratePathwayResponse.parse(generatePathway(body.data)));
 });
 
 router.get("/roles", (_req, res): void => {
