@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -66,18 +66,41 @@ export function IntakePage({
   const [errors, setErrors] = useState<string[]>([]);
   const [interestSearch, setInterestSearch] = useState('');
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
+  const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [pathwayError, setPathwayError] = useState<string | null>(null);
   const submissionLock = useRef(false);
+  const interestSuggestionsRef = useRef<HTMLDivElement>(null);
   const isSubmitting = isSaving || isFormSubmitting;
   const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
+  const interestSuggestionsKey = interestSuggestions.join('\u0000');
   const isInterestDropdownOpen = Boolean(interestSearch.trim());
   const activeSuggestionIndex = interestSuggestions.length
     ? activeInterestIndex % interestSuggestions.length
     : -1;
+
+  useLayoutEffect(() => {
+    if (!isInterestDropdownOpen) {
+      setInterestDropdownHeight(0);
+      return;
+    }
+
+    const dropdown = interestSuggestionsRef.current;
+    if (!dropdown) return;
+
+    const updateHeight = () => {
+      const nextHeight = Math.ceil(dropdown.getBoundingClientRect().height);
+      setInterestDropdownHeight((current) => current === nextHeight ? current : nextHeight);
+    };
+
+    updateHeight();
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateHeight);
+    observer?.observe(dropdown);
+    return () => observer?.disconnect();
+  }, [isInterestDropdownOpen, interestSuggestionsKey]);
 
   useEffect(() => {
     if (profile) {
@@ -226,68 +249,74 @@ export function IntakePage({
           <h2 className="form-section-title" style={{ marginTop: 23 }}>What draws your attention?</h2>
           <div className="field" data-testid="group-interest-options">
             <label>Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
-            <div className="interest-search">
-              <Search size={15} aria-hidden="true" />
-              <input
-                id="interest-search"
-                className="input-control interest-search-input"
-                type="text"
-                value={interestSearch}
-                onChange={(event) => {
-                  setInterestSearch(event.target.value);
-                  setActiveInterestIndex(0);
-                }}
-                onKeyDown={handleInterestSearchKeyDown}
-                placeholder="Search areas of interest (e.g., tech, health, AI)..."
-                aria-label="Search areas of interest"
-                role="combobox"
-                aria-autocomplete="list"
-                aria-expanded={isInterestDropdownOpen}
-                aria-controls="interest-suggestions"
-                aria-activedescendant={activeSuggestionIndex >= 0 ? `interest-suggestion-${activeSuggestionIndex}` : undefined}
-                data-testid="input-interest-search"
-              />
-              {interestSearch && (
-                <button
-                  type="button"
-                  className="interest-search-clear"
-                  onClick={() => setInterestSearch('')}
-                  aria-label="Clear interest search"
-                  data-testid="button-clear-interest-search"
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
-              )}
-              {isInterestDropdownOpen && (
-                <div
-                  id="interest-suggestions"
-                  className="interest-suggestions absolute left-0 right-0 top-full z-50"
-                  role="listbox"
-                  aria-label="Matching areas of interest"
-                  data-testid="list-interest-suggestions"
-                >
-                  {interestSuggestions.length ? interestSuggestions.map((interest, index) => (
-                    <div
-                      id={`interest-suggestion-${index}`}
-                      key={interest}
-                      className={`interest-suggestion ${index === activeSuggestionIndex ? 'active' : ''}`}
-                      role="option"
-                      aria-selected={index === activeSuggestionIndex}
-                      onMouseDown={(event) => event.preventDefault()}
-                      onMouseEnter={() => setActiveInterestIndex(index)}
-                      onClick={() => addInterest(interest)}
-                      data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
-                    >
-                      <span>{interest}</span>
-                      <span className="interest-suggestion-hint">Add</span>
-                    </div>
-                  )) : (
-                    <p className="interest-no-results" role="status" data-testid="text-no-interest-results">
-                      No matching areas found.
-                    </p>
-                  )}
-                </div>
-              )}
+            <div
+              className="interest-search"
+              style={isInterestDropdownOpen ? { paddingBottom: `${interestDropdownHeight + 8}px` } : undefined}
+            >
+              <div className="interest-search-anchor">
+                <Search size={15} aria-hidden="true" />
+                <input
+                  id="interest-search"
+                  className="input-control interest-search-input"
+                  type="text"
+                  value={interestSearch}
+                  onChange={(event) => {
+                    setInterestSearch(event.target.value);
+                    setActiveInterestIndex(0);
+                  }}
+                  onKeyDown={handleInterestSearchKeyDown}
+                  placeholder="Search areas of interest (e.g., tech, health, AI)..."
+                  aria-label="Search areas of interest"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded={isInterestDropdownOpen}
+                  aria-controls="interest-suggestions"
+                  aria-activedescendant={activeSuggestionIndex >= 0 ? `interest-suggestion-${activeSuggestionIndex}` : undefined}
+                  data-testid="input-interest-search"
+                />
+                {interestSearch && (
+                  <button
+                    type="button"
+                    className="interest-search-clear"
+                    onClick={() => setInterestSearch('')}
+                    aria-label="Clear interest search"
+                    data-testid="button-clear-interest-search"
+                  >
+                    <X size={14} aria-hidden="true" />
+                  </button>
+                )}
+                {isInterestDropdownOpen && (
+                  <div
+                    ref={interestSuggestionsRef}
+                    id="interest-suggestions"
+                    className="interest-suggestions absolute left-0 right-0 top-full z-50"
+                    role="listbox"
+                    aria-label="Matching areas of interest"
+                    data-testid="list-interest-suggestions"
+                  >
+                    {interestSuggestions.length ? interestSuggestions.map((interest, index) => (
+                      <div
+                        id={`interest-suggestion-${index}`}
+                        key={interest}
+                        className={`interest-suggestion ${index === activeSuggestionIndex ? 'active' : ''}`}
+                        role="option"
+                        aria-selected={index === activeSuggestionIndex}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onMouseEnter={() => setActiveInterestIndex(index)}
+                        onClick={() => addInterest(interest)}
+                        data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
+                      >
+                        <span>{interest}</span>
+                        <span className="interest-suggestion-hint">Add</span>
+                      </div>
+                    )) : (
+                      <p className="interest-no-results" role="status" data-testid="text-no-interest-results">
+                        No matching areas found.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="interest-tag-list" role="group" aria-label="Selected areas of interest" data-testid="list-selected-interests">
               {form.interests.map((interest) => (
