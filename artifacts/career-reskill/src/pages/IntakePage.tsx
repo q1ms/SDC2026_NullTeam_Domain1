@@ -1,14 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Check, Clock3, UserRound } from 'lucide-react';
+import { ArrowRight, Check, Clock3, LoaderCircle, UserRound } from 'lucide-react';
 import { INTEREST_OPTIONS, type CareerProfile } from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
+const SUBMISSION_MESSAGES = [
+  'Saving profile…',
+  'Analyzing your skills…',
+  'Generating AI career pathways…',
+];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -61,9 +66,11 @@ export function IntakePage({
   const [errors, setErrors] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
-  const [isGeneratingPathway, setIsGeneratingPathway] = useState(false);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [pathwayError, setPathwayError] = useState<string | null>(null);
-  const isSubmitting = isSaving || isGeneratingPathway;
+  const submissionLock = useRef(false);
+  const isSubmitting = isSaving || isFormSubmitting;
 
   useEffect(() => {
     if (profile) {
@@ -72,11 +79,19 @@ export function IntakePage({
     }
   }, [profile]);
 
+  useEffect(() => {
+    if (!isFormSubmitting) return;
+    const timer = window.setInterval(() => {
+      setLoadingMessageIndex((current) => (current + 1) % SUBMISSION_MESSAGES.length);
+    }, 3500);
+    return () => window.clearInterval(timer);
+  }, [isFormSubmitting]);
+
   const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => setForm((current) => ({ ...current, [key]: value }));
   const toggleInterest = (interest: string) => update('interests', form.interests.includes(interest) ? form.interests.filter((item) => item !== interest) : [...form.interests, interest]);
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (submissionLock.current || isSubmitting) return;
     const issues = [];
     if (!form.currentRole.trim()) issues.push('Add your current role.');
     if (!form.industry.trim()) issues.push('Choose or enter your industry.');
@@ -88,45 +103,50 @@ export function IntakePage({
     setSaved(false);
     setSaveFailed(false);
     setPathwayError(null);
+    submissionLock.current = true;
+    setLoadingMessageIndex(0);
+    setIsFormSubmitting(true);
 
     try {
-      await onSave(cleaned);
-      setForm(cleaned);
-    } catch {
-      setSaveFailed(true);
-      return;
-    }
-
-    setIsGeneratingPathway(true);
-    try {
-      const response = await fetch('/api/generate-pathway', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify({ profileId, profile: cleaned }),
-      });
-      const result: unknown = await response.json().catch(() => null);
-      if (!response.ok) {
-        const message = isRecord(result) && typeof result.error === 'string'
-          ? result.error
-          : `Pathway generation failed (HTTP ${response.status}).`;
-        throw new Error(message);
-      }
-      if (!isGeneratedPathway(result, profileId)) {
-        throw new Error('The service did not return three complete, saved career paths.');
+      try {
+        await onSave(cleaned);
+        setForm(cleaned);
+      } catch {
+        setSaveFailed(true);
+        return;
       }
 
-      const generated = result;
-      queryClient.setQueryData(getGetGeneratedPathwayQueryKey(profileId), generated);
-      setSaved(true);
-      navigate('/pathway');
-    } catch (error) {
-      setPathwayError(error instanceof Error ? error.message : 'Please try again.');
+      try {
+        const response = await fetch('/api/generate-pathway', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ profileId, profile: cleaned }),
+        });
+        const result: unknown = await response.json().catch(() => null);
+        if (!response.ok) {
+          const message = isRecord(result) && typeof result.error === 'string'
+            ? result.error
+            : `Pathway generation failed (HTTP ${response.status}).`;
+          throw new Error(message);
+        }
+        if (!isGeneratedPathway(result, profileId)) {
+          throw new Error('The service did not return three complete, saved career paths.');
+        }
+
+        const generated = result;
+        queryClient.setQueryData(getGetGeneratedPathwayQueryKey(profileId), generated);
+        setSaved(true);
+        navigate('/pathway');
+      } catch (error) {
+        setPathwayError(error instanceof Error ? error.message : 'Please try again.');
+      }
     } finally {
-      setIsGeneratingPathway(false);
+      submissionLock.current = false;
+      setIsFormSubmitting(false);
     }
   };
 
@@ -179,15 +199,15 @@ export function IntakePage({
           </div>
           {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors">{errors.map((error) => <div key={error}>{error}</div>)}</div>}
           {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">Your profile could not be saved. Check the API server and try again.</div>}
-          {isSaving && <div className="form-success" role="status" data-testid="status-profile-saving">Saving your profile…</div>}
-          {isGeneratingPathway && <div className="form-success" role="status" data-testid="status-pathway-generating">Your profile is saved. Waiting for the AI-generated career paths…</div>}
+          {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{SUBMISSION_MESSAGES[loadingMessageIndex]}</div>}
           {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
           {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
           <div className="form-footer">
             <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
             <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
-              {isSaving ? 'Saving profile…' : isGeneratingPathway ? 'Generating pathways…' : profile ? 'Save changes' : 'Build my pathway'}
-              <ArrowRight size={15} />
+              {isSubmitting
+                ? <><LoaderCircle size={15} className="animate-spin" /> Please wait…</>
+                : <>{profile ? 'Save changes' : 'Build my pathway'}<ArrowRight size={15} /></>}
             </button>
           </div>
         </section>
