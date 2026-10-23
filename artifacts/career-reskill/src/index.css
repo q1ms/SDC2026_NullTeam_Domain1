@@ -218,6 +218,11 @@ html { @apply scroll-smooth; }
 .interest-choice { @apply inline-flex items-center gap-[5px] rounded-full border border-[#dddacf] bg-[#faf9f3] px-[11px] py-2 text-[10px] text-[#64716b] transition-[background,color,border,transform] duration-150; }
 .interest-choice:hover { @apply -translate-y-px border-[#91b3a5]; }
 .interest-choice.selected { @apply border-[#bad4c4] bg-[#e5f0e8] text-[#2d6f63]; }
+.interest-search { @apply relative mb-2; }
+.interest-search > svg { @apply pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground; }
+.interest-search-input { @apply py-[9px] pl-9 pr-9 text-[11px]; }
+.interest-search-clear { @apply absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full p-1 text-muted-foreground transition-colors hover:text-foreground; }
+.interest-empty-message { @apply mt-2; }
 .form-errors { @apply mb-[13px] rounded-[7px] border border-[#e6c4b7] bg-[#faeee8] px-3 py-[10px] text-[11px] leading-relaxed text-[#97513c]; }
 .form-success { @apply mb-[13px] rounded-[7px] bg-[#e6f1e9] px-3 py-[10px] text-[11px] text-[#2d6f63]; }
 .api-error { @apply mt-3 mx-[30px] rounded-lg border border-[#e6c4b7] bg-[#faeee8] px-[14px] py-[11px] text-[11px] leading-relaxed text-[#97513c]; }

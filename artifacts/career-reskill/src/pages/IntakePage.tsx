@@ -5,8 +5,8 @@ import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Check, Clock3, LoaderCircle, UserRound } from 'lucide-react';
-import { INTEREST_OPTIONS, type CareerProfile } from '../data/catalog';
+import { ArrowRight, Check, Clock3, LoaderCircle, Search, UserRound, X } from 'lucide-react';
+import { filterInterestOptions, type CareerProfile } from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
 const SUBMISSION_MESSAGES = [
@@ -64,6 +64,7 @@ export function IntakePage({
   const [form, setForm] = useState<CareerProfile>(profile ?? EMPTY_PROFILE);
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
   const [errors, setErrors] = useState<string[]>([]);
+  const [interestSearch, setInterestSearch] = useState('');
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
@@ -71,6 +72,7 @@ export function IntakePage({
   const [pathwayError, setPathwayError] = useState<string | null>(null);
   const submissionLock = useRef(false);
   const isSubmitting = isSaving || isFormSubmitting;
+  const visibleInterestOptions = filterInterestOptions(interestSearch, form.interests);
 
   useEffect(() => {
     if (profile) {
@@ -189,12 +191,39 @@ export function IntakePage({
           <h2 className="form-section-title" style={{ marginTop: 23 }}>What draws your attention?</h2>
           <div className="field" data-testid="group-interest-options">
             <label>Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
+            <div className="interest-search">
+              <Search size={15} aria-hidden="true" />
+              <input
+                id="interest-search"
+                className="input-control interest-search-input"
+                type="text"
+                value={interestSearch}
+                onChange={(event) => setInterestSearch(event.target.value)}
+                placeholder="Search areas of interest (e.g., tech, health, AI)..."
+                aria-label="Search areas of interest"
+                data-testid="input-interest-search"
+              />
+              {interestSearch && (
+                <button
+                  type="button"
+                  className="interest-search-clear"
+                  onClick={() => setInterestSearch('')}
+                  aria-label="Clear interest search"
+                  data-testid="button-clear-interest-search"
+                >
+                  <X size={14} aria-hidden="true" />
+                </button>
+              )}
+            </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-              {INTEREST_OPTIONS.map((interest) => {
+              {visibleInterestOptions.map((interest) => {
                 const selected = form.interests.includes(interest);
                 return <button type="button" key={interest} onClick={() => toggleInterest(interest)} className={`interest-choice ${selected ? 'selected' : ''}`} aria-pressed={selected} data-testid={`button-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}>{selected && <Check size={12} />}{interest}</button>;
               })}
             </div>
+            {visibleInterestOptions.length === 0 && (
+              <p className="field-hint interest-empty-message" role="status" data-testid="text-no-interest-results">No areas match that search.</p>
+            )}
           </div>
           <div className="field" style={{ marginTop: 22 }}>
             <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>
