@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "2-YFYRRIy3qNneTwR8yRK"
+uri = "file://tmp/SDC2026_TeamName_Preliminary.pdf"
+type = "pdf"
+title = "SDC 2026 Preliminary Proposal — Northstar Career Companion"
+description = "Five-page proposal draft with all sections answered, cited SDG and workforce benchmarks, architecture diagram, and third-party component disclosures. Team and legal confirmations are clearly marked as pending."
+logical_id = "f87f3431-f163-4718-ba06-f2f2f019b0ad"
+content_hash = "sha256:f54c83f0e3416f09c7f8f12fb029ee66280cdf61c92f1685d2f664f74157f313"
+size = 142335
+mtime_ms = 1792782079401
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:b6aabf82-4b67-43a4-ae4e-73d818b77db0/f87f3431-f163-4718-ba06-f2f2f019b0ad/41b6e41f-fd12-413b-98a0-08e650ce1aca"
+storage_version_token = "1792782119433103"
+content_type = "application/pdf"
