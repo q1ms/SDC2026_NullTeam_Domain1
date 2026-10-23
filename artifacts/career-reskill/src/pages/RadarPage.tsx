@@ -5,7 +5,7 @@ import { useGetLiveTrends } from '@workspace/api-client-react';
 import type { CareerProfile } from '../data/catalog';
 import { CoverageList } from '../components/CoverageList';
 
-const COLORS = ['#36796e', '#578f7f', '#729f89', '#8cb197', '#a9c1a0', '#c7c798', '#d8c795'];
+const COLORS = ['#72c7b5', '#87bfae', '#9bc9b2', '#a5c7bd', '#b1cab0', '#ccce9c', '#dacb94'];
 
 export function RadarPage({ profile }: { profile: CareerProfile | null }) {
   const trendsQuery = useGetLiveTrends({
@@ -71,10 +71,10 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
             <div className="chart-wrap" data-testid="chart-skill-trends">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trends} layout="vertical" margin={{ top: 4, right: 22, bottom: 0, left: 12 }} barCategoryGap={11}>
-                  <CartesianGrid horizontal={false} stroke="#e9e5d9" />
-                  <XAxis type="number" domain={[0, 'dataMax + 1']} allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: '#758078', fontSize: 10 }} />
-                  <YAxis type="category" dataKey="topic" width={190} tickLine={false} axisLine={false} tick={{ fill: '#344643', fontSize: 10 }} />
-                  <Tooltip cursor={{ fill: 'rgba(59,112,98,.06)' }} formatter={(value) => [`${value} recent stories`, 'Coverage']} />
+                  <CartesianGrid horizontal={false} stroke="hsl(var(--border))" />
+                  <XAxis type="number" domain={[0, 'dataMax + 1']} allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
+                  <YAxis type="category" dataKey="topic" width={190} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--foreground))', fontSize: 10 }} />
+                  <Tooltip cursor={{ fill: 'rgba(114,199,181,.08)' }} contentStyle={{ background: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', borderRadius: 8 }} itemStyle={{ color: 'hsl(var(--primary))' }} formatter={(value) => [`${value} recent stories`, 'Coverage']} />
                   <Bar dataKey="mentions" radius={[0, 4, 4, 0]} maxBarSize={17} animationDuration={850}>
                     {trends.map((trend, index) => <Cell key={trend.topic} fill={COLORS[index % COLORS.length]} />)}
                   </Bar>
