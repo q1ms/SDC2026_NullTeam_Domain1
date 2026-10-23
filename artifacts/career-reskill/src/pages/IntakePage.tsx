@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Check, Clock3, LoaderCircle, Search, UserRound, X } from 'lucide-react';
-import { filterInterestOptions, type CareerProfile } from '../data/catalog';
+import { ArrowRight, Clock3, LoaderCircle, Search, UserRound, X } from 'lucide-react';
+import { getInterestSuggestions, type CareerProfile } from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
 const SUBMISSION_MESSAGES = [
@@ -65,6 +65,7 @@ export function IntakePage({
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
   const [errors, setErrors] = useState<string[]>([]);
   const [interestSearch, setInterestSearch] = useState('');
+  const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
@@ -72,7 +73,11 @@ export function IntakePage({
   const [pathwayError, setPathwayError] = useState<string | null>(null);
   const submissionLock = useRef(false);
   const isSubmitting = isSaving || isFormSubmitting;
-  const visibleInterestOptions = filterInterestOptions(interestSearch, form.interests);
+  const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
+  const isInterestDropdownOpen = Boolean(interestSearch.trim());
+  const activeSuggestionIndex = interestSuggestions.length
+    ? activeInterestIndex % interestSuggestions.length
+    : -1;
 
   useEffect(() => {
     if (profile) {
@@ -90,7 +95,37 @@ export function IntakePage({
   }, [isFormSubmitting]);
 
   const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => setForm((current) => ({ ...current, [key]: value }));
-  const toggleInterest = (interest: string) => update('interests', form.interests.includes(interest) ? form.interests.filter((item) => item !== interest) : [...form.interests, interest]);
+  const toggleInterest = (interest: string) => setForm((current) => ({
+    ...current,
+    interests: current.interests.includes(interest)
+      ? current.interests.filter((item) => item !== interest)
+      : [...current.interests, interest],
+  }));
+  const addInterest = (interest: string) => {
+    setForm((current) => current.interests.includes(interest)
+      ? current
+      : { ...current, interests: [...current.interests, interest] });
+    setInterestSearch('');
+    setActiveInterestIndex(0);
+  };
+  const handleInterestSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Escape') {
+      setInterestSearch('');
+      setActiveInterestIndex(0);
+      return;
+    }
+    if (!interestSuggestions.length) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setActiveInterestIndex((current) => (current + 1) % interestSuggestions.length);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setActiveInterestIndex((current) => (current - 1 + interestSuggestions.length) % interestSuggestions.length);
+    } else if (event.key === 'Enter' && isInterestDropdownOpen) {
+      event.preventDefault();
+      addInterest(interestSuggestions[activeSuggestionIndex]);
+    }
+  };
   const submit = async () => {
     if (submissionLock.current || isSubmitting) return;
     const issues = [];
@@ -198,9 +233,18 @@ export function IntakePage({
                 className="input-control interest-search-input"
                 type="text"
                 value={interestSearch}
-                onChange={(event) => setInterestSearch(event.target.value)}
+                onChange={(event) => {
+                  setInterestSearch(event.target.value);
+                  setActiveInterestIndex(0);
+                }}
+                onKeyDown={handleInterestSearchKeyDown}
                 placeholder="Search areas of interest (e.g., tech, health, AI)..."
                 aria-label="Search areas of interest"
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={isInterestDropdownOpen}
+                aria-controls="interest-suggestions"
+                aria-activedescendant={activeSuggestionIndex >= 0 ? `interest-suggestion-${activeSuggestionIndex}` : undefined}
                 data-testid="input-interest-search"
               />
               {interestSearch && (
@@ -214,16 +258,52 @@ export function IntakePage({
                   <X size={14} aria-hidden="true" />
                 </button>
               )}
+              {isInterestDropdownOpen && (
+                <div
+                  id="interest-suggestions"
+                  className="interest-suggestions"
+                  role="listbox"
+                  aria-label="Matching areas of interest"
+                  data-testid="list-interest-suggestions"
+                >
+                  {interestSuggestions.length ? interestSuggestions.map((interest, index) => (
+                    <div
+                      id={`interest-suggestion-${index}`}
+                      key={interest}
+                      className={`interest-suggestion ${index === activeSuggestionIndex ? 'active' : ''}`}
+                      role="option"
+                      aria-selected={index === activeSuggestionIndex}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onMouseEnter={() => setActiveInterestIndex(index)}
+                      onClick={() => addInterest(interest)}
+                      data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
+                    >
+                      <span>{interest}</span>
+                      <span className="interest-suggestion-hint">Add</span>
+                    </div>
+                  )) : (
+                    <p className="interest-no-results" role="status" data-testid="text-no-interest-results">
+                      No matching areas found.
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
-              {visibleInterestOptions.map((interest) => {
-                const selected = form.interests.includes(interest);
-                return <button type="button" key={interest} onClick={() => toggleInterest(interest)} className={`interest-choice ${selected ? 'selected' : ''}`} aria-pressed={selected} data-testid={`button-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}>{selected && <Check size={12} />}{interest}</button>;
-              })}
+            <div className="interest-tag-list" role="group" aria-label="Selected areas of interest" data-testid="list-selected-interests">
+              {form.interests.map((interest) => (
+                <button
+                  type="button"
+                  key={interest}
+                  className="interest-tag"
+                  onClick={() => toggleInterest(interest)}
+                  aria-label={`Remove ${interest}`}
+                  data-testid={`button-remove-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
+                >
+                  <span>{interest}</span>
+                  <X size={13} aria-hidden="true" />
+                </button>
+              ))}
             </div>
-            {visibleInterestOptions.length === 0 && (
-              <p className="field-hint interest-empty-message" role="status" data-testid="text-no-interest-results">No areas match that search.</p>
-            )}
           </div>
           <div className="field" style={{ marginTop: 22 }}>
             <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>

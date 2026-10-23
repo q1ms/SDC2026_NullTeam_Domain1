@@ -39,13 +39,13 @@ function normalizeInterestSearch(value: string): string {
     .trim();
 }
 
-export function filterInterestOptions(query: string, selectedInterests: readonly string[] = []): string[] {
+export function getInterestSuggestions(query: string, selectedInterests: readonly string[] = []): string[] {
   const normalizedQuery = normalizeInterestSearch(query);
-  if (!normalizedQuery) return [...INTEREST_OPTIONS];
+  if (!normalizedQuery) return [];
 
   const selected = new Set(selectedInterests);
   return INTEREST_OPTIONS.filter((interest) => {
-    if (selected.has(interest)) return true;
+    if (selected.has(interest)) return false;
 
     return [interest, ...(INTEREST_SEARCH_TERMS[interest] ?? [])].some((term) => {
       const normalizedTerm = normalizeInterestSearch(term);

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { filterInterestOptions, INTEREST_OPTIONS } from "../src/data/catalog.ts";
+import { getInterestSuggestions, INTEREST_OPTIONS } from "../src/data/catalog.ts";
 
 test("includes all requested career interest options without duplicates", () => {
   const requested = [
@@ -19,18 +19,18 @@ test("includes all requested career interest options without duplicates", () => 
 });
 
 test("matches related areas for AI, technology, and health searches", () => {
-  const technologyMatches = filterInterestOptions("tech");
+  const technologyMatches = getInterestSuggestions("tech");
   assert.ok(technologyMatches.includes("AI & automation"));
   assert.ok(technologyMatches.includes("Cybersecurity"));
-  assert.ok(filterInterestOptions("ai").includes("AI Ethics & Policy"));
-  assert.ok(filterInterestOptions("health").includes("Healthcare & MedTech"));
+  assert.ok(getInterestSuggestions("ai").includes("AI Ethics & Policy"));
+  assert.ok(getInterestSuggestions("health").includes("Healthcare & MedTech"));
 });
 
-test("keeps selected areas visible when they do not match the active search", () => {
-  const visible = filterInterestOptions("health", ["Cybersecurity", "Creative & Design"]);
+test("only suggests matches and excludes areas that are already selected", () => {
+  const suggestions = getInterestSuggestions("health", ["Cybersecurity", "Creative & Design"]);
 
-  assert.ok(visible.includes("Healthcare & MedTech"));
-  assert.ok(visible.includes("Cybersecurity"));
-  assert.ok(visible.includes("Creative & Design"));
-  assert.equal(filterInterestOptions("", []).length, INTEREST_OPTIONS.length);
+  assert.ok(suggestions.includes("Healthcare & MedTech"));
+  assert.ok(!suggestions.includes("Cybersecurity"));
+  assert.ok(!suggestions.includes("Creative & Design"));
+  assert.deepEqual(getInterestSuggestions("", []), []);
 });
