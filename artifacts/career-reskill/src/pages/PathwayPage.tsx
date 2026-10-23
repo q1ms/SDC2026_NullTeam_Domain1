@@ -15,6 +15,7 @@ import {
 import type { CareerProfile } from "../data/catalog";
 import { PersonalizedReading } from "../components/PersonalizedReading";
 import { ScenarioCard } from "../components/ScenarioCard";
+import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
 
 export function PathwayPage({
   profileId,
@@ -87,6 +88,10 @@ export function PathwayPage({
 
   const scenarios = pathwayQuery.data.scenarios;
   const top = scenarios[0];
+  const personalizedSdgNumbers = getPersonalizedSdgNumbers(scenarios.map((scenario) => scenario.unSdgTag));
+  const prioritizedSdgs = sdgsQuery.data
+    ? prioritizeSdgMappings(sdgsQuery.data, personalizedSdgNumbers)
+    : undefined;
 
   return (
     <div className="page-content">
@@ -132,22 +137,25 @@ export function PathwayPage({
 
       <div className="section-header sdg-header fade-in delay-2">
         <div>
-          <h2><Globe2 size={18} /> UN goals, practical skills</h2>
-          <p>Explore curated skill links for each goal; these are not official UN skills guidance.</p>
+          <h2><Globe2 size={18} /> {profile ? "Your Personal SDG Impact" : "UN goals, practical skills"}</h2>
+          <p>Highlighted goals connect to your recommended career pathways. Explore curated skill links for each goal; these are not official UN skills guidance.</p>
         </div>
         <span className="field-hint" data-testid="text-sdg-count">
-          {sdgsQuery.data ? `${sdgsQuery.data.length} goals mapped` : "Loading goal mappings"}
+        {sdgsQuery.data ? `${personalizedSdgNumbers.size} pathway matches · ${sdgsQuery.data.length} goals` : "Loading goal mappings"}
         </span>
       </div>
       {sdgsQuery.isLoading && <div className="section-card loading-card" role="status" data-testid="status-sdgs-loading">Loading SDG skill mappings…</div>}
       {sdgsQuery.isError && <div className="form-errors" role="alert" data-testid="status-sdgs-error">Could not load the SDG skill mappings.</div>}
-      {sdgsQuery.data && (
+      {prioritizedSdgs && (
         <div className="sdg-grid" data-testid="list-sdg-mappings">
-          {sdgsQuery.data.map((goal) => (
-            <details className="sdg-card" key={goal.number} data-testid={`details-sdg-${goal.number}`}>
+          {prioritizedSdgs.map((goal) => {
+            const isPersonalized = personalizedSdgNumbers.has(goal.number);
+            return (
+            <details className={`sdg-card ${isPersonalized ? "sdg-card-personalized" : "sdg-card-muted"}`} key={goal.number} data-personalized={isPersonalized} data-testid={`details-sdg-${goal.number}`}>
               <summary>
                 <span className="sdg-number">{String(goal.number).padStart(2, "0")}</span>
                 <span className="sdg-title">{goal.title}</span>
+                {isPersonalized && <span className="sdg-impact-badge">Pathway match</span>}
                 <span className="sdg-skill-count">{goal.skills.length} skills</span>
               </summary>
               <p>{goal.description}</p>
@@ -157,7 +165,7 @@ export function PathwayPage({
                 ))}
               </div>
             </details>
-          ))}
+          );})}
         </div>
       )}
 
