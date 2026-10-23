@@ -143,8 +143,14 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
     `Available role catalog JSON: ${JSON.stringify(roles)}`,
   ].join("\n");
 
+  console.log(
+    "Triggered generation route; RUNPOD_ENDPOINT_ID configured:",
+    Boolean(process.env.RUNPOD_ENDPOINT_ID?.trim()),
+  );
+
+  let runpodResponse: Response;
   try {
-    const runpodResponse = await fetch(
+    runpodResponse = await fetch(
       `https://api.runpod.ai/v2/${encodeURIComponent(endpointId)}/runsync`,
       {
         method: "POST",
@@ -161,7 +167,18 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
         signal: AbortSignal.timeout(85_000),
       },
     );
+  } catch (error) {
+    const errorType = error instanceof Error ? error.name : "unknown";
+    req.log.error({ errorType }, "Failed to send pathway generation request to RunPod");
+    if (error instanceof Error && error.name === "TimeoutError") {
+      res.status(504).json({ error: "Pathway generation timed out. Please try again." });
+      return;
+    }
+    res.status(502).json({ error: "Unable to send the pathway generation request." });
+    return;
+  }
 
+  try {
     if (!runpodResponse.ok) {
       req.log.error({ upstreamStatus: runpodResponse.status }, "RunPod pathway request failed");
       res.status(502).json({ error: "The pathway service could not generate recommendations." });
@@ -187,12 +204,6 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
     const saved = saveGeneratedPathway(body.data.profileId, candidate.scenarios);
     res.json(GeneratePathwayResponse.parse(saved));
   } catch (error) {
-    if (error instanceof Error && error.name === "TimeoutError") {
-      req.log.warn("RunPod pathway request timed out");
-      res.status(504).json({ error: "Pathway generation timed out. Please try again." });
-      return;
-    }
-
     req.log.error(
       { errorType: error instanceof Error ? error.name : "unknown" },
       "RunPod returned an invalid pathway response",
