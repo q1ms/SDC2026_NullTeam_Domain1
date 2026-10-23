@@ -1,1 +1,2 @@
 - [Stateful route identity](stateful-route-identity.md) — inline Wouter component callbacks can remount forms on mutation updates and erase in-flight submission locks.
+- [WebGL preview verification](webgl-preview-verification.md) — screenshot capture may lack WebGL; verify the static fallback without claiming animated shader verification.
