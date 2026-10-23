@@ -3,12 +3,43 @@ import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   getGetGeneratedPathwayQueryKey,
-  useGeneratePathway,
+  type GeneratedPathway,
 } from '@workspace/api-client-react';
 import { ArrowRight, Check, Clock3, UserRound } from 'lucide-react';
 import { INTEREST_OPTIONS, type CareerProfile } from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isGeneratedPathway(value: unknown, profileId: string): value is GeneratedPathway {
+  if (!isRecord(value) || value.profileId !== profileId || typeof value.generatedAt !== 'string') {
+    return false;
+  }
+  if (!Array.isArray(value.scenarios) || value.scenarios.length !== 3) return false;
+
+  return value.scenarios.every((scenario) => {
+    if (!isRecord(scenario)) return false;
+    return typeof scenario.roleTitle === 'string'
+      && typeof scenario.matchScore === 'number'
+      && Number.isInteger(scenario.matchScore)
+      && scenario.matchScore >= 1
+      && scenario.matchScore <= 100
+      && typeof scenario.explainableReason === 'string'
+      && Array.isArray(scenario.skillsGap)
+      && scenario.skillsGap.every((skill) => typeof skill === 'string')
+      && Array.isArray(scenario.reskillingPathway)
+      && scenario.reskillingPathway.length === 3
+      && scenario.reskillingPathway.every((step) => isRecord(step)
+        && typeof step.step === 'string'
+        && typeof step.estimatedHours === 'number'
+        && Number.isInteger(step.estimatedHours)
+        && step.estimatedHours > 0)
+      && typeof scenario.unSdgTag === 'string';
+  });
+}
 
 export function IntakePage({
   profileId,
@@ -25,14 +56,14 @@ export function IntakePage({
 }) {
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
-  const pathwayMutation = useGeneratePathway();
   const [form, setForm] = useState<CareerProfile>(profile ?? EMPTY_PROFILE);
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
   const [errors, setErrors] = useState<string[]>([]);
   const [saved, setSaved] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
-  const [pathwayFailed, setPathwayFailed] = useState(false);
-  const isSubmitting = isSaving || pathwayMutation.isPending;
+  const [isGeneratingPathway, setIsGeneratingPathway] = useState(false);
+  const [pathwayError, setPathwayError] = useState<string | null>(null);
+  const isSubmitting = isSaving || isGeneratingPathway;
 
   useEffect(() => {
     if (profile) {
@@ -45,6 +76,7 @@ export function IntakePage({
   const toggleInterest = (interest: string) => update('interests', form.interests.includes(interest) ? form.interests.filter((item) => item !== interest) : [...form.interests, interest]);
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) return;
     const issues = [];
     if (!form.currentRole.trim()) issues.push('Add your current role.');
     if (!form.industry.trim()) issues.push('Choose or enter your industry.');
@@ -55,7 +87,7 @@ export function IntakePage({
     setErrors([]);
     setSaved(false);
     setSaveFailed(false);
-    setPathwayFailed(false);
+    setPathwayError(null);
 
     try {
       await onSave(cleaned);
@@ -65,15 +97,36 @@ export function IntakePage({
       return;
     }
 
+    setIsGeneratingPathway(true);
     try {
-      const generated = await pathwayMutation.mutateAsync({
-        data: { profileId, profile: cleaned },
+      const response = await fetch('/api/generate-pathway', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({ profileId, profile: cleaned }),
       });
+      const result: unknown = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = isRecord(result) && typeof result.error === 'string'
+          ? result.error
+          : `Pathway generation failed (HTTP ${response.status}).`;
+        throw new Error(message);
+      }
+      if (!isGeneratedPathway(result, profileId)) {
+        throw new Error('The service did not return three complete, saved career paths.');
+      }
+
+      const generated = result;
       queryClient.setQueryData(getGetGeneratedPathwayQueryKey(profileId), generated);
       setSaved(true);
       navigate('/pathway');
-    } catch {
-      setPathwayFailed(true);
+    } catch (error) {
+      setPathwayError(error instanceof Error ? error.message : 'Please try again.');
+    } finally {
+      setIsGeneratingPathway(false);
     }
   };
 
@@ -126,13 +179,14 @@ export function IntakePage({
           </div>
           {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors">{errors.map((error) => <div key={error}>{error}</div>)}</div>}
           {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">Your profile could not be saved. Check the API server and try again.</div>}
-          {pathwayMutation.isPending && <div className="form-success" role="status" data-testid="status-pathway-generating">Your profile is saved. Generating three career paths…</div>}
-          {pathwayFailed && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed. Check the API or RunPod configuration and try again.</div>}
+          {isSaving && <div className="form-success" role="status" data-testid="status-profile-saving">Saving your profile…</div>}
+          {isGeneratingPathway && <div className="form-success" role="status" data-testid="status-pathway-generating">Your profile is saved. Waiting for the AI-generated career paths…</div>}
+          {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
           {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
           <div className="form-footer">
             <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
             <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
-              {isSaving ? 'Saving profile…' : pathwayMutation.isPending ? 'Generating pathways…' : profile ? 'Save changes' : 'Build my pathway'}
+              {isSaving ? 'Saving profile…' : isGeneratingPathway ? 'Generating pathways…' : profile ? 'Save changes' : 'Build my pathway'}
               <ArrowRight size={15} />
             </button>
           </div>
