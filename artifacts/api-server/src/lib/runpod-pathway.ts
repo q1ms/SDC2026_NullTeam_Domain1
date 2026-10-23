@@ -44,10 +44,10 @@ export function parseRunpodJson(
   const rawText = extractRunpodText(output);
   let parsed: unknown;
   try {
-    const start = rawText.indexOf("{");
-    const end = rawText.lastIndexOf("}");
+    const start = rawText.search(/[{\[]/);
+    const end = Math.max(rawText.lastIndexOf("}"), rawText.lastIndexOf("]"));
     if (start < 0 || end < start) {
-      throw new Error("Generated text did not contain a complete JSON object.");
+      throw new Error("Generated text did not contain a complete JSON object or array.");
     }
     const jsonString = rawText.substring(start, end + 1);
     parsed = JSON.parse(jsonString);
@@ -60,6 +60,9 @@ export function parseRunpodJson(
     throw error;
   }
 
+  if (Array.isArray(parsed)) {
+    parsed = { scenarios: parsed };
+  }
   if (!isRecord(parsed) || Object.keys(parsed).length !== 1 || !("scenarios" in parsed)) {
     throw new Error("Generated JSON must contain only a scenarios property.");
   }

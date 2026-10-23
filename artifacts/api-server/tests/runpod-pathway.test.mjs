@@ -18,6 +18,25 @@ test("extracts first-to-last braces from all supported text envelopes", () => {
   }
 });
 
+test("extracts top-level arrays and wraps all scenarios without losing nested data", () => {
+  const scenarios = [
+    { roleTitle: "AI Operations Specialist", skillsGap: ["Python", "Data analysis"] },
+    { roleTitle: "AI Designer", reskillingPathway: ["Learn AI tools", "Practice", "Build a portfolio"] },
+    { roleTitle: "AI Trainer", explainableReason: "Experience with {design} and [research]." },
+  ];
+  const arrayJson = JSON.stringify(scenarios);
+  for (const raw of [
+    arrayJson,
+    ` Scenarios: \n${arrayJson}\n`,
+    `Here are your paths:\n\`\`\`json\n${arrayJson}\n\`\`\`\nHope this helps.`,
+    "[]",
+  ]) {
+    for (const output of [raw, { text: [raw] }, [raw]]) {
+      assert.deepEqual(parseRunpodJson(output), { scenarios: raw === "[]" ? [] : scenarios });
+    }
+  }
+});
+
 test("parsing failure reports only the first 200 characters", () => {
   const raw = `No JSON was generated. ${"x".repeat(300)}`;
   let preview;
@@ -27,7 +46,7 @@ test("parsing failure reports only the first 200 characters", () => {
 });
 
 test("malformed and incomplete JSON fail rather than inventing scenarios", () => {
-  for (const raw of ['{"scenarios": [}', '{"scenarios": [', '{"other":[]}']) {
+  for (const raw of ['{"scenarios": [}', '{"scenarios": [', '{"other":[]}', '[{"roleTitle":"AI Trainer"}', '[{"roleTitle":}]']) {
     assert.throws(() => parseRunpodJson(raw));
   }
 });
