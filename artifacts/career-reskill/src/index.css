@@ -359,7 +359,7 @@ body { background:
 
 /* Glass sidebar */
 .sidebar {
-  background: linear-gradient(170deg, hsl(185 29% 26% / .9), hsl(193 30% 23% / .9));
+  background: linear-gradient(170deg, hsl(185 29% 22% / .92), hsl(193 30% 19% / .92));
   border-right: 1px solid hsl(174 32% 72% / .2);
   backdrop-filter: blur(22px) saturate(1.45);
   -webkit-backdrop-filter: blur(22px) saturate(1.45);
