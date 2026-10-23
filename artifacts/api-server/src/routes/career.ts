@@ -27,6 +27,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function firstText(value: unknown): string | null {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value) && typeof value[0] === "string") return value[0];
+  return null;
+}
+
 function unwrapQwenOutput(output: unknown): unknown {
   if (Array.isArray(output) && output.length === 1) {
     return unwrapQwenOutput(output[0]);
@@ -35,28 +41,44 @@ function unwrapQwenOutput(output: unknown): unknown {
   if ("scenarios" in output) return output;
 
   for (const key of ["text", "generated_text", "response", "content"]) {
-    if (typeof output[key] === "string") return output[key];
+    const text = firstText(output[key]);
+    if (text !== null) return text;
   }
   if (Array.isArray(output.choices) && isRecord(output.choices[0])) {
     const choice = output.choices[0];
-    if (typeof choice.text === "string") return choice.text;
-    if (isRecord(choice.message) && typeof choice.message.content === "string") {
-      return choice.message.content;
+    const choiceText = firstText(choice.text);
+    if (choiceText !== null) return choiceText;
+    if (isRecord(choice.message)) {
+      const messageText = firstText(choice.message.content);
+      if (messageText !== null) return messageText;
     }
   }
   if ("output" in output) return unwrapQwenOutput(output.output);
   return output;
 }
 
+function cleanJsonText(text: string): string {
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start < 0 || end < start) {
+    throw new Error("Qwen output did not contain a JSON object.");
+  }
+
+  const prefix = cleaned.slice(0, start).trim();
+  const suffix = cleaned.slice(end + 1).trim();
+  if ((prefix && prefix.toLowerCase() !== "json") || suffix) {
+    throw new Error("Qwen output contained text outside the JSON object.");
+  }
+  return cleaned.slice(start, end + 1);
+}
+
 function parseQwenJson(output: unknown): Record<string, unknown> {
   const unwrapped = unwrapQwenOutput(output);
   let parsed: unknown = unwrapped;
   if (typeof unwrapped === "string") {
-    const raw = unwrapped.trim();
-    if (!raw.startsWith("{") || !raw.endsWith("}") || raw.includes("```")) {
-      throw new Error("Qwen output was not a raw JSON object.");
-    }
-    parsed = JSON.parse(raw);
+    parsed = JSON.parse(cleanJsonText(unwrapped));
   }
 
   if (!isRecord(parsed)) {
@@ -162,6 +184,10 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
         body: JSON.stringify({
           input: {
             prompt,
+            sampling_params: {
+              max_tokens: 2500,
+              temperature: 0.7,
+            },
           },
         }),
         signal: AbortSignal.timeout(85_000),
@@ -185,17 +211,30 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
       return;
     }
 
-    const runpodResult: unknown = await runpodResponse.json();
-    if (!isRecord(runpodResult) || runpodResult.status !== "COMPLETED") {
+    const runpodData: unknown = await runpodResponse.json();
+    const output = isRecord(runpodData) ? runpodData.output : undefined;
+    const outputText = isRecord(output) ? output.text : undefined;
+    console.log("RunPod response envelope:", {
+      status: isRecord(runpodData) ? runpodData.status : "invalid-response",
+      outputType: Array.isArray(output) ? "array" : typeof output,
+      outputKeys: isRecord(output) ? Object.keys(output).slice(0, 20) : undefined,
+      textCount: Array.isArray(outputText) ? outputText.length : undefined,
+      textLength: typeof outputText === "string"
+        ? outputText.length
+        : Array.isArray(outputText) && typeof outputText[0] === "string"
+          ? outputText[0].length
+          : undefined,
+    });
+    if (!isRecord(runpodData) || runpodData.status !== "COMPLETED") {
       req.log.warn(
-        { upstreamStatus: isRecord(runpodResult) ? runpodResult.status : "invalid-response" },
+        { upstreamStatus: isRecord(runpodData) ? runpodData.status : "invalid-response" },
         "RunPod pathway job did not complete",
       );
       res.status(502).json({ error: "The pathway service did not complete the request." });
       return;
     }
 
-    const generatedOutput = parseQwenJson(runpodResult.output);
+    const generatedOutput = parseQwenJson(runpodData.output);
     const candidate = GeneratePathwayResponse.parse({
       profileId: body.data.profileId,
       scenarios: generatedOutput.scenarios,
