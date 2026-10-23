@@ -261,7 +261,7 @@ export function IntakePage({
               {isInterestDropdownOpen && (
                 <div
                   id="interest-suggestions"
-                  className="interest-suggestions"
+                  className="interest-suggestions absolute left-0 right-0 top-full z-50"
                   role="listbox"
                   aria-label="Matching areas of interest"
                   data-testid="list-interest-suggestions"
