@@ -1,53 +1,69 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { hasPathwayResourceLinks, isPathwayResourceUrl } from "../src/lib/pathway-resources.ts";
+import { normalizePathwayResourceLinks } from "../src/lib/pathway-resources.ts";
 
-const link = "https://www.coursera.org/learn/ai-for-everyone";
 const scenarios = () => Array.from({ length: 3 }, (_, scenarioIndex) => ({
+  roleTitle: `Role ${scenarioIndex + 1}`,
   reskillingPathway: Array.from({ length: 3 }, (_, stepIndex) => ({
     step: `Scenario ${scenarioIndex + 1}, step ${stepIndex + 1}`,
     estimatedHours: 5,
-    resourceLink: link,
   })),
 }));
 
-test("accepts HTTPS links from the named learning providers and their subdomains", () => {
-  for (const url of [
-    link,
-    "https://courses.edx.org/learn/example",
-    "https://www.freecodecamp.org/learn",
-    "https://www.youtube.com/results?search_query=ai+course",
-    "https://youtu.be/dQw4w9WgXcQ",
-    "https://www.khanacademy.org/computing",
-  ]) {
-    assert.equal(isPathwayResourceUrl(url), true, url);
-  }
-});
-
-test("rejects insecure, malformed, credentialed, oversized and lookalike-host URLs", () => {
-  for (const url of [
-    "javascript:alert(1)",
-    "http://www.coursera.org/course",
-    "https://coursera.org.evil.test/course",
-    "https://coursera.org@evil.test/course",
-    "https://user@coursera.org/course",
+test("preserves any nonblank resourceLink string without URL or provider checks", () => {
+  const links = [
     "not a URL",
-    `https://coursera.org/${"x".repeat(2048)}`,
-  ]) {
-    assert.equal(isPathwayResourceUrl(url), false, url.slice(0, 80));
+    "ftp://somewhere.example/course",
+    "https://unexpected.example/resource",
+    "javascript:alert(1)",
+  ];
+  const output = { scenarios: scenarios() };
+  const steps = output.scenarios.flatMap((scenario) => scenario.reskillingPathway);
+  links.forEach((resourceLink, index) => {
+    steps[index].resourceLink = resourceLink;
+  });
+
+  const normalized = normalizePathwayResourceLinks(output);
+  const normalizedSteps = normalized.scenarios.flatMap((scenario) => scenario.reskillingPathway);
+  assert.deepEqual(
+    normalizedSteps.slice(0, links.length).map((step) => step.resourceLink),
+    links,
+  );
+});
+
+test("fills missing, blank, and non-string resource links with a step-specific YouTube search", () => {
+  const output = { scenarios: scenarios() };
+  const steps = output.scenarios.flatMap((scenario) => scenario.reskillingPathway);
+  delete steps[0].resourceLink;
+  steps[1].resourceLink = "";
+  steps[2].resourceLink = "  ";
+  steps[3].resourceLink = null;
+  steps[4].resourceLink = 42;
+
+  const normalized = normalizePathwayResourceLinks(output);
+  const normalizedSteps = normalized.scenarios.flatMap((scenario) => scenario.reskillingPathway);
+  for (const step of normalizedSteps.slice(0, 5)) {
+    assert.equal(
+      step.resourceLink,
+      `https://www.youtube.com/results?search_query=${encodeURIComponent(step.step)}`,
+    );
   }
 });
 
-test("requires exactly three scenarios with three trusted learning links apiece", () => {
-  assert.equal(hasPathwayResourceLinks({ scenarios: scenarios() }), true);
-  assert.equal(hasPathwayResourceLinks({ scenarios: scenarios().slice(0, 2) }), false);
-  const missingLink = scenarios();
-  delete missingLink[1].reskillingPathway[2].resourceLink;
-  assert.equal(hasPathwayResourceLinks({ scenarios: missingLink }), false);
-  const unsafeLink = scenarios();
-  unsafeLink[0].reskillingPathway[0].resourceLink = "https://unexpected.example/resource";
-  assert.equal(hasPathwayResourceLinks({ scenarios: unsafeLink }), false);
-  const shortPathway = scenarios();
-  shortPathway[0].reskillingPathway.pop();
-  assert.equal(hasPathwayResourceLinks({ scenarios: shortPathway }), false);
+test("uses description when the usual step text is absent", () => {
+  const output = {
+    scenarios: [{
+      reskillingPathway: [{
+        description: "Learn data modeling & SQL",
+        estimatedHours: 5,
+        resourceLink: null,
+      }],
+    }],
+  };
+
+  const normalized = normalizePathwayResourceLinks(output);
+  assert.equal(
+    normalized.scenarios[0].reskillingPathway[0].resourceLink,
+    `https://www.youtube.com/results?search_query=${encodeURIComponent("Learn data modeling & SQL")}`,
+  );
 });

@@ -316,9 +316,7 @@ components:
           maximum: 200
         resourceLink:
           type: string
-          format: uri
-          maxLength: 2048
-          description: Optional for previously saved pathways; newly generated steps include a curated learning resource URL.
+          description: Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL.
       required:
         - step
         - estimatedHours

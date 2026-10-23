@@ -1,36 +1,32 @@
-const TRUSTED_LEARNING_DOMAINS = [
-  "coursera.org",
-  "edx.org",
-  "freecodecamp.org",
-  "youtube.com",
-  "youtu.be",
-  "khanacademy.org",
-];
+export function normalizePathwayResourceLinks(output: unknown): unknown {
+  if (!isRecord(output) || !Array.isArray(output.scenarios)) return output;
 
-export function isPathwayResourceUrl(value: unknown): value is string {
-  if (typeof value !== "string" || value.length > 2048) return false;
-  try {
-    const url = new URL(value);
-    const host = url.hostname.toLowerCase();
-    return url.protocol === "https:"
-      && !url.username
-      && !url.password
-      && TRUSTED_LEARNING_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
-  } catch {
-    return false;
-  }
-}
+  return {
+    ...output,
+    scenarios: output.scenarios.map((scenario) => {
+      if (!isRecord(scenario) || !Array.isArray(scenario.reskillingPathway)) return scenario;
 
-export function hasPathwayResourceLinks(output: unknown): boolean {
-  if (!isRecord(output) || !Array.isArray(output.scenarios) || output.scenarios.length !== 3) return false;
-  return output.scenarios.every((scenario) =>
-    isRecord(scenario)
-    && Array.isArray(scenario.reskillingPathway)
-    && scenario.reskillingPathway.length === 3
-    && scenario.reskillingPathway.every((step) =>
-      isRecord(step) && isPathwayResourceUrl(step.resourceLink),
-    ),
-  );
+      return {
+        ...scenario,
+        reskillingPathway: scenario.reskillingPathway.map((step) => {
+          if (!isRecord(step)) return step;
+          const resourceLink = step.resourceLink;
+          if (typeof resourceLink === "string" && resourceLink.trim().length > 0) return step;
+
+          const description = typeof step.step === "string"
+            ? step.step
+            : typeof step.description === "string"
+              ? step.description
+              : "career learning skills";
+
+          return {
+            ...step,
+            resourceLink: `https://www.youtube.com/results?search_query=${encodeURIComponent(description)}`,
+          };
+        }),
+      };
+    }),
+  };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

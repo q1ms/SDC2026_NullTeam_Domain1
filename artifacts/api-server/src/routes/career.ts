@@ -21,7 +21,7 @@ import {
   saveCareerProfile,
 } from "../lib/career-db";
 import { parseRunpodJson, runPathwayJob } from "../lib/runpod-pathway";
-import { hasPathwayResourceLinks } from "../lib/pathway-resources";
+import { normalizePathwayResourceLinks } from "../lib/pathway-resources";
 
 const router: IRouter = Router();
 
@@ -96,8 +96,7 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
     "Return ONLY one raw JSON object. Do not include markdown, code blocks, backticks, or any text before or after the JSON.",
     "The object must contain exactly one property named scenarios, whose value is an array of exactly 3 career path objects.",
     "Each scenario must contain exactly these properties: roleTitle (string), matchScore (integer from 1 to 100), explainableReason (exactly one sentence), skillsGap (array of strings), reskillingPathway (array of exactly 3 objects), and unSdgTag (one string).",
-    "Each reskillingPathway object must contain exactly step (string), estimatedHours (positive integer number of hours), and resourceLink (string).",
-    "For each resourceLink provide a real, highly relevant HTTPS learning-resource URL that directly helps complete that exact step. Use only coursera.org, edx.org, freecodecamp.org, youtube.com, youtu.be, or khanacademy.org (including their subdomains). Prefer a specific course or lesson; otherwise use a focused YouTube search URL such as https://www.youtube.com/results?search_query=encoded+step+topic. Never use placeholders or invent unsupported domains.",
+    "Each reskillingPathway object must contain step (string) and estimatedHours (positive integer number of hours). It may include resourceLink as any string when available; do not follow URL or provider restrictions, and omit the field if you cannot provide one.",
     `Each unSdgTag must be exactly one of these values: ${JSON.stringify(sdgTags)}.`,
     "Choose role titles from the provided SQLite role catalog. Do not add properties or invent a different output shape.",
     `Profile JSON: ${JSON.stringify(body.data.profile)}`,
@@ -142,13 +141,12 @@ router.post("/generate-pathway", async (req, res): Promise<void> => {
           : undefined,
     }, "RunPod response envelope");
 
-    const generatedOutput = parseRunpodJson(runpodData.output, (preview) => {
+    const parsedOutput = parseRunpodJson(runpodData.output, (preview) => {
       req.log.warn({ rawPreview: preview }, "Unable to parse generated JSON; first 200 characters");
     }, [apiKey, endpointId]);
-    if (!hasPathwayResourceLinks(generatedOutput)) {
-      req.log.warn("Generated pathways are missing valid HTTPS learning-resource links");
-      res.status(502).json({ error: "The pathway service returned missing or unsupported learning-resource links." });
-      return;
+    const generatedOutput = normalizePathwayResourceLinks(parsedOutput);
+    if (!isRecord(generatedOutput) || !Array.isArray(generatedOutput.scenarios)) {
+      throw new Error("Generated pathway scenarios are missing.");
     }
     const candidate = GeneratePathwayResponse.parse({
       profileId: body.data.profileId,

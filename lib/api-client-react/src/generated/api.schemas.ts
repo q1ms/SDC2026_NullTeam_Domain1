@@ -68,10 +68,7 @@ export interface ReskillingStep {
      * @maximum 200
      */
   estimatedHours: number;
-  /**
-     * Optional for previously saved pathways; newly generated steps include a curated learning resource URL.
-     * @maxLength 2048
-     */
+  /** Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL. */
   resourceLink?: string;
 }
 
