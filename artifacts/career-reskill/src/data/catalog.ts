@@ -10,4 +10,6 @@ export type CareerProfile = {
 export const INTEREST_OPTIONS = [
   'AI & automation', 'Data & analytics', 'People & learning', 'Climate & sustainability',
   'Cybersecurity', 'Product & customer experience', 'Operations & systems',
+  'Healthcare & MedTech', 'Creative & Design', 'FinTech & Blockchain',
+  'Smart Cities & IoT', 'Supply Chain & Logistics', 'AI Ethics & Policy',
 ];

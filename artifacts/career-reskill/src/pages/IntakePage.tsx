@@ -197,7 +197,8 @@ export function IntakePage({
             </div>
           </div>
           <div className="field" style={{ marginTop: 22 }}>
-            <label htmlFor="weekly-hours">Time you can set aside each week <span className="field-hint">{form.weeklyHours} hours</span></label>
+            <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>
+            <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">How much time can you realistically dedicate to upskilling courses?</p>
             <div className="hours-control"><input id="weekly-hours" type="range" min="1" max="15" value={form.weeklyHours} onChange={(event) => update('weeklyHours', Number(event.target.value))} data-testid="input-weekly-hours" /><span className="hours-number" data-testid="text-weekly-hours-value">{form.weeklyHours}h</span></div>
           </div>
           {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors">{errors.map((error) => <div key={error}>{error}</div>)}</div>}
