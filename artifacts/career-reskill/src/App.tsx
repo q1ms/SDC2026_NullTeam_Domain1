@@ -76,9 +76,9 @@ function Router() {
       {profileError && <div className="api-error" role="alert" data-testid="status-profile-load-error">{profileError}</div>}
       <RoutedErrorBoundary>
         <Switch>
-          <Route path="/" component={() => <RadarPage profile={profile} />} />
-          <Route path="/intake" component={() => <IntakePage profileId={profileId} profile={profile} profileLoading={profileLoading} onSave={updateProfile} isSaving={saveMutation.isPending && !isMigrating} />} />
-          <Route path="/pathway" component={() => <PathwayPage profileId={profileId} profile={profile} profileLoading={profileLoading} />} />
+          <Route path="/"><RadarPage profile={profile} /></Route>
+          <Route path="/intake"><IntakePage profileId={profileId} profile={profile} profileLoading={profileLoading} onSave={updateProfile} isSaving={saveMutation.isPending && !isMigrating} /></Route>
+          <Route path="/pathway"><PathwayPage profileId={profileId} profile={profile} profileLoading={profileLoading} /></Route>
           <Route component={NotFound} />
         </Switch>
       </RoutedErrorBoundary>

@@ -89,8 +89,7 @@ export function IntakePage({
 
   const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => setForm((current) => ({ ...current, [key]: value }));
   const toggleInterest = (interest: string) => update('interests', form.interests.includes(interest) ? form.interests.filter((item) => item !== interest) : [...form.interests, interest]);
-  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const submit = async () => {
     if (submissionLock.current || isSubmitting) return;
     const issues = [];
     if (!form.currentRole.trim()) issues.push('Add your current role.');
@@ -161,7 +160,10 @@ export function IntakePage({
         <h1 className="page-title">Your experience is<br />a strong starting point.</h1>
         <p className="page-subtitle">A few details help us suggest adjacent roles and realistic learning steps. Your profile is saved in the career database associated with this browser.</p>
       </div>
-      <form className="form-layout fade-in delay-1" onSubmit={submit} data-testid="form-career-profile">
+      <form className="form-layout fade-in delay-1" onSubmit={(e) => {
+        e.preventDefault();
+        void submit();
+      }} data-testid="form-career-profile">
         <section className="section-card form-panel">
           <h2 className="form-section-title">Your experience</h2>
           <div className="field-grid">

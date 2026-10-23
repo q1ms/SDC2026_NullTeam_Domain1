@@ -1,0 +1,1 @@
+- [Stateful route identity](stateful-route-identity.md) — inline Wouter component callbacks can remount forms on mutation updates and erase in-flight submission locks.
