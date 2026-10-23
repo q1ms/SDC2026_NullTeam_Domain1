@@ -158,7 +158,7 @@ export function IntakePage({
       <div className="fade-in">
         <div className="eyebrow">A little about you</div>
         <h1 className="page-title">Your experience is<br />a strong starting point.</h1>
-        <p className="page-subtitle">A few details help us suggest adjacent roles and realistic learning steps. Your profile is saved in the career database associated with this browser.</p>
+        <p className="page-subtitle">A few details help us suggest adjacent roles and realistic learning steps. Your profile is saved on this device.</p>
       </div>
       <div className="form-layout fade-in delay-1">
       <form onSubmit={(e) => {
