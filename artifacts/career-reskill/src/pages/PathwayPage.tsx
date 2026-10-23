@@ -4,20 +4,17 @@ import {
   getListSdgSkillMappingsQueryKey,
   useGetGeneratedPathway,
   useListSdgSkillMappings,
-  type PathwayScenario,
 } from "@workspace/api-client-react";
 import {
   ArrowRight,
   BookmarkCheck,
-  Check,
-  Clock3,
   Compass,
-  GraduationCap,
   Globe2,
   Sparkles,
 } from "lucide-react";
 import type { CareerProfile } from "../data/catalog";
 import { PersonalizedReading } from "../components/PersonalizedReading";
+import { ScenarioCard } from "../components/ScenarioCard";
 
 export function PathwayPage({
   profileId,
@@ -167,37 +164,5 @@ export function PathwayPage({
       <div className="footer-note" data-testid="text-pathway-generated-at">Generated {new Date(pathwayQuery.data.generatedAt).toLocaleString()}</div>
       <div className="footer-note" data-testid="text-pathway-disclaimer">AI suggestions are starting points, not guarantees. Check local role requirements and learning options before making decisions.</div>
     </div>
-  );
-}
-
-function ScenarioCard({ scenario, index }: { scenario: PathwayScenario; index: number }) {
-  return (
-    <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-scenario-${index}`}>
-      <div className="role-head">
-        <h3 className="role-title" data-testid={`text-scenario-title-${index}`}>{scenario.roleTitle}</h3>
-        <span className="match-badge" data-testid={`status-scenario-match-${index}`}><Check size={11} /> {scenario.matchScore}% match</span>
-      </div>
-      <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{scenario.explainableReason}</p>
-      <div className="scenario-sdg" data-testid={`text-scenario-sdg-${index}`}><Globe2 size={13} />{scenario.unSdgTag}</div>
-      <div className="gap-label">Skills to build</div>
-      {scenario.skillsGap.length ? (
-        <div className="skill-chips">
-          {scenario.skillsGap.map((skill) => <span className="skill-chip missing" key={skill}>{skill}</span>)}
-        </div>
-      ) : (
-        <p className="role-description">Your current skills already cover this pathway’s listed gaps.</p>
-      )}
-      <details className="learning-path" data-testid={`details-scenario-steps-${index}`}>
-        <summary><span><GraduationCap size={14} style={{ verticalAlign: 'middle', marginRight: 7, color: '#347a70' }} />Reskilling pathway</span><span className="field-hint">3 steps</span></summary>
-        <ol>
-          {scenario.reskillingPathway.map((step, stepIndex) => (
-            <li className="scenario-step" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
-              <span>{step.step}</span>
-              <span className="scenario-step-hours"><Clock3 size={11} /> {step.estimatedHours} hours</span>
-            </li>
-          ))}
-        </ol>
-      </details>
-    </article>
   );
 }

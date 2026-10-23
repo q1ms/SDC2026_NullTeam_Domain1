@@ -7,6 +7,7 @@ import {
 } from '@workspace/api-client-react';
 import { ArrowRight, Check, Clock3, LoaderCircle, UserRound } from 'lucide-react';
 import { INTEREST_OPTIONS, type CareerProfile } from '../data/catalog';
+import { isAllowedLearningResourceUrl } from '../lib/pathway-resource-links';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
 const SUBMISSION_MESSAGES = [
@@ -41,7 +42,8 @@ function isGeneratedPathway(value: unknown, profileId: string): value is Generat
         && typeof step.step === 'string'
         && typeof step.estimatedHours === 'number'
         && Number.isInteger(step.estimatedHours)
-        && step.estimatedHours > 0)
+        && step.estimatedHours > 0
+        && isAllowedLearningResourceUrl(step.resourceLink))
       && typeof scenario.unSdgTag === 'string';
   });
 }

@@ -246,6 +246,8 @@ html { @apply scroll-smooth; }
 .learning-path li { @apply pl-1 text-[10px] leading-relaxed text-[#64716b]; }
 .learning-path li::marker { @apply font-mono text-[#3d8376]; }
 .scenario-step { @apply flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between; }
+.scenario-step-copy { @apply flex flex-wrap items-center gap-x-2 gap-y-1; }
+.scenario-step-resource { @apply inline-flex items-center gap-1 rounded-full border border-[#dce5d9] bg-[#edf2e9] px-2 py-1 text-[9px] font-semibold text-[#34796d] no-underline transition-colors hover:bg-[#dfeae0] hover:underline; }
 .scenario-step-hours { @apply inline-flex shrink-0 items-center gap-1 font-mono text-[9px] text-[#34796d]; }
 .section-header { @apply my-[28px] mb-[13px] flex items-end justify-between gap-[15px]; }
 .section-header h2 { @apply m-0 font-serif text-[19px] font-bold tracking-[-0.04em]; }

@@ -314,6 +314,11 @@ components:
           type: integer
           minimum: 1
           maximum: 200
+        resourceLink:
+          type: string
+          format: uri
+          maxLength: 2048
+          description: Optional for previously saved pathways; newly generated steps include a curated learning resource URL.
       required:
         - step
         - estimatedHours
