@@ -194,7 +194,7 @@ html { @apply scroll-smooth; }
 .personal-strip { @apply mb-[18px] flex flex-wrap gap-[9px]; }
 .meta-chip { @apply flex items-center gap-[7px] rounded-full border border-border bg-[#faf8f0] px-[10px] py-[7px] text-[10px] text-[#53635e]; }
 .meta-chip svg { @apply text-primary; }
-.form-layout { @apply mt-[27px] grid items-start gap-[19px]; grid-template-columns:minmax(0,1fr) 290px; }
+.form-layout { @apply mt-[27px] grid grid-cols-1 items-start gap-[19px]; }
 .form-panel { @apply p-[25px]; }
 .form-section-title { @apply m-0 mb-4 font-mono text-[10px] uppercase tracking-[0.1em] text-primary; }
 .field-grid { @apply grid grid-cols-2 gap-4; }

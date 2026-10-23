@@ -4,7 +4,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import { Redirect, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
   getGetCareerProfileQueryKey,
   useGetCareerProfile,
@@ -76,7 +76,8 @@ function Router() {
       {profileError && <div className="api-error" role="alert" data-testid="status-profile-load-error">{profileError}</div>}
       <RoutedErrorBoundary>
         <Switch>
-          <Route path="/"><RadarPage profile={profile} /></Route>
+          <Route path="/"><Redirect to="/intake" replace /></Route>
+          <Route path="/radar"><RadarPage profile={profile} /></Route>
           <Route path="/intake"><IntakePage profileId={profileId} profile={profile} profileLoading={profileLoading} onSave={updateProfile} isSaving={saveMutation.isPending && !isMigrating} /></Route>
           <Route path="/pathway"><PathwayPage profileId={profileId} profile={profile} profileLoading={profileLoading} /></Route>
           <Route component={NotFound} />

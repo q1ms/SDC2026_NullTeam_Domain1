@@ -160,7 +160,8 @@ export function IntakePage({
         <h1 className="page-title">Your experience is<br />a strong starting point.</h1>
         <p className="page-subtitle">A few details help us suggest adjacent roles and realistic learning steps. Your profile is saved in the career database associated with this browser.</p>
       </div>
-      <form className="form-layout fade-in delay-1" onSubmit={(e) => {
+      <div className="form-layout fade-in delay-1">
+      <form onSubmit={(e) => {
         e.preventDefault();
         void submit();
       }} data-testid="form-career-profile">
@@ -213,6 +214,7 @@ export function IntakePage({
             </button>
           </div>
         </section>
+      </form>
         <aside className="aside-panel">
           <h3>Built around the work you’ve done</h3>
           <p>Career shifts often start with strengths you already use—not a blank slate.</p>
@@ -220,7 +222,7 @@ export function IntakePage({
           <div className="aside-step"><span className="step-number">02</span><span>Your interests help us rank possible directions more thoughtfully.</span></div>
           <div className="aside-step"><span className="step-number"><Clock3 size={12} /></span><span>Your weekly time shapes a learning pace that feels doable.</span></div>
         </aside>
-      </form>
+      </div>
     </div>
   );
 }

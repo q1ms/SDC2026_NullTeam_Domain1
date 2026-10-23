@@ -5,7 +5,7 @@ import type { CareerProfile } from '../data/catalog';
 export function Shell({ children, profile }: { children: React.ReactNode; profile: CareerProfile | null }) {
   const [location] = useLocation();
   const links = [
-    { href: '/', label: 'Skills radar', icon: Activity },
+    { href: '/radar', label: 'Skills radar', icon: Activity },
     { href: '/intake', label: 'Your profile', icon: Compass },
     { href: '/pathway', label: 'Career pathways', icon: Waypoints },
   ];
