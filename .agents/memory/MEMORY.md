@@ -1,0 +1,3 @@
+- [Dashboard design direction](dashboard-design-direction.md) — skills-first wizard with three roles and a hero quest; user rejected the main-view spiderweb graph as overwhelming.
+- [Scenario data provenance](scenario-data-provenance.md) — built-in job projections are illustrative hackathon scenarios, not verified forecasts.
+- [Cross-tab profile conflicts](cross-tab-profile-conflicts.md) — preserve local edits on external changes; replacing a cleared profile requires an explicit choice.

@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertex Build Challenge 2027 | Build Tech That Matters</title>
+<meta name="description" content="Vertex is a 2-week hybrid innovation challenge built around the UN Sustainable Development Goals. $20,000 in prizes. Open to foundation, diploma, and undergraduate students at a Malaysian university.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   1. CUSTOM PROPERTIES
+   ============================================================ */
+:root {
+  --green: #5ba300;
+  --green-soft: rgba(91, 163, 0, 0.12);
+  --blue: #297cef;
+  --blue-soft: rgba(41, 124, 239, 0.12);
+  --teal: #2acbea;
+  --yellow: #f5b73d;
+  --yellow-soft: rgba(245, 183, 61, 0.15);
+  --yellow-deep: #dca536;
+  --red: #e14443;
+  --red-soft: rgba(225, 68, 67, 0.12);
+  --ink: #0f1a14;
+  --bg: #f7faf8;
+  --radius: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --font-display: 'Oswald', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --shadow-glass: 0 8px 32px rgba(15, 26, 20, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  --shadow-card: 0 4px 24px rgba(15, 26, 20, 0.06);
+}
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+ul, ol { list-style: none; }
+
+/* ============================================================
+   3. LAYOUT UTILITIES
+   ============================================================ */
+.container-wide {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.container-full { width: 100%; }
+
+.section-pad { padding-block: 4rem; }
+@media (min-width: 768px) { .section-pad { padding-block: 5rem; } }
+
+/* ============================================================
+   4. MESH BACKGROUND
+   ============================================================ */
+.mesh-root {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mesh-layer {
+  position: absolute;
+  inset: -25%;
+  filter: blur(80px);
+  will-change: transform;
+}
+
+.mesh-1 {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(91, 163, 0, 0.45), transparent 52%),
+    radial-gradient(circle at 82% 28%, rgba(41, 124, 239, 0.40), transparent 52%),
+    radial-gradient(circle at 50% 85%, rgba(42, 203, 234, 0.30), transparent 55%);
+  animation: drift1 28s ease-in-out infinite alternate;
+}
+
+.mesh-2 {
+  background:
+    radial-gradient(circle at 75% 70%, rgba(245, 183, 61, 0.30), transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(225, 68, 67, 0.20), transparent 50%);
+  animation: drift2 34s ease-in-out infinite alternate;
+}
+
+.mesh-grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes drift1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, -2%) scale(1.05); }
+  100% { transform: translate(-2%, 3%) scale(0.98); }
+}
+
+@keyframes drift2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-3%, 2%) scale(1.04); }
+  100% { transform: translate(2%, -3%) scale(1); }
+}
+
+/* ============================================================
+   5. GLASS & CARD UTILITIES
+   ============================================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow-glass);
+  border-radius: var(--radius);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 12px 48px rgba(15, 26, 20, 0.10), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-lg);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 12px 36px rgba(15, 26, 20, 0.10);
+}
+
+.card-accent-green { border-left: 3px solid var(--green); }
+.card-accent-blue { border-left: 3px solid var(--blue); }
+.card-accent-yellow { border-left: 3px solid var(--yellow-deep); }
+.card-accent-red { border-left: 3px solid var(--red); }
+
+.lift-on-hover:hover { transform: translateY(-6px); }
+
+/* ============================================================
+   6. TYPOGRAPHY
+   ============================================================ */
+.font-display { font-family: var(--font-display); }
+
+.t-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.t-hero {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.t-stat {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--blue), var(--teal) 45%, var(--green));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   7. BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 1.5rem;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(41, 124, 239, 0.28);
+}
+.btn-primary:hover {
+  background: #1e6ed8;
+  box-shadow: 0 12px 32px rgba(41, 124, 239, 0.36);
+}
+
+.btn-green {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(91, 163, 0, 0.28);
+}
+.btn-green:hover {
+  background: #4d8c00;
+  box-shadow: 0 12px 32px rgba(91, 163, 0, 0.36);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  box-shadow: var(--shadow-glass);
+}
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.8); }
+
+/* ============================================================
+   8. STATUS BAR
+   ============================================================ */
+.status-bar {
+  position: sticky;
+  top: 0;
+  z-index: 55;
+  height: 2.25rem;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  color: rgba(15, 26, 20, 0.75);
+}
+
+.status-bar .divider { margin-inline: 0.5rem; opacity: 0.3; }
+.status-bar a { color: var(--blue); font-weight: 600; }
+.status-bar a:hover { text-decoration: underline; }
+
+/* ============================================================
+   9. HEADER
+   ============================================================ */
+.site-header {
+  position: fixed;
+  left: 0; right: 0;
+  top: 3.5rem;
+  z-index: 50;
+  transition: transform 0.3s ease;
+}
+@media (min-width: 768px) { .site-header { top: 4rem; } }
+
+.nav-inner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  max-width: 1200px;
+  margin-inline: auto;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-glass);
+}
+
+@media (min-width: 1024px) { .nav-inner { display: flex; } }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(15, 26, 20, 0.7);
+  position: relative;
+  padding-block: 0.25rem;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--blue); }
+.nav-links a.active { color: var(--blue); }
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--blue);
+  border-radius: 2px;
+}
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  transition: transform 0.2s;
+}
+.icon-btn:hover { transform: scale(1.05); }
+
+/* Mobile nav */
+.mobile-nav {
+  display: block;
+  padding-inline: 1rem;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+@media (min-width: 1024px) { .mobile-nav { display: none; } }
+
+.mobile-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-glass);
+}
+
+.mobile-menu-btn {
+  width: 2.75rem; height: 2.75rem;
+  border-radius: 10px;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================
+   10. HERO
+   ============================================================ */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  min-height: 80vh;
+  padding-top: 9rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .hero { grid-template-columns: 1fr 1fr; }
+}
+
+.hero-eyebrow {
+  color: rgba(15, 26, 20, 0.6);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero-eyebrow .handshake { color: var(--green); }
+
+.hero-sub {
+  margin-top: 1.25rem;
+  max-width: 52ch;
+  font-size: 1rem;
+  color: rgba(15, 26, 20, 0.7);
+}
+@media (min-width: 768px) { .hero-sub { font-size: 1.125rem; } }
+
+.hero-actions {
+  margin-top: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.hero-note {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: rgba(15, 26, 20, 0.55);
+}
+
+.hero-note a {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(41, 124, 239, 0.4);
+  text-underline-offset: 4px;
+}
+.hero-note a:hover { text-decoration-color: var(--blue); }
+
+/* Hero visual cluster */
+.cluster {
+  position: relative;
+  height: 26rem;
+  display: none;
+}
+@media (min-width: 1024px) { .cluster { display: block; } }
+
+.cluster-orb {
+  position: absolute;
+  top: 10%; left: 15%;
+  width: 60%; height: 60%;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, rgba(91, 163, 0, 0.55), rgba(41, 124, 239, 0.35) 70%);
+  filter: blur(50px);
+  animation: orbPulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes orbPulse {
+  from { transform: scale(1); opacity: 0.8; }
+  to { transform: scale(1.15); opacity: 1; }
+}
+
+.cluster-illustration {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 1;
+}
+
+.illustration-disc {
+  width: 14rem;
+  height: 14rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(91, 163, 0, 0.9), rgba(41, 124, 239, 0.85));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3rem;
+  box-shadow: 0 30px 80px rgba(41, 124, 239, 0.35);
+  border: 4px solid rgba(255, 255, 255, 0.6);
+}
+
+.float-card {
+  position: absolute;
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  z-index: 2;
+  animation: floaty 6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--rot, 0deg)); }
+}
+
+.countdown-box {
+  position: absolute;
+  top: 0; left: 2%;
+  --rot: -3deg;
+  animation-delay: 0s;
+  padding: 1rem;
+  z-index: 3;
+}
+
+.countdown-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(15, 26, 20, 0.55);
+}
+
+.countdown-grid {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.countdown-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countdown-cell .num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.countdown-cell .lbl {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(15, 26, 20, 0.45);
+  margin-top: 0.15rem;
+}
+
+.countdown-sep {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: rgba(15, 26, 20, 0.3);
+  padding-bottom: 0.9rem;
+}
+
+.prize-box {
+  position: absolute;
+  bottom: 24%; left: 8%;
+  --rot: 2deg;
+  animation-delay: -1.6s;
+  z-index: 2;
+}
+
+.prize-box .num {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.sdg-box {
+  position: absolute;
+  top: 18%; right: 4%;
+  --rot: -1.5deg;
+  animation-delay: -3.1s;
+  z-index: 2;
+}
+
+.team-box {
+  position: absolute;
+  bottom: 22%; right: 6%;
+  --rot: -4deg;
+  animation-delay: -4.4s;
+  z-index: 3;
+  padding: 1rem;
+}
+
+/* ============================================================
+   11. MARQUEE
+   ============================================================ */
+.marquee-mask {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: scroll-x-left 55s linear infinite;
+}
+
+.marquee-track.reverse {
+  animation: scroll-x-right 70s linear infinite;
+}
+
+@keyframes scroll-x-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scroll-x-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.goal-tile {
+  width: 5rem;
+  height: 5rem;
+  flex-shrink: 0;
+  margin-right: 1rem;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 0.4rem;
+  line-height: 1.1;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(15, 26, 20, 0.08);
+}
+@media (min-width: 768px) {
+  .goal-tile { width: 6rem; height: 6rem; font-size: 1rem; }
+}
+
+/* ============================================================
+   12. STATS SECTION
+   ============================================================ */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.stat-card { padding: 1.5rem; display: flex; flex-direction: column; }
+
+.stat-card .label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(15, 26, 20, 0.5);
+}
+
+.stat-card .value {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 0.5rem;
+}
+
+/* Prize bars */
+.prize-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  height: 12rem;
+  margin-top: 1rem;
+}
+.prize-bars .bar {
+  flex: 1;
+  border-radius: 8px 8px 0 0;
+  transition: height 1s ease;
+}
+.prize-labels {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+.prize-labels > div { flex: 1; }
+.prize-labels .amount {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.prize-labels .place {
+  font-size: 0.8125rem;
+  color: rgba(15, 26, 20, 0.55);
+  margin-top: 0.25rem;
+}
+
+/* Dot grid */
+.dot-grid {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 0.375rem;
+  margin-top: 1rem;
+}
+.dot {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.dot.dim {
+  background: transparent;
+  border: 1px solid rgba(41, 124, 239, 0.4);
+}
+
+/* Locked domain cards */
+.domain-stack { position: relative; display: flex; flex-direction: column; margin-top: 1rem; }
+.domain-card {
+  width: 60%;
+  padding: 1.5rem 1rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(91, 163, 0, 0.4);
+  background: rgba(91, 163, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  color: rgba(15, 26, 20, 0.7);
+}
+.domain-card:nth-child(1) { align-self: flex-start; }
+.domain-card:nth-child(2) { align-self: flex-end; margin-top: -1.25rem; }
+.domain-stack .shuffle-badge {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.shuffle-badge span {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid rgba(91, 163, 0, 0.3);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(15, 26, 20, 0.08);
+  color: var(--green);
+}
+
+/* Mini goal grid */
+.goal-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.375rem;
+  margin-top: 1rem;
+}
+.goal-mini {
+  aspect-ratio: 1;
+  border-radius: 3px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+/* Format blocks */
+.format-block {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border-left: 3px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.format-block.online {
+  border-color: var(--blue);
+  background: rgba(41, 124, 239, 0.08);
+}
+.format-block.physical {
+  border-color: var(--green);
+  background: rgba(91, 163, 0, 0.08);
+}
+.format-block .tag {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-size: 0.8125rem;
+  color: rgba(15, 26, 20, 0.75);
+}
+.format-block .desc {
+  font-size: 0.875rem;
+  color: rgba(15, 26, 20, 0.55);
+}
+
+/* ============================================================
+   13. ABOUT SECTION
+   ============================================================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+}
+
+.about-text p {
+  margin-top: 1rem;
+  max-width: 56ch;
+  color: rgba(15, 26, 20, 0.75);
+  line-height: 1.65;
+}
+
+.about-subhead {
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(15, 26, 20, 0.45);
+  margin-top: 2rem;
+}
+
+.logo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-top: 0.75rem;
+}
+
+.logo-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.logo-placeholder {
+  height: 4.5rem;
+  min-width: 9rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: rgba(15, 26, 20, 0.7);
+  box-shadow: var(--shadow-card);
+}
+
+.insta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(15, 26, 20, 0.75);
+  transition: transform 0.2s, background 0.2s;
+}
+.insta-chip:hover { transform: scale(1.05); background: rgba(255, 255, 255, 0.85); }
+.insta-chip .icon {
+  width: 1rem; height: 1rem;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
+/* Mascot card */
+.mascot-card {
+  padding: 1.25rem 1.5rem;
+  margin-top: 2rem;
+  border-radius: var(--radius);
+  border-left: 3px solid var(--red);
+}
+
+.mascot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.mascot-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.mascot-body {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: rgba(15, 26, 20, 0.75);
+}
+
+.about-visual {
+  position: relative;
+  height: 20rem;
+}
+@media (min-width: 1024px) { .about-visual { height: 26rem; } }
+
+.about-visual .orb {
+  position: absolute;
+  top: 10%; left: 8%;
+  width: 66%; height: 66%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(91, 163, 0, 0.6), rgba(41, 124, 239, 0.4) 70%);
+  filter: blur(60px);
+}
+
+.about-visual .big-disc {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(91, 163, 0, 0.9), rgba(41, 124, 239, 0.85));
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  border: 4px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 30px 80px rgba(41, 124, 239, 0.3);
+}
+
+/* ============================================================
+   14. WHY JOIN
+   ============================================================ */
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+@media (min-width: 768px) { .why-grid { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1024px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.why-card {
+  padding: 1.5rem;
+  min-height: 16rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.why-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.why-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.why-card .num {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.25;
+}
+
+.why-card p {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(15, 26, 20, 0.7);
+  flex: 1;
+}
+
+.why-tag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+}
+
+/* ============================================================
+   15. COMPETITION / TIMELINE
+   ============================================================ */
+.comp-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: end;
+}
+@media (min-width: 1024px) {
+  .comp-header { grid-template-columns: 1fr 2fr; }
+}
+
+.comp-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) { .comp-stats { grid-template-columns: repeat(4, 1fr); } }
+
+.comp-stat {
+  padding: 1rem;
+  border-radius: var(--radius);
+  border-left: 2px solid;
+}
+.comp-stat .n {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.comp-stat .t {
+  font-size: 0.8125rem;
+  color: rgba(15, 26, 20, 0.6);
+  margin-top: 0.625rem;
+  line-height: 1.3;
+}
+
+.timeline-card {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+}
+
+.phase-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 1024px) {
+  .phase-grid { grid-template-columns: 4fr 2fr; }
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid;
+}
+.phase-header.online {
+  background: rgba(41, 124, 239, 0.08);
+  border-color: rgba(41, 124, 239, 0.2);
+}
+.phase-header.physical {
+  background: rgba(91, 163, 0, 0.08);
+  border-color: rgba(91, 163, 0, 0.2);
+}
+
+.phase-header .p-icon {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+.phase-header.online .p-icon { background: rgba(41, 124, 239, 0.15); color: var(--blue); }
+.phase-header.physical .p-icon { background: rgba(91, 163, 0, 0.15); color: var(--green); }
+
+.phase-header .p-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.phase-header.online .p-title { color: var(--blue); }
+.phase-header.physical .p-title { color: var(--green); }
+
+.phase-desc {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(15, 26, 20, 0.7);
+}
+
+.steps {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.steps.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.steps.cols-1 { grid-template-columns: 1fr; }
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .step { display: block; }
+}
+
+.step-num {
+  width: 2rem; height: 2rem;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  border: 1px solid;
+  position: relative;
+  z-index: 1;
+}
+.step-num.blue { color: var(--blue); border-color: rgba(41, 124, 239, 0.35); }
+.step-num.green { color: var(--green); border-color: rgba(91, 163, 0, 0.35); }
+
+.step-info {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+@media (min-width: 1024px) {
+  .step-info { display: block; margin-top: 0.75rem; }
+}
+
+.step-name {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+}
+.step-date {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(15, 26, 20, 0.55);
+}
+@media (min-width: 1024px) {
+  .step-date { display: block; margin-top: 0.25rem; }
+}
+
+/* ============================================================
+   16. COUNTER
+   ============================================================ */
+.counter-card {
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: 1.75rem;
+  text-align: center;
+  border-radius: var(--radius);
+}
+.counter-num {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.counter-label {
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(15, 26, 20, 0.5);
+}
+
+/* ============================================================
+   17. PRIZES
+   ============================================================ */
+.prizes-section { text-align: center; }
+
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 3.5rem;
+}
+@media (min-width: 768px) { .podium { gap: 1rem; } }
+
+.podium-col {
+  position: relative;
+  width: 6rem;
+}
+@media (min-width: 768px) { .podium-col { width: 10rem; } }
+
+.podium-col.short { height: 8rem; }
+.podium-col.mid { height: 12rem; }
+.podium-col.tall { height: 10rem; }
+@media (min-width: 768px) {
+  .podium-col.short { height: 11rem; }
+  .podium-col.mid { height: 16rem; }
+  .podium-col.tall { height: 13rem; }
+}
+
+.podium-glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px 16px 20px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 36px rgba(15, 26, 20, 0.10);
+}
+.podium-glass.gold {
+  background: linear-gradient(to top, rgba(245, 183, 61, 0.45), rgba(255, 255, 255, 0.7));
+}
+.podium-glass.silver {
+  background: linear-gradient(to top, rgba(245, 183, 61, 0.2), rgba(255, 255, 255, 0.75));
+}
+
+.podium-glow {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 66%;
+  border-radius: 50%;
+  background: rgba(245, 183, 61, 0.25);
+  filter: blur(48px);
+  z-index: -1;
+}
+
+.podium-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 1.5rem;
+}
+
+.podium-place {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: rgba(15, 26, 20, 0.6);
+  padding-inline: 0.5rem;
+}
+.podium-amount {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 0.25rem;
+}
+@media (min-width: 768px) { .podium-amount { font-size: 1.5rem; } }
+
+.prize-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+@media (min-width: 768px) { .prize-row { grid-template-columns: repeat(3, 1fr); } }
+
+.prize-chip {
+  padding: 1rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+.prize-chip .pl { color: rgba(15, 26, 20, 0.7); }
+.prize-chip .pv { font-weight: 600; }
+
+/* ============================================================
+   18. SPONSORS
+   ============================================================ */
+.sponsor-tier {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.sponsor-tile {
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-card);
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: rgba(15, 26, 20, 0.65);
+  text-align: center;
+  padding: 0.5rem;
+  transition: transform 0.2s;
+}
+.sponsor-tile:hover { transform: translateY(-2px); }
+
+.sponsor-tile.lg { height: 9rem; width: 11rem; font-size: 1.05rem; }
+@media (min-width: 768px) { .sponsor-tile.lg { height: 11rem; width: 14rem; font-size: 1.25rem; } }
+
+.sponsor-tile.md { height: 7rem; width: 8.5rem; font-size: 0.9rem; }
+@media (min-width: 768px) { .sponsor-tile.md { height: 8rem; width: 11rem; font-size: 1rem; } }
+
+.sponsor-tile.sm { height: 3.5rem; width: 8rem; font-size: 0.8rem; }
+@media (min-width: 768px) { .sponsor-tile.sm { height: 5rem; width: 10rem; font-size: 0.9rem; } }
+
+/* ============================================================
+   19. MEDIA PARTNERS MARQUEE
+   ============================================================ */
+.partner-row {
+  display: flex;
+  padding-block: 0.5rem;
+}
+
+.partner-tile {
+  height: 4rem;
+  width: 9rem;
+  margin-right: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: rgba(15, 26, 20, 0.6);
+  text-align: center;
+  padding: 0.5rem;
+}
+@media (min-width: 768px) {
+  .partner-tile { height: 4.5rem; width: 10rem; font-size: 0.95rem; }
+}
+
+/* ============================================================
+   20. FAQ
+   ============================================================ */
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .faq-grid { grid-template-columns: 1fr 2fr; gap: 2.5rem; }
+  .faq-aside { position: sticky; top: 8rem; align-self: start; }
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-item {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: var(--shadow-card);
+}
+
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  text-align: left;
+}
+
+.faq-trigger .q {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.faq-trigger .chev {
+  transition: transform 0.3s ease;
+  color: rgba(15, 26, 20, 0.5);
+  flex-shrink: 0;
+}
+
+.faq-item.open .chev { transform: rotate(180deg); }
+
+.faq-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.faq-item.open .faq-panel { max-height: 30rem; }
+
+.faq-panel-inner {
+  padding: 0 1.5rem 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgba(15, 26, 20, 0.7);
+}
+.faq-panel-inner p + p { margin-top: 0.75rem; }
+
+/* ============================================================
+   21. REGISTER CTA
+   ============================================================ */
+.cta-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+@media (min-width: 768px) { .cta-panel { padding: 4rem 3rem; } }
+
+.cta-orb-a {
+  position: absolute;
+  top: -10%; left: -5%;
+  width: 14rem; height: 14rem;
+  border-radius: 50%;
+  background: rgba(41, 124, 239, 0.35);
+  filter: blur(80px);
+  animation: orbPulse 10s ease-in-out infinite alternate;
+}
+.cta-orb-b {
+  position: absolute;
+  bottom: -10%; right: -5%;
+  width: 16rem; height: 16rem;
+  border-radius: 50%;
+  background: rgba(91, 163, 0, 0.3);
+  filter: blur(80px);
+  animation: orbPulse 13s ease-in-out infinite alternate;
+}
+
+.cta-content { position: relative; }
+
+.cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 1.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(41, 124, 239, 0.3);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--blue);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.cta-link:hover { background: #fff; }
+
+/* ============================================================
+   22. FOOTER
+   ============================================================ */
+.site-footer {
+  position: relative;
+  z-index: 10;
+  padding: 3.5rem 1.5rem 2rem;
+  color: rgba(255, 255, 255, 0.85);
+  background: linear-gradient(160deg, #0f1a14 0%, #14261c 60%, #0d2118 100%);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 768px) {
+  .footer-grid { grid-template-columns: 5fr 2fr 2fr 3fr; gap: 2rem; }
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.footer-brand .mark {
+  width: 2.5rem; height: 2.5rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  display: grid; place-items: center;
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.footer-brand .name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.footer-tagline {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.color-band {
+  display: flex;
+  height: 4px;
+  width: 10rem;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 1.25rem;
+}
+.color-band span { flex: 1; }
+
+.footer-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-links {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.footer-links a {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: #fff; }
+
+.footer-bottom {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+@media (min-width: 768px) {
+  .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+}
+
+/* ============================================================
+   23. REVEAL ANIMATIONS
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== MESH BACKGROUND ===== -->
+<div class="mesh-root" aria-hidden="true">
+  <div class="mesh-layer mesh-1"></div>
+  <div class="mesh-layer mesh-2"></div>
+</div>
+<div class="mesh-grain" aria-hidden="true"></div>
+
+<!-- ===== STATUS BAR ===== -->
+<div class="status-bar">
+  <span>Registration open</span>
+  <span class="divider" aria-hidden="true">·</span>
+  <span style="display:none" class="hide-mobile">
+    <strong>$15 + $10 refundable deposit</strong>
+    <span class="divider" aria-hidden="true">·</span>
+  </span>
+  <a href="#register">Register →</a>
+</div>
+<style>
+  @media (min-width: 768px) { .hide-mobile { display: inline !important; } }
+</style>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <!-- Desktop nav -->
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark">V</span>
+      <span class="brand-name">Vertex Challenge</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#about" class="active">About</a>
+      <a href="#competition">Tracks</a>
+      <a href="#prizes">Prizes</a>
+      <a href="#sponsors">Sponsors</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="nav-cta">
+      <a href="#" class="icon-btn" aria-label="Join our Discord" title="Join our Discord">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      </a>
+      <a href="#" class="btn btn-ghost">Log in</a>
+      <a href="#register" class="btn btn-primary">Register Your Team →</a>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div class="mobile-nav">
+    <div class="mobile-nav-bar">
+      <a href="#top" class="brand">
+        <span class="brand-mark">V</span>
+        <span class="brand-name">Vertex Challenge</span>
+      </a>
+      <button class="mobile-menu-btn" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+  <!-- ===== HERO ===== -->
+  <section id="top" class="container-wide hero">
+    <div>
+      <p class="hero-eyebrow t-eyebrow">
+        <span><strong>Nexus</strong> Innovation Guild</span>
+        <svg class="handshake" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg>
+        <span><strong>Meridian</strong> Tech Society</span>
+        <span aria-hidden="true" style="opacity:0.35">·</span>
+        <span>15–28 Mar 2027</span>
+      </p>
+
+      <h1 class="t-hero" style="margin-top:1rem">
+        <span style="display:block">VERTEX CHALLENGE 2027</span>
+        <span style="display:block" class="text-gradient">BUILD TECH THAT MATTERS.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Vertex is a 2-week hybrid innovation challenge built around the UN Sustainable
+        Development Goals. $20,000 in prizes. Open to foundation, diploma, and
+        undergraduate students at a Malaysian university.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#register" class="btn btn-primary">Register Your Team →</a>
+        <a href="#competition" style="font-size:0.875rem;font-weight:600;color:rgba(15,26,20,0.6)">See how it works ↓</a>
+      </div>
+
+      <p class="hero-note">Online preliminaries + physical finals at Meridian University</p>
+      <p class="hero-note" style="margin-top:0.5rem">
+        No team yet? <a href="#">Find teammates</a> · <a href="#">See who's looking</a>
+      </p>
+    </div>
+
+    <!-- Hero visual cluster -->
+    <div class="cluster" aria-hidden="true">
+      <div class="cluster-orb"></div>
+
+      <div class="cluster-illustration">
+        <div class="illustration-disc">V</div>
+      </div>
+
+      <!-- Countdown card -->
+      <div class="float-card glass-strong countdown-box">
+        <p class="countdown-label">Registration Closes</p>
+        <div class="countdown-grid" id="countdown">
+          <div class="countdown-cell"><span class="num" id="cd-d">14</span><span class="lbl">DAYS</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-cell"><span class="num" id="cd-h">08</span><span class="lbl">HRS</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-cell"><span class="num" id="cd-m">22</span><span class="lbl">MIN</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-cell"><span class="num" id="cd-s">45</span><span class="lbl">SEC</span></div>
+        </div>
+      </div>
+
+      <!-- Prize card -->
+      <div class="float-card glass prize-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dca536" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/></svg>
+        <p class="num" style="margin-top:0.375rem">$20,000</p>
+        <p style="font-size:0.875rem;color:rgba(15,26,20,0.6)">Total Prize Pool</p>
+      </div>
+
+      <!-- SDG card -->
+      <div class="float-card glass sdg-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ba300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        <p style="font-family:var(--font-display);font-weight:600;margin-top:0.375rem">17 SDGs · 2 Tracks</p>
+        <p style="font-size:0.875rem;color:rgba(15,26,20,0.6)">Every goal is in play</p>
+      </div>
+
+      <!-- Team card -->
+      <div class="float-card glass-strong team-box">
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#297cef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+          <p style="font-size:0.875rem;font-weight:600">1–5 per team</p>
+        </div>
+        <p style="margin-top:0.25rem;font-size:0.875rem;color:rgba(15,26,20,0.6)">Beginners welcome</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GOAL MARQUEE ===== -->
+  <section class="container-full section-pad" style="padding-block:1rem 3rem" aria-label="The 17 UN Sustainable Development Goals">
+    <div class="marquee-mask" style="padding-block:1.5rem">
+      <div class="marquee-track" id="goalTrack1"></div>
+    </div>
+    <div style="margin-top:-4.5rem;transform:scale(0.9);opacity:0.7" aria-hidden="true">
+      <div class="marquee-mask" style="padding-block:1.5rem">
+        <div class="marquee-track reverse" id="goalTrack2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="container-wide section-pad">
+    <div class="stats-grid">
+
+      <!-- Prize pool -->
+      <div class="stat-card glass-strong card-accent-yellow" style="grid-column:span 12" data-reveal>
+        <p class="label">Prize Pool</p>
+        <p class="value">$20,000</p>
+
+        <div style="margin-top:1.5rem">
+          <div class="prize-bars" aria-hidden="true">
+            <div class="bar" style="height:43%;background:rgba(245,183,61,0.55)"></div>
+            <div class="bar" style="height:100%;background:#f5b73d"></div>
+            <div class="bar" style="height:65%;background:#dca536"></div>
+          </div>
+          <div class="prize-labels">
+            <div><p class="amount" style="color:rgba(15,26,20,0.65)">$1,500</p><p class="place">2nd Runner-Up</p></div>
+            <div><p class="amount">$4,000</p><p class="place">Champion</p></div>
+            <div><p class="amount" style="color:rgba(15,26,20,0.65)">$2,500</p><p class="place">1st Runner-Up</p></div>
+          </div>
+        </div>
+
+        <p style="margin-top:1rem;font-size:0.875rem;color:rgba(15,26,20,0.55)">Plus cash prizes down to every finalist.</p>
+      </div>
+
+      <!-- Builders -->
+      <div class="stat-card card card-accent-blue" style="grid-column:span 12" data-reveal>
+        <p class="label">Builders Expected</p>
+        <p class="value">400+</p>
+        <div class="dot-grid" id="dotGrid" aria-hidden="true"></div>
+      </div>
+
+      <!-- Tracks -->
+      <div class="stat-card card card-accent-green" style="grid-column:span 12" data-reveal>
+        <p class="label">Challenge Tracks</p>
+        <p class="value">2</p>
+        <div class="domain-stack" aria-hidden="true">
+          <div class="domain-card">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ba300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>TRACK 01</span>
+          </div>
+          <div class="domain-card">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ba300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>TRACK 02</span>
+          </div>
+          <div class="shuffle-badge">
+            <span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></svg>
+            </span>
+          </div>
+        </div>
+        <span style="position:absolute;left:-9999px">The two challenge tracks are assigned at random on Orientation Day.</span>
+      </div>
+
+      <!-- SDGs -->
+      <div class="stat-card card card-accent-red" style="grid-column:span 12" data-reveal>
+        <p class="label">SDGs in Play</p>
+        <p class="value">17</p>
+        <div class="goal-mini-grid" id="goalMini" aria-hidden="true"></div>
+        <p style="margin-top:0.75rem;font-size:0.875rem;color:rgba(15,26,20,0.55)">All 17 goals are in scope.</p>
+      </div>
+
+      <!-- Format -->
+      <div class="stat-card card" style="grid-column:span 12" data-reveal>
+        <p class="label">Hybrid Format</p>
+        <p class="value">2 Weeks</p>
+        <div style="margin-top:1.5rem;display:flex;flex-direction:column;gap:0.625rem">
+          <div class="format-block online">
+            <span class="tag">ONLINE</span>
+            <p class="desc">Preliminary · 15–21 Mar</p>
+          </div>
+          <div class="format-block physical">
+            <span class="tag">PHYSICAL</span>
+            <p class="desc">Grand Final · 27–28 Mar</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:1.25rem;font-size:0.875rem;color:rgba(15,26,20,0.5)">
+      Figures are launch targets and will be finalised as sponsorship confirms.
+    </p>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="container-wide section-pad">
+    <div class="about-grid">
+      <div class="about-text" data-reveal>
+        <p class="t-eyebrow" style="color:rgba(15,26,20,0.6)">About</p>
+        <h2 class="t-h2" style="margin-top:0.75rem">What is Vertex?</h2>
+        <p>
+          Vertex (formerly "Sustainably Developing Code") is a 2-week hybrid innovation
+          challenge from the Nexus Innovation Guild and the Meridian Tech Society.
+          It challenges student builders to ship real solutions aligned with the
+          UN Sustainable Development Goals — not just slides.
+        </p>
+
+        <p class="about-subhead">Organised by</p>
+        <div class="logo-row">
+          <div class="logo-box">
+            <div class="logo-placeholder">Nexus Guild</div>
+            <a href="#" class="insta-chip"><span class="icon">IG</span>@nexus_guild</a>
+          </div>
+          <div class="logo-box">
+            <div class="logo-placeholder">Meridian Tech</div>
+            <a href="#" class="insta-chip"><span class="icon">IG</span>@meridian.tech</a>
+          </div>
+        </div>
+
+        <p class="about-subhead">Supported by</p>
+        <div class="logo-row">
+          <div class="logo-box">
+            <div class="logo-placeholder" style="min-width:7rem;height:3.5rem;font-size:0.8rem">Lighthouse Rotary</div>
+          </div>
+        </div>
+
+        <!-- Mascot -->
+        <div class="mascot-card card card-accent-red">
+          <div class="mascot-header">
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <span style="width:1.5rem;height:1.5rem;border-radius:50%;background:rgba(225,68,67,0.1);display:grid;place-items:center;font-size:0.75rem">🐾</span>
+              <span class="t-eyebrow" style="font-size:0.6875rem;font-weight:700;color:var(--red)">Meet Our Mascot</span>
+            </div>
+            <button class="faq-trigger" style="padding:0;width:auto" aria-label="Toggle mascot bio">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+          <h3 class="mascot-title">Introducing NOVA!</h3>
+          <p class="mascot-body">
+            Our mascot NOVA is a curious little fox with a backpack full of ideas.
+            Their motto is <strong>build, break, learn, repeat</strong>. NOVA is here to
+            welcome every builder — first-timers and veterans alike — to grow together with us.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-visual" data-reveal>
+        <div class="orb"></div>
+        <div class="big-disc">N</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHY JOIN ===== -->
+  <section class="container-wide section-pad">
+    <div data-reveal style="max-width:40ch">
+      <p class="t-eyebrow" style="color:rgba(15,26,20,0.6)">Why Join</p>
+      <h2 class="t-h2" style="margin-top:0.75rem">More than a certificate.</h2>
+    </div>
+
+    <div class="why-grid">
+      <!-- Build -->
+      <div class="why-card card card-accent-green lift-on-hover" data-reveal>
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span class="why-icon" style="background:var(--green-soft);color:var(--green)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>
+          </span>
+          <h3>Build</h3>
+          <span class="num" style="color:var(--green)">01</span>
+        </div>
+        <p>Turn an SDG-aligned idea into a working prototype. Leave with a real project, not just a certificate.</p>
+        <span class="why-tag" style="background:var(--green-soft);color:var(--green)">Working prototype</span>
+      </div>
+
+      <!-- Collaborate -->
+      <div class="why-card card card-accent-blue lift-on-hover" data-reveal style="transition-delay:0.08s">
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span class="why-icon" style="background:var(--blue-soft);color:var(--blue)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+          </span>
+          <h3>Collaborate</h3>
+          <span class="num" style="color:var(--blue)">02</span>
+        </div>
+        <p>Team up with builders from Meridian University and campuses across the region.</p>
+        <span class="why-tag" style="background:var(--blue-soft);color:var(--blue)">Teams of 1–5</span>
+      </div>
+
+      <!-- Level Up -->
+      <div class="why-card card card-accent-yellow lift-on-hover" data-reveal style="transition-delay:0.16s">
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span class="why-icon" style="background:var(--yellow-soft);color:var(--yellow-deep)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+          </span>
+          <h3>Level Up</h3>
+          <span class="num" style="color:var(--yellow-deep)">03</span>
+        </div>
+        <p>Seven days of workshops and bookable mentor sessions before the final even starts.</p>
+        <span class="why-tag" style="background:var(--yellow-soft);color:var(--yellow-deep)">7 days of prep</span>
+      </div>
+
+      <!-- Compete -->
+      <div class="why-card card card-accent-red lift-on-hover" data-reveal style="transition-delay:0.24s">
+        <div style="display:flex;align-items:center;gap:0.75rem">
+          <span class="why-icon" style="background:var(--red-soft);color:var(--red)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/></svg>
+          </span>
+          <h3>Compete</h3>
+          <span class="num" style="color:var(--red)">04</span>
+        </div>
+        <p>Pitch live to industry judges for a share of the prize pool.</p>
+        <span class="why-tag" style="background:var(--red-soft);color:var(--red)">$20,000</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPETITION ===== -->
+  <section id="competition" class="container-wide section-pad">
+    <div class="comp-header">
+      <div data-reveal>
+        <p class="t-eyebrow" style="color:rgba(15,26,20,0.6)">The Competition</p>
+        <h2 class="t-h2" style="margin-top:0.75rem">Tech for Sustainable Development</h2>
+        <p style="margin-top:1rem;max-width:42ch;color:rgba(15,26,20,0.7)">
+          Two tracks. One problem statement each. Real SDG problems from real partners.
+        </p>
+      </div>
+
+      <div class="comp-stats" data-reveal>
+        <div class="comp-stat card" style="border-left-color:var(--green)">
+          <div style="display:flex;align-items:center;gap:0.625rem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5ba300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/></svg>
+            <p class="n">2</p>
+          </div>
+          <p class="t">Tracks, randomly assigned</p>
+        </div>
+        <div class="comp-stat card" style="border-left-color:var(--blue)">
+          <div style="display:flex;align-items:center;gap:0.625rem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#297cef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+            <p class="n">1–5</p>
+          </div>
+          <p class="t">Members per team</p>
+        </div>
+        <div class="comp-stat card" style="border-left-color:var(--yellow-deep)">
+          <div style="display:flex;align-items:center;gap:0.625rem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dca536" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+            <p class="n">$25</p>
+          </div>
+          <p class="t">$15 registration + $10 refundable</p>
+        </div>
+        <div class="comp-stat card" style="border-left-color:var(--red)">
+          <div style="display:flex;align-items:center;gap:0.625rem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e14443" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
+            <p class="n">All</p>
+          </div>
+          <p class="t">Foundation, diploma &amp; undergraduate</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-card glass-strong" data-reveal>
+      <div class="phase-grid">
+        <!-- Online phase -->
+        <div>
+          <div class="phase-header online">
+            <span class="p-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </span>
+            <p class="p-title">Online</p>
+          </div>
+          <p class="phase-desc">Compete from anywhere. Workshops, mentors and submission are all remote.</p>
+
+          <ol class="steps cols-4">
+            <li><div class="step"><span class="step-num blue">1</span><div class="step-info"><span class="step-name">Register</span><span class="step-date">by 14 Mar</span></div></div></li>
+            <li><div class="step"><span class="step-num blue">2</span><div class="step-info"><span class="step-name">Preliminary</span><span class="step-date">15–21 Mar</span></div></div></li>
+            <li><div class="step"><span class="step-num blue">3</span><div class="step-info"><span class="step-name">Judging</span><span class="step-date">21–24 Mar</span></div></div></li>
+            <li><div class="step"><span class="step-num blue">4</span><div class="step-info"><span class="step-name">Upgrade Round</span><span class="step-date">24–26 Mar</span></div></div></li>
+          </ol>
+        </div>
+
+        <!-- Physical phase -->
+        <div>
+          <div class="phase-header physical">
+            <span class="p-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></svg>
+            </span>
+            <p class="p-title">Physical</p>
+          </div>
+          <p class="phase-desc">Top teams per track hack for 24 hours and pitch live at Meridian University.</p>
+
+          <ol class="steps cols-1">
+            <li><div class="step"><span class="step-num green">5</span><div class="step-info"><span class="step-name">Grand Final</span><span class="step-date">27–28 Mar</span></div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COUNTER ===== -->
+  <section class="container-wide section-pad" style="padding-block:2rem">
+    <div class="counter-card card">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#297cef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-inline:auto"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+      <p class="counter-num" style="margin-top:0.75rem" id="counterNum">0</p>
+      <p class="counter-label">Students Registered So Far</p>
+    </div>
+  </section>
+
+  <!-- ===== PRIZES ===== -->
+  <section id="prizes" class="container-wide section-pad prizes-section">
+    <div data-reveal>
+      <p class="t-eyebrow" style="color:rgba(15,26,20,0.6);display:flex;justify-content:center">The Prizes</p>
+      <h2 class="t-display" style="margin-top:0.75rem">$20,000</h2>
+      <p style="margin-top:0.75rem;color:rgba(15,26,20,0.65)">Across 2 tracks, $10,000 each</p>
+    </div>
+
+    <div class="podium" data-reveal>
+      <div class="podium-col short">
+        <div class="podium-glass silver"></div>
+        <div class="podium-content">
+          <span class="podium-place">2nd Runner-Up</span>
+          <span class="podium-amount">$1,500</span>
+        </div>
+      </div>
+      <div class="podium-col mid">
+        <span class="podium-glow"></span>
+        <div class="podium-glass gold"></div>
+        <div class="podium-content">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#dca536" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:1rem"><path d="M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978"/><path d="M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978"/><path d="M18 9h1.5a1 1 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6 9H4.5a1 1 0 0 1 0-5H6"/></svg>
+          <span class="podium-place">Champion</span>
+          <span class="podium-amount">$4,000</span>
+        </div>
+      </div>
+      <div class="podium-col tall">
+        <div class="podium-glass"></div>
+        <div class="podium-content">
+          <span class="podium-place">1st Runner-Up</span>
+          <span class="podium-amount">$2,500</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prize-row" data-reveal>
+      <div class="prize-chip card"><span class="pl">3rd Runner-Up</span><span class="pv">$1,000</span></div>
+      <div class="prize-chip card"><span class="pl">4th Runner-Up</span><span class="pv">$500</span></div>
+      <div class="prize-chip card"><span class="pl">Finalists (×10)</span><span class="pv">$200 each</span></div>
+    </div>
+
+    <p style="margin-top:2rem;color:rgba(15,26,20,0.6)">Every finalist is paid. Nobody leaves empty-handed.</p>
+  </section>
+
+  <!-- ===== SPONSORS ===== -->
+  <section id="sponsors" class="container-wide section-pad">
+    <p class="t-eyebrow" style="text-align:center;color:rgba(15,26,20,0.55)">Powered by</p>
+    <div class="sponsor-tier" style="margin-top:2.5rem">
+      <div class="sponsor-tile lg" style="transform:rotate(-1.5deg)">CloudForge</div>
+    </div>
+
+    <p class="t-eyebrow" style="text-align:center;color:rgba(15,26,20,0.55);margin-top:3.5rem">Supported by</p>
+
+    <div class="sponsor-tier" style="margin-top:2.5rem">
+      <div class="sponsor-tile md" style="transform:rotate(1deg)">Polaris Labs</div>
+    </div>
+
+    <div class="sponsor-tier">
+      <div class="sponsor-tile sm" style="transform:rotate(-1.5deg)">CodeSpring</div>
+      <div class="sponsor-tile sm" style="transform:rotate(1deg)">ByteHarbor</div>
+      <div class="sponsor-tile sm" style="transform:rotate(-1.5deg)">KD Systems</div>
+    </div>
+
+    <div class="sponsor-tier">
+      <div class="sponsor-tile sm" style="transform:rotate(1deg)">Lighthouse Rotary</div>
+      <div class="sponsor-tile sm" style="transform:rotate(-1.5deg)">Nilai Hardware Co.</div>
+    </div>
+
+    <div class="sponsor-tier" style="max-width:52rem;margin-inline:auto">
+      <div class="sponsor-tile sm">Intrinsic SEA</div>
+      <div class="sponsor-tile sm">ChangeWorks</div>
+      <div class="sponsor-tile sm">HackNorth</div>
+      <div class="sponsor-tile sm">Favoriot</div>
+      <div class="sponsor-tile sm">ACXOA</div>
+      <div class="sponsor-tile sm">STEPAN-UNESCO</div>
+      <div class="sponsor-tile sm">AI Chamber</div>
+      <div class="sponsor-tile sm">ATOX</div>
+      <div class="sponsor-tile sm">TIDE</div>
+      <div class="sponsor-tile sm">Futurum Academy</div>
+    </div>
+  </section>
+
+  <!-- ===== MEDIA PARTNERS ===== -->
+  <section id="media-partners" class="container-full section-pad" style="padding-block:3rem">
+    <div class="container-wide">
+      <p class="t-eyebrow" style="text-align:center;color:rgba(15,26,20,0.55)">Our Media Partners</p>
+    </div>
+    <div class="marquee-mask" style="margin-top:2rem">
+      <div class="marquee-track" id="partnerTrack" style="animation-duration:57s"></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="container-wide section-pad">
+    <div class="faq-grid">
+      <div class="faq-aside">
+        <p class="t-eyebrow" style="color:rgba(15,26,20,0.6)">FAQ</p>
+        <h2 class="t-h2" style="margin-top:0.75rem">Common Questions</h2>
+        <p style="margin-top:1rem;color:rgba(15,26,20,0.65)">The ones people ask most. The rest are on the full FAQ page.</p>
+        <div style="margin-top:1.5rem">
+          <a href="#" class="btn btn-ghost">Still have questions?</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="faq-list">
+          <div class="faq-item open">
+            <button class="faq-trigger">
+              <span class="q">What is Vertex Challenge?</span>
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-panel"><div class="faq-panel-inner">
+              <p>Vertex is a hybrid innovation challenge where participants develop tech-based solutions that address real-world problems aligned with the United Nations Sustainable Development Goals (SDGs).</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="q">Who can participate?</span>
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-panel"><div class="faq-panel-inner">
+              <p>The challenge is open to foundation, diploma, and undergraduate students from all universities in Malaysia. International students are warmly welcomed — eligibility is based on where you study, not your nationality.</p>
+              <p>Students from non-technical majors are also encouraged to join! As long as you have enthusiasm for building and a willingness to present your ideas, you are welcome.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="q">Can I join as a solo participant?</span>
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-panel"><div class="faq-panel-inner">
+              <p>Yes. Participants may join individually, as the team size is 1 to 5 members per team.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="q">What is the registration fee?</span>
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-panel"><div class="faq-panel-inner">
+              <p>The registration fee is $15 + a $10 commitment deposit (refundable) per team. The deposit is returned to your team after the event.</p>
+            </div></div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-trigger">
+              <span class="q">When will the problem statement be revealed?</span>
+              <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="faq-panel"><div class="faq-panel-inner">
+              <p>The official problem statement will be revealed online on 15 March 2027, 08:00:00 PM MYT (UTC+8).</p>
+            </div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem">
+          <a href="#" class="btn btn-ghost">See all 30 questions →</a>
+          <p style="margin-top:0.75rem;font-size:0.875rem;color:rgba(15,26,20,0.55)">25 more, with search and filters by topic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REGISTER CTA ===== -->
+  <section id="register" class="container-wide section-pad">
+    <div data-reveal>
+      <div class="cta-panel glass-strong">
+        <div class="cta-orb-a" aria-hidden="true"></div>
+        <div class="cta-orb-b" aria-hidden="true"></div>
+
+        <div class="cta-content">
+          <h2 class="t-display">Ready to build?</h2>
+          <p style="margin-top:1rem;color:rgba(15,26,20,0.7)">Registration closes 14 March 2027.</p>
+
+          <div style="margin-top:2rem;display:flex;justify-content:center">
+            <a href="#" class="btn btn-primary">Register Your Team →</a>
+          </div>
+
+          <p style="margin-top:1.5rem;color:rgba(15,26,20,0.6)">
+            Closes in <span id="ctaCountdown">14 : 08 : 22 : 45</span>
+          </p>
+
+          <div style="margin-top:2rem">
+            <p style="font-size:0.875rem;font-weight:600;color:rgba(15,26,20,0.7)">Don't have a team yet?</p>
+            <div class="cta-links">
+              <a href="#" class="cta-link">Find a team</a>
+              <a href="#" class="cta-link">See who's looking</a>
+            </div>
+          </div>
+
+          <p style="margin-top:1.75rem;font-size:0.875rem;color:rgba(15,26,20,0.55)">
+            Before you register, read the <a href="#" style="color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:4px">Official Handbook</a>
+            and the <a href="#" style="color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:4px">Terms &amp; Conditions</a>.
+          </p>
+          <p style="margin-top:0.5rem;font-size:0.875rem;color:rgba(15,26,20,0.55)">
+            Questions first? <a href="#" style="color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:4px">Ask us on Discord</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container-wide" style="padding-inline:0">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span class="mark">V</span>
+          <span class="name">Vertex Challenge 2027</span>
+        </div>
+        <p class="footer-tagline">Build Tech That Matters</p>
+        <div class="color-band" aria-hidden="true">
+          <span style="background:#5ba300"></span>
+          <span style="background:#297cef"></span>
+          <span style="background:#f5b73d"></span>
+          <span style="background:#e14443"></span>
+          <span style="background:#60f434"></span>
+          <span style="background:#2acbea"></span>
+          <span style="background:#dca536"></span>
+          <span style="background:#c35354"></span>
+          <span style="background:#279ad7"></span>
+          <span style="background:#3d80b0"></span>
+        </div>
+      </div>
+
+      <div>
+        <p class="footer-eyebrow">Explore</p>
+        <ul class="footer-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#competition">Tracks</a></li>
+          <li><a href="#prizes">Prizes</a></li>
+          <li><a href="#sponsors">Sponsors</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-eyebrow">Contact</p>
+        <ul class="footer-links">
+          <li><a href="mailto:hello@vertexchallenge.my">hello@vertexchallenge.my</a></li>
+          <li><a href="#">Aria · +60 12-345 6789</a></li>
+          <li><a href="#">Kai · +60 12-987 6543</a></li>
+          <li><a href="#">@vertexchallenge</a></li>
+          <li><a href="#">discord.gg/vertex</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer-eyebrow">Venue</p>
+        <p style="margin-top:0.75rem;font-size:0.875rem">Meridian University, Jalan Sunsuria, Bandar Sunsuria, 43900 Sepang, Selangor</p>
+        <div style="margin-top:1rem;overflow:hidden;border-radius:10px;border:1px solid rgba(255,255,255,0.2);height:10rem;background:rgba(255,255,255,0.05);display:grid;place-items:center;font-size:0.8rem;color:rgba(255,255,255,0.5)">
+          [ map placeholder ]
+        </div>
+        <a href="#" style="margin-top:0.5rem;display:inline-block;font-size:0.875rem;color:rgba(255,255,255,0.85);text-decoration:underline;text-underline-offset:2px">Get directions</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Organised by Nexus Innovation Guild × Meridian Tech Society.</p>
+      <p>© 2027 Vertex Challenge</p>
+      <a href="#" style="text-decoration:underline;text-underline-offset:2px">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   1. COUNTDOWN
+   ============================================================ */
+(function () {
+  // Target: 14 March 2027, 23:59:59 MYT (UTC+8)
+  var target = new Date('2027-03-14T23:59:59+08:00').getTime();
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    var now = Date.now();
+    var diff = Math.max(0, target - now);
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+
+    var elD = document.getElementById('cd-d');
+    var elH = document.getElementById('cd-h');
+    var elM = document.getElementById('cd-m');
+    var elS = document.getElementById('cd-s');
+    if (elD) elD.textContent = pad(d);
+    if (elH) elH.textContent = pad(h);
+    if (elM) elM.textContent = pad(m);
+    if (elS) elS.textContent = pad(s);
+
+    var cta = document.getElementById('ctaCountdown');
+    if (cta) cta.textContent = pad(d) + ' : ' + pad(h) + ' : ' + pad(m) + ' : ' + pad(s);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ============================================================
+   2. FAQ ACCORDION
+   ============================================================ */
+(function () {
+  var items = document.querySelectorAll('.faq-item');
+  items.forEach(function (item) {
+    var trigger = item.querySelector('.faq-trigger');
+    if (!trigger) return;
+    trigger.addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+      // Close all
+      items.forEach(function (i) { i.classList.remove('open'); });
+      // Toggle clicked
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+})();
+
+/* ============================================================
+   3. REVEAL ON SCROLL
+   ============================================================ */
+(function () {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(function (el) { el.classList.add('visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { io.observe(el); });
+})();
+
+/* ============================================================
+   4. GOAL MARQUEE (17 SDG tiles)
+   ============================================================ */
+(function () {
+  var colors = [
+    '#E5243B','#DDA63A','#4C9F38','#C5192D','#FF3A21','#26BDE2',
+    '#FCC30B','#A21942','#FD6925','#DD1367','#FD9D24','#BF8B2E',
+    '#3F7E44','#0A97D9','#56C02B','#00689D','#19486A'
+  ];
+  var names = [
+    'No Poverty','Zero Hunger','Good Health','Quality Education','Gender Equality',
+    'Clean Water','Clean Energy','Decent Work','Industry & Innovation','Reduced Inequalities',
+    'Sustainable Cities','Responsible Consumption','Climate Action','Life Below Water',
+    'Life on Land','Peace & Justice','Partnerships'
+  ];
+
+  function buildTrack(trackEl, reverse) {
+    var html = '';
+    // two copies for seamless loop
+    for (var copy = 0; copy < 2; copy++) {
+      var order = reverse
+        ? colors.map(function (_, i) { return 16 - i; })
+        : colors.map(function (_, i) { return i; });
+      for (var j = 0; j < order.length; j++) {
+        var i = order[j];
+        var rot = (j % 3 === 0) ? '-2deg' : (j % 3 === 1 ? '3deg' : '-1deg');
+        var ty = (j % 2 === 0) ? '0' : '0.5rem';
+        html += '<div class="goal-tile" style="background:' + colors[i] + ';transform:rotate(' + rot + ') translateY(' + ty + ')">'
+             +  '<span>' + (i + 1) + '</span>'
+             +  '</div>';
+      }
+    }
+    trackEl.innerHTML = html;
+  }
+
+  var t1 = document.getElementById('goalTrack1');
+  var t2 = document.getElementById('goalTrack2');
+  if (t1) buildTrack(t1, false);
+  if (t2) buildTrack(t2, true);
+})();
+
+/* ============================================================
+   5. DOT GRID
+   ============================================================ */
+(function () {
+  var grid = document.getElementById('dotGrid');
+  if (!grid) return;
+  var total = 60;
+  var on = 45;
+  var html = '';
+  for (var i = 0; i < total; i++) {
+    html += '<span class="dot' + (i < on ? '' : ' dim') + '" style="animation-delay:' + (i * 0.01) + 's"></span>';
+  }
+  grid.innerHTML = html;
+})();
+
+/* ============================================================
+   6. MINI GOAL GRID
+   ============================================================ */
+(function () {
+  var grid = document.getElementById('goalMini');
+  if (!grid) return;
+  var colors = [
+    '#E5243B','#DDA63A','#4C9F38','#C5192D','#FF3A21','#26BDE2',
+    '#FCC30B','#A21942','#FD6925','#DD1367','#FD9D24','#BF8B2E',
+    '#3F7E44','#0A97D9','#56C02B','#00689D','#19486A'
+  ];
+  var html = '';
+  for (var i = 0; i < colors.length; i++) {
+    html += '<span class="goal-mini" style="background:' + colors[i] + '">' + (i + 1) + '</span>';
+  }
+  grid.innerHTML = html;
+})();
+
+/* ============================================================
+   7. MEDIA PARTNER MARQUEE
+   ============================================================ */
+(function () {
+  var track = document.getElementById('partnerTrack');
+  if (!track) return;
+  var partners = [
+    'Student Council','IT Society MMU','MMU Melaka IT','UTAR Cyber','AI Club',
+    'Bhinneka UCSI','Meridian Coding','APAC Analytics','ITC UTHM','IEEE PES UTM',
+    'SE Programming Club','APU Blockchain','MUBA','UMACT','NSC 2027',
+    'inStats','ASHRAE Run','UTAR ASS','SOLID','UM Data Analytics',
+    'AWS SBG APU','MYFinTech'
+  ];
+  var html = '';
+  for (var copy = 0; copy < 2; copy++) {
+    for (var i = 0; i < partners.length; i++) {
+      html += '<li style="list-style:none"><div class="partner-tile">' + partners[i] + '</div></li>';
+    }
+  }
+  track.innerHTML = '<ul class="partner-row" style="margin:0;padding:0">' + html + '</ul>';
+})();
+
+/* ============================================================
+   8. COUNTER ANIMATION
+   ============================================================ */
+(function () {
+  var el = document.getElementById('counterNum');
+  if (!el) return;
+  var target = 642;
+  var started = false;
+
+  function animate() {
+    if (started) return;
+    started = true;
+    var start = performance.now();
+    var duration = 1400;
+    function step(now) {
+      var t = Math.min(1, (now - start) / duration);
+      var eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(eased * target);
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { animate(); io.disconnect(); }
+      });
+    }, { threshold: 0.4 });
+    io.observe(el);
+  } else {
+    animate();
+  }
+})();
+
+/* ============================================================
+   9. SMOOTH SCROLL FOR HASH LINKS
+   ============================================================ */
+(function () {
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>

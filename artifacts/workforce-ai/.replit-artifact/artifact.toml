@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/workforce-ai/"
+title = "Future-Ready Workforce AI"
+description = "An AI-powered career readiness dashboard that compares a person's skills with AI job-trend data, recommends resilient roles, and builds reskilling paths mapped to the UN Sustainable Development Goals."
+version = "1.0.0"
+id = "artifacts/workforce-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/workforce-ai/" ]
+localPort = 21449
+
+[services.development]
+run = "pnpm --filter @workspace/workforce-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/workforce-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/workforce-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21449"
+BASE_PATH = "/workforce-ai/"

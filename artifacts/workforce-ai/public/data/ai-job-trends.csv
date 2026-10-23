@@ -1,0 +1,15 @@
+role,sector,moderate_growth_pct,fast_growth_pct,moderate_resilience,fast_resilience,skills,sdgs
+AI Governance Analyst,Technology,26,34,88,92,AI policy|risk assessment|data literacy|stakeholder communication,SDG 16|SDG 9
+Cybersecurity Analyst,Technology,22,31,84,90,network security|threat analysis|incident response|communication,SDG 9|SDG 16
+Data Steward,Technology,18,27,86,91,data quality|privacy|SQL|documentation,SDG 9|SDG 16
+Renewable Energy Analyst,Energy,24,38,82,93,energy systems|data analysis|GIS|project management,SDG 7|SDG 13
+Learning Experience Designer,Education,20,29,80,89,instructional design|learning analytics|facilitation|content strategy,SDG 4|SDG 8
+Healthcare Data Analyst,Healthcare,19,30,83,91,statistics|SQL|health informatics|privacy,SDG 3|SDG 9
+Human-AI Collaboration Specialist,Professional Services,28,41,89,95,change management|facilitation|AI literacy|process design,SDG 8|SDG 9
+Climate Risk Analyst,Environment,21,35,85,94,climate science|scenario analysis|GIS|data visualization,SDG 13|SDG 11
+Automation Process Consultant,Professional Services,17,25,77,82,process mapping|automation|business analysis|change management,SDG 8|SDG 9
+Digital Accessibility Specialist,Technology,16,24,87,93,accessibility testing|UX research|WCAG|product design,SDG 10|SDG 4
+Responsible AI Researcher,Technology,27,39,90,96,machine learning|ethics|research|policy analysis,SDG 9|SDG 16
+Sustainable Supply Chain Analyst,Operations,18,32,81,90,supply chain|sustainability|forecasting|data analysis,SDG 12|SDG 13
+Data Entry Clerk,Administration,-8,-32,40,20,Excel|data entry|documentation|attention to detail,SDG 8|SDG 4
+Routine Reporting Assistant,Operations,-4,-24,50,30,Excel|data analysis|reporting|documentation,SDG 4|SDG 8
