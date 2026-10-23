@@ -6,7 +6,12 @@ import {
   type GeneratedPathway,
 } from '@workspace/api-client-react';
 import { ArrowRight, Clock3, LoaderCircle, Search, UserRound, X } from 'lucide-react';
-import { getInterestSuggestions, type CareerProfile } from '../data/catalog';
+import {
+  addInterestSelection,
+  getInterestSuggestions,
+  toggleInterestSelection,
+  type CareerProfile,
+} from '../data/catalog';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
 const SUBMISSION_MESSAGES = [
@@ -120,14 +125,12 @@ export function IntakePage({
   const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => setForm((current) => ({ ...current, [key]: value }));
   const toggleInterest = (interest: string) => setForm((current) => ({
     ...current,
-    interests: current.interests.includes(interest)
-      ? current.interests.filter((item) => item !== interest)
-      : [...current.interests, interest],
+    interests: toggleInterestSelection(current.interests, interest),
   }));
   const addInterest = (interest: string) => {
     setForm((current) => current.interests.includes(interest)
       ? current
-      : { ...current, interests: [...current.interests, interest] });
+      : { ...current, interests: addInterestSelection(current.interests, interest) });
     setInterestSearch('');
     setActiveInterestIndex(0);
   };
