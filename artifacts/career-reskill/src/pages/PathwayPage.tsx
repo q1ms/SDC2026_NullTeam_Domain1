@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { CareerProfile } from "../data/catalog";
+import { PersonalizedReading } from "../components/PersonalizedReading";
 
 export function PathwayPage({
   profileId,
@@ -129,6 +130,8 @@ export function PathwayPage({
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">No career scenarios are available yet.</div>
       )}
+
+      <PersonalizedReading profile={profile} />
 
       <div className="section-header sdg-header fade-in delay-2">
         <div>

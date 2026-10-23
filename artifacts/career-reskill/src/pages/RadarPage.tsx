@@ -1,8 +1,9 @@
 import { Link } from 'wouter';
-import { Activity, ArrowRight, BrainCircuit, ChartNoAxesCombined, ExternalLink, RefreshCw, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
+import { Activity, ArrowRight, BrainCircuit, ChartNoAxesCombined, RefreshCw, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
 import { CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Cell } from 'recharts';
 import { useGetLiveTrends } from '@workspace/api-client-react';
 import type { CareerProfile } from '../data/catalog';
+import { CoverageList } from '../components/CoverageList';
 
 const COLORS = ['#36796e', '#578f7f', '#729f89', '#8cb197', '#a9c1a0', '#c7c798', '#d8c795'];
 
@@ -89,27 +90,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
         <section className="section-card category-card">
           <div className="card-head"><div><h2 className="card-title">Recent coverage</h2><p className="card-description">Source articles behind the five topics</p></div><TrendingUp size={18} color="#458173" /></div>
           {trends.length > 0 ? (
-            <div className="coverage-list">
-              {trends.map((trend, index) => (
-                <article className="coverage-item" key={`${trend.topic}-${trend.articleUrl}`} data-testid={`row-skill-trend-${index}`}>
-                  <div className="coverage-copy">
-                    <div className="coverage-topic">
-                      <span className="topic-badge">{trend.topic}</span>
-                      <span className="coverage-count">{trend.mentions} {trend.mentions === 1 ? 'story' : 'stories'}</span>
-                    </div>
-                    <a className="coverage-headline" href={trend.articleUrl} target="_blank" rel="noopener noreferrer" data-testid={`link-trend-source-${index}`}>
-                      {trend.headline}<ExternalLink size={13} aria-hidden="true" />
-                    </a>
-                    <p>{trend.summary}</p>
-                    <div className="coverage-meta">
-                      <span>{trend.sourceName}</span>
-                      <span aria-hidden="true">·</span>
-                      <time dateTime={trend.publishedAt}>{formatPublishedAt(trend.publishedAt)}</time>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+            <CoverageList articles={trends} />
           ) : trendsQuery.isLoading ? (
             <div className="trend-state" role="status">Loading recent source articles…</div>
           ) : (
@@ -126,13 +107,6 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
       <div className="footer-note" data-testid="text-radar-footer">News coverage can surface emerging topics, but it does not measure hiring demand. Your experience is the starting point.</div>
     </div>
   );
-}
-
-function formatPublishedAt(value: string): string {
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? 'Date unavailable'
-    : new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(date);
 }
 
 function Signal({ icon, title, copy }: { icon: React.ReactNode; title: string; copy: string }) {
