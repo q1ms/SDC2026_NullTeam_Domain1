@@ -5,7 +5,7 @@ import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Clock3, ExternalLink, Layers, LoaderCircle, Search, ShieldCheck, UserRound, X, Zap } from 'lucide-react';
+import { ArrowRight, Clock3, ExternalLink, Languages, Layers, LoaderCircle, Search, ShieldCheck, Upload, UserRound, X, Zap } from 'lucide-react';
 import {
   addInterestSelection,
   getInterestEntryOptions,
@@ -33,6 +33,8 @@ import './profile-intake.css';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4, profileMode: 'quick', professionalBackground: {} };
 const STATUS_PRESETS = ['Student', 'Recent graduate', 'Career break'];
+const CORE_BACKGROUND_SECTIONS = SECTIONS.filter((section) =>
+  ['experience', 'education', 'certifications', 'projects'].includes(section.key));
 
 function toDraft(profile: CareerProfile | null): CareerProfile {
   if (!profile) return EMPTY_PROFILE;
@@ -122,6 +124,8 @@ export function IntakePage({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const [validationAttempt, setValidationAttempt] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
+  const [preferredLanguage, setPreferredLanguage] = useState('English');
+  const [cvUploadNotice, setCvUploadNotice] = useState(false);
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -491,6 +495,15 @@ export function IntakePage({
         data-testid="form-career-profile"
       >
         <fieldset className="pi-fieldset" disabled={isSubmitting} data-testid="fieldset-career-profile">
+        <div className="pi-language-picker">
+          <label htmlFor="profile-language"><Languages size={14} aria-hidden="true" /> Preferred language</label>
+          <select id="profile-language" className="input-control" value={preferredLanguage} onChange={(event) => setPreferredLanguage(event.target.value)} aria-describedby="profile-language-help" data-testid="select-profile-language">
+            <option value="English">English</option>
+            <option value="Bahasa Malaysia">Bahasa Malaysia</option>
+            <option value="Chinese">Chinese</option>
+          </select>
+          <small id="profile-language-help">Preference for this session only. This form is currently in English.</small>
+        </div>
         <div className="pi-mode" role="radiogroup" aria-label="Profile detail level" data-testid="group-profile-mode">
           {([
             ['quick', 'Quick profile', 'Six essentials, about two minutes', Zap],
@@ -518,6 +531,13 @@ export function IntakePage({
 
         {mode === 'detailed' && (
           <div className="pi-detailed" data-testid="panel-detailed-profile">
+            <div className="section-card pi-cv-upload">
+              <button type="button" className="button-primary" onClick={() => setCvUploadNotice(true)} aria-describedby="cv-upload-help" data-testid="button-upload-cv">
+                <Upload size={18} aria-hidden="true" /> Upload CV / Resume to Auto-Fill
+              </button>
+              <p id="cv-upload-help" className="pi-helper">Coming soon — you can fill in your details below for now.</p>
+              {cvUploadNotice && <p className="pi-helper" role="status" data-testid="status-cv-upload">CV auto-fill is not available yet. No file has been uploaded or profile information changed.</p>}
+            </div>
             <section className="section-card form-panel">
               <h2 className="form-section-title">Professional identity</h2>
               {roleAndIndustryFields}
@@ -562,7 +582,7 @@ export function IntakePage({
             <section className="section-card form-panel pi-sections">
               <h2 className="form-section-title">Background <span className="pi-optional">Professional records optional</span></h2>
               {skillsField}
-              {SECTIONS.map((section) => (
+              {CORE_BACKGROUND_SECTIONS.map((section) => (
                 <SectionEditor
                   key={section.key}
                   section={section}
@@ -586,7 +606,7 @@ export function IntakePage({
       </form>
         <aside className="aside-panel">
           <h3>Built around the work you’ve done</h3>
-          <p>{mode === 'quick' ? 'Career shifts often start with strengths you already use, not a blank slate.' : 'Students and career switchers alike: no job history is required. Add projects, coursework or volunteering instead.'}</p>
+          <p>{mode === 'quick' ? 'Career shifts often start with strengths you already use, not a blank slate.' : 'Students and career switchers alike: no job history is required. Add projects, coursework or certifications instead.'}</p>
           <div className="aside-step"><span className="step-number"><UserRound size={12} /></span><span>We’ll look for roles that build on your experience, not replace it.</span></div>
           <div className="aside-step"><span className="step-number">02</span><span>Your interests help us rank possible directions more thoughtfully.</span></div>
           <div className="aside-step"><span className="step-number"><Clock3 size={12} /></span><span>Your weekly time shapes a learning pace that feels doable.</span></div>

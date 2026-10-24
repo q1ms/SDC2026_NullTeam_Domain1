@@ -46,8 +46,21 @@ test("profile modes render exclusively with one complete, mode-appropriate form"
     assert.doesNotMatch(detailed, /data-testid="panel-quick-profile"|>Your experience<\/h2>|What draws your attention/);
     assert.doesNotMatch(detailed, /data-testid="button-open-import"|Import from text|Read text/);
     assert.match(detailed, /Professional identity/);
+    assert.match(detailed, /data-testid="button-upload-cv"/);
+    assert.doesNotMatch(quick, /data-testid="button-upload-cv"/);
+    assert.ok(detailed.indexOf('data-testid="button-upload-cv"') < detailed.indexOf("Professional identity"));
+    for (const key of ["experience", "education", "certifications", "projects"]) {
+      assert.match(detailed, new RegExp(`data-testid="button-toggle-profile-${key}"`));
+    }
+    for (const key of ["volunteering", "organizations", "courses", "awards", "publications", "languages", "testScores"]) {
+      assert.doesNotMatch(detailed, new RegExp(`data-testid="button-toggle-profile-${key}"`));
+    }
     assert.match(detailed, /Learning preferences/);
     for (const html of [quick, detailed]) {
+      assert.match(html, /data-testid="select-profile-language"/);
+      for (const language of ["English", "Bahasa Malaysia", "Chinese"]) {
+        assert.ok(html.includes(`value="${language}"`));
+      }
       assert.equal((html.match(/<form\b/g) ?? []).length, 1);
       assert.equal((html.match(/type="submit"/g) ?? []).length, 1);
       for (const id of ["current-role", "industry", "years-experience", "existing-skills", "interest-search", "weekly-hours", "industry-options"]) {
