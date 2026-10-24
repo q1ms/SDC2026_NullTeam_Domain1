@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'wouter';
-import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Languages, Layers3, Waypoints } from 'lucide-react';
+import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Layers3, Waypoints } from 'lucide-react';
 import type { CareerProfile } from '../data/catalog';
 import { LightRays } from './effects/LightRays';
 import { useMagicSurfaces } from './effects/useMagicSurfaces';
-import { useLanguage, type AppLanguage } from '../i18n/LanguageContext';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function Shell({ children, profile }: { children: React.ReactNode; profile: CareerProfile | null }) {
   const [location] = useLocation();
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   useMagicSurfaces();
   const links = [
     { href: '/intake', label: t('navigation.profile'), icon: Compass, id: 'profile' },
@@ -41,22 +41,6 @@ export function Shell({ children, profile }: { children: React.ReactNode; profil
         <header className="topbar">
           <div className="topbar-kicker">{t('header.kicker')}</div>
           <div className="topbar-right">
-            <label className="global-language-control">
-              <Languages size={13} aria-hidden="true" />
-              <span className="sr-only">{t('language.label')}</span>
-              <select
-                id="global-language"
-                className="global-language-select"
-                value={language}
-                onChange={(event) => setLanguage(event.target.value as AppLanguage)}
-                aria-label={t('language.label')}
-                data-testid="select-global-language"
-              >
-                <option value="en">English</option>
-                <option value="ms">Bahasa Malaysia</option>
-                <option value="zh">Chinese</option>
-              </select>
-            </label>
             {profile
               ? <span className="profile-status"><Check size={13} strokeWidth={2.5} aria-hidden="true" /> {t('header.saved')}</span>
               : <span>{t('header.guide')}</span>}

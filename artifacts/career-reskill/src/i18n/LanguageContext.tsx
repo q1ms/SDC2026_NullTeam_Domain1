@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
 
-export type AppLanguage = "en" | "ms" | "zh";
 export type TranslationKey = keyof typeof translations.en;
 
 const translations = {
@@ -503,41 +502,24 @@ const translations = {
 
 const STORAGE_KEY = "northstar-career-language";
 type LanguageContextValue = {
-  language: AppLanguage;
-  setLanguage: (language: AppLanguage) => void;
   t: (key: TranslationKey) => string;
 };
 const LanguageContext = createContext<LanguageContextValue>({
-  language: "en",
-  setLanguage: () => {},
   t: (key) => translations.en[key],
 });
 
-function readSavedLanguage(): AppLanguage {
-  try {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    return saved === "ms" || saved === "zh" || saved === "en" ? saved : "en";
-  } catch {
-    return "en";
-  }
-}
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<AppLanguage>(readSavedLanguage);
-
   useEffect(() => {
-    document.documentElement.lang = language;
+    document.documentElement.lang = "en";
     try {
-      window.localStorage.setItem(STORAGE_KEY, language);
+      window.localStorage.removeItem(STORAGE_KEY);
     } catch {
-      // The language still applies for this session if browser storage is unavailable.
+      // The app remains English-only if browser storage is unavailable.
     }
-  }, [language]);
+  }, []);
 
   const value: LanguageContextValue = {
-    language,
-    setLanguage,
-    t: (key: TranslationKey) => translations[language][key],
+    t: (key: TranslationKey) => translations.en[key],
   };
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

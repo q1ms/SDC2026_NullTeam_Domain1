@@ -8,7 +8,7 @@ import { Window } from "happy-dom";
 import { Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
 
-test("global language selection translates navigation and page headings immediately and persists", async () => {
+test("the app stays English-only and clears a previously saved language choice", async () => {
   const window = new Window({ url: "http://localhost/intake" });
   const previous = new Map();
   for (const [key, value] of Object.entries({
@@ -30,6 +30,7 @@ test("global language selection translates navigation and page headings immediat
   const container = window.document.createElement("div");
   window.document.body.append(container);
   const root = createRoot(container);
+  window.localStorage.setItem("northstar-career-language", "zh");
   const location = memoryLocation({ path: "/intake" });
 
   const client = new QueryClient({ defaultOptions: { queries: { enabled: false, retry: false } } });
@@ -59,45 +60,16 @@ test("global language selection translates navigation and page headings immediat
         createElement(LanguageProvider, null, createElement(Shell, { profile: null }, pages))))));
 
     assert.equal(container.querySelector('[data-testid="link-nav-profile"]').textContent.trim(), "Your profile");
-    const select = container.querySelector('[data-testid="select-global-language"]');
-    assert.ok(select);
+    assert.equal(container.querySelector('[data-testid="select-global-language"]'), null);
     assert.equal(container.querySelector('[data-testid="heading-profile-title"]').textContent, "Your experience is a strong starting point.");
     assert.equal(container.querySelector('[data-testid="heading-radar-title"]').textContent, "A clearer view of what’s changing.");
     assert.equal(container.querySelector('[data-testid="heading-pathway-title"]').textContent, "A route that starts where you are.");
     assert.equal(container.querySelector('[data-testid="button-upload-cv"]').textContent.trim(), "Upload CV / Resume to Auto-Fill");
     assert.match(container.querySelector('label[for="current-role"]').textContent, /Current role or status/);
     assert.match(container.querySelector('label[for="interest-search"]').textContent, /Areas you’re curious about/);
-
-    await act(async () => {
-      select.value = "ms";
-      select.dispatchEvent(new window.Event("change", { bubbles: true }));
-    });
-    assert.equal(container.querySelector('[data-testid="link-nav-profile"]').textContent.trim(), "Profil anda");
-    assert.equal(container.querySelector('[data-testid="link-nav-radar"]').textContent.trim(), "Radar kemahiran");
-    assert.equal(container.querySelector('[data-testid="link-nav-pathways"]').textContent.trim(), "Laluan kerjaya");
-    assert.equal(container.querySelector('[data-testid="heading-profile-title"]').textContent, "Pengalaman anda ialah asas yang kukuh.");
-    assert.equal(container.querySelector('[data-testid="heading-radar-title"]').textContent, "Lihat dengan lebih jelas perubahan yang berlaku.");
-    assert.equal(container.querySelector('[data-testid="heading-pathway-title"]').textContent, "Laluan yang bermula dari kedudukan anda.");
-    assert.equal(container.querySelector('[data-testid="button-upload-cv"]').textContent.trim(), "Muat naik CV / Resume untuk Isi Automatik");
-    assert.match(container.querySelector('label[for="current-role"]').textContent, /Jawatan atau status semasa/);
-    assert.match(container.querySelector('label[for="interest-search"]').textContent, /Bidang yang menarik minat anda/);
-    assert.equal(window.localStorage.getItem("northstar-career-language"), "ms");
-
-    await act(async () => {
-      select.value = "zh";
-      select.dispatchEvent(new window.Event("change", { bubbles: true }));
-    });
-    assert.equal(container.querySelector('[data-testid="link-nav-profile"]').textContent.trim(), "个人资料");
-    assert.equal(container.querySelector('[data-testid="link-nav-radar"]').textContent.trim(), "技能趋势");
-    assert.equal(container.querySelector('[data-testid="link-nav-pathways"]').textContent.trim(), "职业路径");
-    assert.equal(container.querySelector('[data-testid="heading-profile-title"]').textContent, "你的经验是坚实的起点。");
-    assert.equal(container.querySelector('[data-testid="heading-radar-title"]').textContent, "更清晰地了解正在发生的变化。");
-    assert.equal(container.querySelector('[data-testid="heading-pathway-title"]').textContent, "从你当前的起点开始规划。");
-    assert.equal(container.querySelector('[data-testid="button-upload-cv"]').textContent.trim(), "上传简历以自动填写");
-    assert.match(container.querySelector('label[for="current-role"]').textContent, /当前职位或状态/);
-    assert.match(container.querySelector('label[for="interest-search"]').textContent, /你感兴趣的领域/);
     assert.deepEqual(fetchCalls, [], "Switching language must not trigger network requests");
-    assert.equal(window.localStorage.getItem("northstar-career-language"), "zh");
+    assert.equal(window.localStorage.getItem("northstar-career-language"), null);
+    assert.equal(window.document.documentElement.lang, "en");
   } finally {
     await act(async () => root.unmount());
     client.clear();
