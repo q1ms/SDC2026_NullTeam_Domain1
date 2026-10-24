@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
-import { resolveGoogleNewsImageUrl } from "./article-images";
+import { extractRssImageUrl } from "./rss-images";
 
 const FEED_URL =
   "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
@@ -64,6 +64,7 @@ type FeedArticle = {
   sourceName: string;
   articleUrl: string;
   publishedAt: Date;
+  imageUrl?: string;
 };
 
 type TopicAccumulator = {
@@ -131,6 +132,7 @@ function parseArticle(item: unknown): FeedArticle | null {
   if (!parsedDate || Number.isNaN(parsedDate.getTime())) return null;
   const sourceName =
     cleanHtml(readText(record.source)) || new URL(articleUrl).hostname.replace(/^www\./, "");
+  const imageUrl = extractRssImageUrl(record);
 
   return {
     title,
@@ -138,6 +140,7 @@ function parseArticle(item: unknown): FeedArticle | null {
     sourceName,
     articleUrl,
     publishedAt: parsedDate,
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 
@@ -154,6 +157,7 @@ function toLiveTrend(topic: string, value: TopicAccumulator): LiveTrend {
     sourceName: value.article.sourceName,
     articleUrl: value.article.articleUrl,
     publishedAt: value.article.publishedAt,
+    ...(value.article.imageUrl ? { imageUrl: value.article.imageUrl } : {}),
   };
 }
 
@@ -254,15 +258,11 @@ export async function getLiveTrends(): Promise<LiveTrendsResponse> {
     throw new Error("AI news RSS feed contained no usable articles");
   }
 
-  const trends = await Promise.all(buildTopics(articles).map(async (trend) => {
-    const imageUrl = await resolveGoogleNewsImageUrl(trend.articleUrl);
-    return imageUrl ? { ...trend, imageUrl } : trend;
-  }));
   const result: LiveTrendsResponse = {
     source: "Google News RSS",
     feedUrl: FEED_URL,
     fetchedAt: new Date(),
-    trends,
+    trends: buildTopics(articles),
   };
 
   cachedResponse = result;
