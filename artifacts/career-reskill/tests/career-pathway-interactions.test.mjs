@@ -74,7 +74,7 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     const { ProfileContextDialog } = await server.ssrLoadModule("/src/components/ProfileContextDialog.tsx");
     await act(async () => root.render(createElement("div", null,
       createElement(ProfileContextDialog, { profileSummary: "Operations Coordinator · 4 learning hours per week" }),
-      createElement(ScenarioCard, { scenario, index: 0, evidence }))));
+      createElement(ScenarioCard, { scenario, index: 0, evidence, profileInterests: ["Operations & systems"] }))));
 
     const evidenceAccordion = container.querySelector('[data-testid="details-scenario-evidence-0"]');
     const stepsAccordion = container.querySelector('[data-testid="details-scenario-steps-0"]');
@@ -87,12 +87,25 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     const checkbox = container.querySelector('[data-testid="checkbox-scenario-skill-0-0"]');
     const checkboxLabel = container.querySelector('[data-testid="label-scenario-skill-0-0"]');
     assert.equal(checkbox.checked, false);
+    assert.ok(container.querySelector('[data-testid="text-scenario-reason-0"]').textContent.includes("Your interest in Operations & systems"));
     await act(async () => checkbox.click());
     assert.equal(checkbox.checked, true);
     assert.ok(checkboxLabel.classList.contains("is-checked"));
+    let scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
+    assert.ok(scoreBadge.textContent.includes("78") && scoreBadge.textContent.includes("83"));
+    assert.equal(scoreBadge.querySelector(".projected-score-note").textContent, "+5 pts");
     await act(async () => checkbox.click());
     assert.equal(checkbox.checked, false);
     assert.ok(!checkboxLabel.classList.contains("is-checked"));
+    assert.ok(container.querySelector('[data-testid="status-scenario-match-0"]').textContent.includes("Fit score"));
+
+    const markStepComplete = container.querySelector('[data-testid="button-scenario-step-complete-0-0"]');
+    await act(async () => markStepComplete.click());
+    assert.equal(checkbox.checked, true, "Completing a learning step checks its mapped skill");
+    assert.ok(markStepComplete.disabled);
+    scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
+    assert.ok(scoreBadge.textContent.includes("78") && scoreBadge.textContent.includes("83"));
+    assert.equal(scoreBadge.querySelector(".projected-score-note").textContent, "+5 pts");
 
     assert.ok(!container.textContent.includes(scoreBasis), "The score math should not be visible until the tooltip opens");
     const scoreTrigger = container.querySelector('[data-testid="status-scenario-match-0"]');

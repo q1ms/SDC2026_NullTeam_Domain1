@@ -22,6 +22,7 @@ import { ScenarioCard } from "../components/ScenarioCard";
 import { EvidenceList } from "../components/EvidenceList";
 import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
 import { scenarioLabel } from "../lib/adoption-comparison";
+import { getPivotInterests, interestsFromProfileSummary } from "../lib/career-pivot-copy";
 import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -113,7 +114,14 @@ export function PathwayPage({
   const otherComparison = analysis?.comparisons.find((c) => c !== activeComparison);
   const activeComparisonLabel = activeComparison ? scenarioLabel(activeComparison.id, activeComparison.name) : undefined;
   const otherComparisonLabel = otherComparison ? scenarioLabel(otherComparison.id, otherComparison.name) : undefined;
+  const profileInterests = profile?.interests ?? interestsFromProfileSummary(analysis?.profileSummary);
   const top = scenarios[0];
+  const topInterests = top ? getPivotInterests(profileInterests, top.explainableReason) : [];
+  const topPivotIntro = topInterests.length === 1
+    ? t("pathway.pivotOne").replace("{interest}", topInterests[0])
+    : topInterests.length > 1
+      ? t("pathway.pivotMany").replace("{interest}", topInterests.join(" and "))
+      : t("pathway.pivotFallback");
   const personalizedSdgNumbers = getPersonalizedSdgNumbers(scenarios.map((scenario) => scenario.unSdgTag));
   const prioritizedSdgs = sdgsQuery.data
     ? prioritizeSdgMappings(sdgsQuery.data, personalizedSdgNumbers)
@@ -167,7 +175,7 @@ export function PathwayPage({
           <div>
             <div className="eyebrow" style={{ marginBottom: 9 }}>{t('pathway.strongest')}</div>
             <h2>{top.roleTitle}</h2>
-            <p>{top.explainableReason}</p>
+            <p>{topPivotIntro}</p>
           </div>
           <div className="banner-figure">{top.matchScore}<small>{activeComparisonLabel ? `${activeComparisonLabel} fit score` : "profile match"}</small></div>
         </section>
@@ -179,7 +187,7 @@ export function PathwayPage({
       </div>
       {scenarios.length ? (
         <div className="role-grid">
-          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
+          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
         </div>
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">{t('pathway.noScenarios')}</div>

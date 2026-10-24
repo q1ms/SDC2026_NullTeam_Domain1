@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BookOpen, Check, ChevronDown, Clock3, ExternalLink, Globe2, GraduationCap, Info, Link2Off } from "lucide-react";
 import type { CareerSignal, PathwayScenario } from "@workspace/api-client-react";
+import { getPivotInterests } from "../lib/career-pivot-copy";
 import { getLearningResourceLink } from "../lib/pathway-resource-links";
 import { evidenceAnchor, formatDate } from "./EvidenceList";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -11,6 +12,7 @@ export function ScenarioCard({
   index,
   rank,
   evidence,
+  profileInterests,
   otherScore,
   otherLabel,
 }: {
@@ -18,19 +20,28 @@ export function ScenarioCard({
   index: number;
   rank?: number;
   evidence?: Map<string, CareerSignal>;
+  profileInterests?: string[];
   otherScore?: number;
   otherLabel?: string;
 }) {
   const { t } = useLanguage();
-  const [checkedSkills, setCheckedSkills] = useState<Set<number>>(() => new Set());
+  const [acquiredSkills, setAcquiredSkills] = useState<string[]>([]);
   const delta = otherScore === undefined ? undefined : scenario.matchScore - otherScore;
-  const toggleSkill = (skillIndex: number) => {
-    setCheckedSkills((current) => {
-      const next = new Set(current);
-      if (next.has(skillIndex)) next.delete(skillIndex);
-      else next.add(skillIndex);
-      return next;
-    });
+  const projectedScore = Math.min(99, scenario.matchScore + acquiredSkills.length * 5);
+  const projectedGain = projectedScore - scenario.matchScore;
+  const pivotInterests = getPivotInterests(profileInterests, scenario.explainableReason);
+  const pivotIntro = pivotInterests.length === 1
+    ? t("pathway.pivotOne").replace("{interest}", pivotInterests[0])
+    : pivotInterests.length > 1
+      ? t("pathway.pivotMany").replace("{interest}", pivotInterests.join(" and "))
+      : t("pathway.pivotFallback");
+  const addAcquiredSkill = (skill: string) => {
+    setAcquiredSkills((current) => current.includes(skill) ? current : [...current, skill]);
+  };
+  const toggleSkill = (skill: string) => {
+    setAcquiredSkills((current) => current.includes(skill)
+      ? current.filter((item) => item !== skill)
+      : [...current, skill]);
   };
 
   return (
@@ -45,19 +56,53 @@ export function ScenarioCard({
                   type="button"
                   className="match-badge match-badge-help"
                   data-testid={`status-scenario-match-${index}`}
-                  aria-label={`${t("pathway.fitScore")} ${scenario.matchScore} / 100. ${t("pathway.whyThisScore")}`}
+                  aria-label={acquiredSkills.length
+                    ? `${t("pathway.fitScore")} ${scenario.matchScore}; ${t("pathway.projectedScore")} ${projectedScore} / 100. ${t("pathway.whyThisScore")}`
+                    : `${t("pathway.fitScore")} ${scenario.matchScore} / 100. ${t("pathway.whyThisScore")}`}
                 >
-                  <Check size={11} aria-hidden="true" /> {scenario.matchScore} {t("pathway.fitScore")} <Info size={12} aria-hidden="true" />
+                  <Check size={11} aria-hidden="true" /> {scenario.matchScore}
+                  {acquiredSkills.length > 0 ? (
+                    <>
+                      <span aria-hidden="true">→</span>
+                      <strong>{projectedScore}</strong> {t("pathway.projectedScore")}
+                      <span className="projected-score-note" key={projectedGain}>
+                        {projectedGain > 0
+                          ? t("pathway.projectedGain").replace("{points}", String(projectedGain))
+                          : t("pathway.scoreCapped")}
+                      </span>
+                    </>
+                  ) : (
+                    <>{t("pathway.fitScore")}</>
+                  )}
+                  <Info size={12} aria-hidden="true" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" align="end" className="score-basis-tooltip" data-testid={`tooltip-scenario-basis-${index}`}>
                 <strong>{t("pathway.whyThisScore")}</strong>
                 <span>{scenario.scoreBasis}</span>
+                {acquiredSkills.length > 0 && (
+                  <span>Completed skills add 5 points each, capped at 99. Current projection: {projectedScore}/100.</span>
+                )}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <span className="match-badge" data-testid={`status-scenario-match-${index}`}><Check size={11} /> {scenario.matchScore} {t("pathway.fitScore")}</span>
+          <span className="match-badge" data-testid={`status-scenario-match-${index}`}>
+            <Check size={11} aria-hidden="true" /> {scenario.matchScore}
+            {acquiredSkills.length > 0 ? (
+              <>
+                <span aria-hidden="true">→</span>
+                <strong>{projectedScore}</strong> {t("pathway.projectedScore")}
+                <span className="projected-score-note" key={projectedGain}>
+                  {projectedGain > 0
+                    ? t("pathway.projectedGain").replace("{points}", String(projectedGain))
+                    : t("pathway.scoreCapped")}
+                </span>
+              </>
+            ) : (
+              <>{t("pathway.fitScore")}</>
+            )}
+          </span>
         )}
       </div>
       {delta !== undefined && (
@@ -65,7 +110,7 @@ export function ScenarioCard({
           {delta === 0 ? `Same score under ${otherLabel}` : `${delta > 0 ? "+" : ""}${delta} vs ${otherLabel}`}
         </div>
       )}
-      <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{scenario.explainableReason}</p>
+      <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{pivotIntro}</p>
       {scenario.paceEstimate && <div className="metric-tag" data-testid={`text-scenario-pace-${index}`}><Clock3 size={11} /> Estimated pace: {scenario.paceEstimate}</div>}
       <div className="scenario-sdg" data-testid={`text-scenario-sdg-${index}`}><Globe2 size={13} />{scenario.unSdgTag}</div>
       {scenario.matchedSkills && scenario.matchedSkills.length > 0 && (
@@ -80,7 +125,7 @@ export function ScenarioCard({
       {scenario.skillsGap.length ? (
         <div className="skill-chips">
           {scenario.skillsGap.map((skill, skillIndex) => {
-            const isChecked = checkedSkills.has(skillIndex);
+            const isChecked = acquiredSkills.includes(skill);
             return (
               <label
                 className={`skill-chip missing skill-chip-checkable${isChecked ? " is-checked" : ""}`}
@@ -90,7 +135,7 @@ export function ScenarioCard({
                 <input
                   type="checkbox"
                   checked={isChecked}
-                  onChange={() => toggleSkill(skillIndex)}
+                  onChange={() => toggleSkill(skill)}
                   aria-label={`${t("pathway.markSkillBuilt")}: ${skill}`}
                   data-testid={`checkbox-scenario-skill-${index}-${skillIndex}`}
                 />
@@ -131,6 +176,8 @@ export function ScenarioCard({
         <ol>
           {scenario.reskillingPathway.map((step, stepIndex) => {
             const resource = getLearningResourceLink(step.resourceLink, step.resourceTitle);
+            const stepSkill = getStepSkill(step.step, scenario.skillsGap, stepIndex);
+            const stepComplete = stepSkill ? acquiredSkills.includes(stepSkill) : false;
             return (
               <li className="scenario-step" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
                 <span className="scenario-step-copy">
@@ -144,6 +191,20 @@ export function ScenarioCard({
                   )}
                   {step.cost && <span className="field-hint">{step.cost}</span>}
                   {step.checkedAt && <span className="field-hint">checked {formatDate(step.checkedAt)}</span>}
+                  {stepSkill && (
+                    <button
+                      className={`scenario-step-complete${stepComplete ? " is-complete" : ""}`}
+                      type="button"
+                      onClick={() => addAcquiredSkill(stepSkill)}
+                      disabled={stepComplete}
+                      aria-pressed={stepComplete}
+                      aria-label={`${stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}: ${stepSkill}`}
+                      data-testid={`button-scenario-step-complete-${index}-${stepIndex}`}
+                    >
+                      <Check size={11} aria-hidden="true" />
+                      {stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}
+                    </button>
+                  )}
                 </span>
                 <span className="scenario-step-hours"><Clock3 size={11} /> {step.estimatedHours} hours</span>
               </li>
@@ -153,4 +214,24 @@ export function ScenarioCard({
       </details>
     </article>
   );
+}
+
+function getStepSkill(stepDescription: string, skills: string[], stepIndex: number): string | undefined {
+  if (!skills.length) return undefined;
+  const stopWords = new Set(["and", "the", "with", "from", "your", "this", "that", "into", "using", "learn", "build", "create", "practice"]);
+  const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const stepTokens = new Set(normalize(stepDescription).split(/\s+/).filter((word) => word.length > 2 && !stopWords.has(word)));
+  let bestSkill: string | undefined;
+  let bestOverlap = 0;
+
+  for (const skill of skills) {
+    const normalizedSkill = normalize(skill);
+    if (normalizedSkill && normalize(stepDescription).includes(normalizedSkill)) return skill;
+    const overlap = normalize(skill).split(/\s+/).filter((word) => word.length > 2 && stepTokens.has(word)).length;
+    if (overlap > bestOverlap) {
+      bestSkill = skill;
+      bestOverlap = overlap;
+    }
+  }
+  return bestSkill ?? skills[Math.min(stepIndex, skills.length - 1)];
 }
