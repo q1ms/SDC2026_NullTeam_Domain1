@@ -1,9 +1,17 @@
 # jAIX (Job Artificial Intelligence Expert)
 
-**Team:** NullTeam  
-**Domain:** Domain 1 - AIVERSECITY (Future-Ready Workforce)  
-**University:** Universiti Malaya  
-**Hackathon:** SDC Hackathon 2026  
+## Team Information
+
+| Field | Details |
+| :--- | :--- |
+| **Team Name** | NullTeam |
+| **Team Domain** | Domain 1 - AIVERSECITY |
+| **SDG Track (1-17)** | SDG 4 (Quality Education) & SDG 8 (Decent Work and Economic Growth) |
+| **Team Leader** | Muhammad Haqim bin Mohd Nazry |
+| **University** | Universiti Malaya |
+| **Number of Members** | 5 |
+
+---
 
 ## 🔗 Important Links
 *   **Live Demo:** [https://jAIX-Job-Artificial-Intelligence-Expert.replit.app](https://jAIX-Job-Artificial-Intelligence-Expert.replit.app)
