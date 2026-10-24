@@ -128,7 +128,7 @@ test("unsaved profile guards retain cancelled drafts, compare reversions, and cl
         profileId: "test", generatedAt: "2026-10-24T00:00:00Z",
         scenarios: Array.from({ length: 3 }, () => ({
           roleTitle: "Designer", matchScore: 80, explainableReason: "Test", skillsGap: [],
-          reskillingPathway: Array.from({ length: 3 }, () => ({ step: "Learn", estimatedHours: 2 })),
+          reskillingPathway: [],
           unSdgTag: "SDG 4",
         })),
       }),

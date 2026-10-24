@@ -87,21 +87,25 @@ function isGeneratedPathway(value: unknown, profileId: string): value is Generat
 
   return value.scenarios.every((scenario) => {
     if (!isRecord(scenario)) return false;
+    const skillsGap = scenario.skillsGap;
+    const reskillingPathway = scenario.reskillingPathway;
     return typeof scenario.roleTitle === 'string'
       && typeof scenario.matchScore === 'number'
       && Number.isInteger(scenario.matchScore)
       && scenario.matchScore >= 1
       && scenario.matchScore <= 100
       && typeof scenario.explainableReason === 'string'
-      && Array.isArray(scenario.skillsGap)
-      && scenario.skillsGap.every((skill) => typeof skill === 'string')
-      && Array.isArray(scenario.reskillingPathway)
-      && scenario.reskillingPathway.length === 3
-      && scenario.reskillingPathway.every((step) => isRecord(step)
+      && Array.isArray(skillsGap)
+      && skillsGap.every((skill) => typeof skill === 'string')
+      && Array.isArray(reskillingPathway)
+      && reskillingPathway.length === skillsGap.length
+      && reskillingPathway.every((step, stepIndex) => isRecord(step)
         && typeof step.step === 'string'
         && typeof step.estimatedHours === 'number'
         && Number.isInteger(step.estimatedHours)
-        && step.estimatedHours > 0)
+        && step.estimatedHours > 0
+        && typeof step.teachesSkill === 'string'
+        && step.teachesSkill === skillsGap[stepIndex])
       && typeof scenario.unSdgTag === 'string';
   });
 }

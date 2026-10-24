@@ -6,6 +6,13 @@ export function interestsFromProfileSummary(summary?: string): string[] {
     .filter(Boolean) ?? [];
 }
 
+export function weeklyHoursFromProfileSummary(summary?: string): number | undefined {
+  const match = summary?.match(/\b(\d+(?:\.\d+)?)\s+learning h\/week/i);
+  if (!match) return undefined;
+  const hours = Number(match[1]);
+  return Number.isFinite(hours) && hours > 0 ? hours : undefined;
+}
+
 export function getPivotInterests(profileInterests: string[] | undefined, explainableReason?: string): string[] {
   const reasonMatches = explainableReason?.match(/interests in (.+?) informs this option/i)?.[1]
     .split(",")

@@ -26,10 +26,6 @@ export interface PathwayScenario {
      */
   explainableReason: string;
   skillsGap: string[];
-  /**
-     * @minItems 3
-     * @maxItems 3
-     */
   reskillingPathway: ReskillingStep[];
   unSdgTag: PathwayScenarioUnSdgTag;
 }

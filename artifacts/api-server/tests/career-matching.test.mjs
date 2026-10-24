@@ -116,26 +116,26 @@ test("reviewed evidence is fully attributed and outages use an explicit non-live
   }
 });
 
-test("direct checked free resources and realistic effort are complete; availability changes pace not scores", () => {
+test("learning plans map each gap to one checked free resource step; weekly availability does not change scores", () => {
   const fastLearner = generate({ ...DEMO_PROFILE, weeklyHours: 10 });
   const slowLearner = generate({ ...DEMO_PROFILE, weeklyHours: 5 });
   for (const comparison of slowLearner.analysis.comparisons) {
     for (const scenario of comparison.scenarios) {
-      assert.equal(scenario.reskillingPathway.length, 3);
+      assert.equal(scenario.reskillingPathway.length, scenario.skillsGap.length);
+      assert.deepEqual(scenario.reskillingPathway.map((step) => step.teachesSkill), scenario.skillsGap);
+      assert.equal(new Set(scenario.reskillingPathway.map((step) => step.teachesSkill)).size, scenario.skillsGap.length);
       for (const step of scenario.reskillingPathway) {
         assert.ok(Object.values(LEARNING_RESOURCES).some((r) => r.resourceLink === step.resourceLink));
         assert.equal(new URL(step.resourceLink).protocol, "https:");
         assert.ok(!step.resourceLink.includes("search"));
         assert.match(step.cost, /Free/);
         assert.equal(step.checkedAt, "2026-10-23");
-        assert.ok(step.estimatedHours >= 20);
+        assert.ok(step.estimatedHours >= 18);
       }
-      assert.match(scenario.paceEstimate, /portfolio work.*5 h\/week.*not job readiness/);
+      assert.equal(scenario.paceEstimate, undefined, "The client calculates pace from step effort and saved weekly hours.");
     }
   }
   assert.equal(slowLearner.scenarios[0].matchScore, fastLearner.scenarios[0].matchScore);
-  assert.match(slowLearner.scenarios[0].paceEstimate, /20–30 weeks/);
-  assert.match(fastLearner.scenarios[0].paceEstimate, /10–15 weeks/);
 });
 
 test("output validation rejects malformed scores, resource effort, and incomplete comparisons", () => {

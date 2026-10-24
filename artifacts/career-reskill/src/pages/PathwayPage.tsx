@@ -22,7 +22,7 @@ import { ScenarioCard } from "../components/ScenarioCard";
 import { EvidenceList } from "../components/EvidenceList";
 import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
 import { scenarioLabel } from "../lib/adoption-comparison";
-import { getPivotInterests, interestsFromProfileSummary } from "../lib/career-pivot-copy";
+import { getPivotInterests, interestsFromProfileSummary, weeklyHoursFromProfileSummary } from "../lib/career-pivot-copy";
 import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
 import { useLanguage } from "../i18n/LanguageContext";
 
@@ -55,6 +55,9 @@ export function PathwayPage({
   });
   const pathwayQuery = isDemo ? demoQuery : personalQuery;
   const analysis = pathwayQuery.data?.analysis;
+  const weeklyHours = (isDemo ? weeklyHoursFromProfileSummary(analysis?.profileSummary) : undefined)
+    ?? profile?.weeklyHours
+    ?? 4;
   const activeComparison = analysis?.comparisons.find((c) => c.id === comparisonId) ?? analysis?.comparisons[0];
   const evidenceMap = useMemo(
     () => new Map((analysis?.evidence.signals ?? []).map((s) => [s.id, s])),
@@ -146,7 +149,6 @@ export function PathwayPage({
       {isDemo || !profile ? (
         <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
           <span className="meta-chip"><Sparkles size={13} /> {t('pathway.sampleProfile')} <strong>{analysis?.profileSummary ?? "Sample learner"}</strong></span>
-          {top?.paceEstimate && <span className="meta-chip">{top.paceEstimate}</span>}
         </div>
       ) : (
         <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
@@ -187,7 +189,7 @@ export function PathwayPage({
       </div>
       {scenarios.length ? (
         <div className="role-grid">
-          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
+          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} weeklyHours={weeklyHours} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
         </div>
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">{t('pathway.noScenarios')}</div>

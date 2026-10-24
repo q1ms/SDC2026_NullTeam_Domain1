@@ -10,6 +10,11 @@ export interface ReskillingStep {
   /** @minLength 1 */
   step: string;
   /**
+     * Skill this learning step teaches; older saved pathways may omit it.
+     * @minLength 1
+     */
+  teachesSkill?: string;
+  /**
      * @minimum 1
      * @maximum 200
      */

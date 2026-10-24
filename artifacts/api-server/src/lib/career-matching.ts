@@ -54,16 +54,13 @@ export function buildPathway(
       const rawScore = 30 + skillsPoints + interestPoints + sourcePoints + newsPoints + adjustment;
       const skillsGap = role.skills.filter((skill) => !hasSkill(explicitSkills, skill));
       if (fast && !hasSkill(explicitSkills, rule.extra)) skillsGap.push(rule.extra);
-      const reskillingPathway = learningPlan(role.id, fast);
-      const hours = reskillingPathway.reduce((total, step) => total + step.estimatedHours, 0);
-      const weeks = Math.ceil(hours / profile.weeklyHours);
+      const reskillingPathway = learningPlan(role.title, skillsGap, fast);
       return {
         roleTitle: role.title, matchScore: Math.max(1, Math.min(95, rawScore)),
         explainableReason: `From ${profile.currentRole.slice(0, 100)}: ${matchedSkills.length ? matchedSkills.join(", ") : "no exact listed skill matches yet"} covers ${matchedSkills.length}/${role.skills.length} catalog skills; ${interestMatches.length ? `interests in ${interestMatches.join(", ")}` : "no direct interest match"} informs this option.`.slice(0, 500),
         matchedSkills, skillsGap, reskillingPathway, unSdgTag: rule.sdg as PathwayScenario["unSdgTag"],
         evidenceIds: relevant.map((signal) => signal.id),
         scoreBasis: `30 starting points + ${skillsPoints} skills (40 × matched/required) + ${interestPoints} interests (8 each, max 16) + ${sourcePoints} reviewed evidence + ${newsPoints} news context (max 2) ${adjustment >= 0 ? "+" : "−"} ${Math.abs(adjustment)} ${id}-adoption assumption = ${rawScore}; bounded to 1–95. Editorial index, not probability. ${fast ? `Additional skill assumed: ${rule.extra}.` : "Existing catalog skill requirements assumed."}${backgroundMatches.length ? ` Self-reported background matches: ${backgroundMatches.join("; ")}; exact label/declared alias only, not verified qualifications.` : ""}`,
-        paceEstimate: `${hours}–${Math.ceil(hours * 1.5)} practice hours including portfolio work; about ${weeks}–${Math.ceil(hours * 1.5 / profile.weeklyHours)} weeks at ${profile.weeklyHours} h/week. Exploration pace only, not job readiness or a guaranteed completion date.`,
       };
     }).sort((a, b) => b.matchScore - a.matchScore || a.roleTitle.localeCompare(b.roleTitle)).slice(0, 3);
     return {

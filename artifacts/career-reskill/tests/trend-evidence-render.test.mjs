@@ -23,12 +23,11 @@ const scenario = (roleTitle, score, fast = false) => ({
   skillsGap: fast ? ["AI output evaluation"] : ["SQL fundamentals"], matchedSkills: ["Process mapping"],
   unSdgTag: "SDG 8: Decent Work and Economic Growth", evidenceIds: ["fixture-report"],
   scoreBasis: "Fixture: skills + interests + evidence + adoption assumption; not probability.",
-  paceEstimate: "100–150 practice hours; 20–30 weeks at 5 h/week. Not a guarantee.",
-  reskillingPathway: Array.from({ length: 3 }, (_, i) => ({
-    step: `Practice and portfolio step ${i + 1}`, estimatedHours: 30,
+  reskillingPathway: [{
+    step: "Practice and portfolio project", teachesSkill: fast ? "AI output evaluation" : "SQL fundamentals", estimatedHours: 30,
     resourceLink: "https://sqlbolt.com/", resourceTitle: "SQLBolt · SQL lessons",
     cost: "Free", checkedAt: "2026-10-23",
-  })),
+  }],
 });
 const moderate = ["BI", "AI Operations", "Customer Operations"].map((name, i) => scenario(name, 67 - i * 10));
 const fast = ["AI Operations", "BI", "Cyber Risk"].map((name, i) => scenario(name, 77 - i * 10, true));
@@ -91,7 +90,8 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     assert.ok(card.includes("href=\"#evidence-fixture-report\""));
     assert.ok(card.includes('data-testid="details-scenario-evidence-0"'));
     assert.ok(card.includes('data-testid="details-scenario-steps-0"'));
-    assert.ok(card.includes('type="checkbox"'));
+    assert.ok(!card.includes('type="checkbox"'), "Skills are read-only indicators; step completion controls their state.");
+    assert.ok(card.includes('class="scenario-step-teaches"'));
     assert.ok(!card.includes("Score basis:"));
     assert.ok(!card.includes("Fixture: skills + interests + evidence + adoption assumption"));
     assert.ok(!/details[^>]* open/.test(card), "Evidence and learning-step accordions should start collapsed");

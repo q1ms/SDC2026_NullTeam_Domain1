@@ -73,7 +73,7 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
         scenarios: Array.from({ length: 3 }, (_, i) => ({
           roleTitle: `Role ${i}`, matchScore: 80, explainableReason: "Uses your skills.",
           skillsGap: ["SQL"], unSdgTag: "SDG 4",
-          reskillingPathway: Array.from({ length: 3 }, () => ({ step: "Learn SQL", estimatedHours: 5 })),
+          reskillingPathway: [{ step: "Learn SQL", teachesSkill: "SQL", estimatedHours: 5 }],
         })),
       }),
     };

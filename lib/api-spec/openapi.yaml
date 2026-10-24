@@ -390,6 +390,10 @@ components:
         step:
           type: string
           minLength: 1
+        teachesSkill:
+          type: string
+          minLength: 1
+          description: Skill this learning step teaches; older saved pathways may omit it.
         estimatedHours:
           type: integer
           minimum: 1
@@ -439,8 +443,6 @@ components:
             type: string
         reskillingPathway:
           type: array
-          minItems: 3
-          maxItems: 3
           items:
             $ref: "#/components/schemas/ReskillingStep"
         unSdgTag:

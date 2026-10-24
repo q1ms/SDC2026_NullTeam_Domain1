@@ -61,8 +61,8 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     evidenceIds: ["report-1"],
     paceEstimate: "80–100 hours over 17–25 weeks at 4 h/week.",
     reskillingPathway: [
-      { step: "Learn SQL", estimatedHours: 20, resourceLink: "https://example.test/sql" },
-      { step: "Build a dashboard", estimatedHours: 16, resourceLink: "https://example.test/dashboard" },
+      { step: "Learn SQL", teachesSkill: "SQL", estimatedHours: 20, resourceLink: "https://example.test/sql" },
+      { step: "Build a dashboard", teachesSkill: "Data visualization", estimatedHours: 16, resourceLink: "https://example.test/dashboard" },
     ],
   };
   const evidence = new Map([["report-1", {
@@ -84,26 +84,26 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     assert.equal(container.querySelector('[data-testid="link-scenario-evidence-0-report-1"]').textContent, "Employer survey: Skills outlook");
     assert.equal(container.querySelectorAll('[data-testid^="text-scenario-step-0-"]').length, 2);
 
-    const checkbox = container.querySelector('[data-testid="checkbox-scenario-skill-0-0"]');
-    const checkboxLabel = container.querySelector('[data-testid="label-scenario-skill-0-0"]');
-    assert.equal(checkbox.checked, false);
+    const skillPill = container.querySelector('[data-testid="label-scenario-skill-0-0"]');
+    assert.equal(container.querySelector('input[type="checkbox"]'), null, "Skills are read-only indicators, not direct controls.");
+    assert.ok(!skillPill.classList.contains("is-checked"));
     assert.ok(container.querySelector('[data-testid="text-scenario-reason-0"]').textContent.includes("Your interest in Operations & systems"));
-    await act(async () => checkbox.click());
-    assert.equal(checkbox.checked, true);
-    assert.ok(checkboxLabel.classList.contains("is-checked"));
-    let scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
-    assert.ok(scoreBadge.textContent.includes("78") && scoreBadge.textContent.includes("83"));
-    assert.equal(scoreBadge.querySelector(".projected-score-note").textContent, "+5 pts");
-    await act(async () => checkbox.click());
-    assert.equal(checkbox.checked, false);
-    assert.ok(!checkboxLabel.classList.contains("is-checked"));
-    assert.ok(container.querySelector('[data-testid="status-scenario-match-0"]').textContent.includes("Fit score"));
+    const pace = container.querySelector('[data-testid="text-scenario-pace-0"]');
+    assert.ok(pace.textContent.includes("Total effort"));
+    assert.ok(pace.textContent.includes("36 hours"));
+    assert.ok(pace.textContent.includes("Your pace"));
+    assert.ok(pace.textContent.includes("4 hours/week"));
+    assert.ok(pace.textContent.includes("~9 weeks"));
+    assert.ok(pace.textContent.includes("not a guaranteed job timeline"));
 
     const markStepComplete = container.querySelector('[data-testid="button-scenario-step-complete-0-0"]');
+    assert.ok(container.querySelector('[data-testid="text-scenario-step-0-0"]').textContent.includes("Teaches: SQL"));
+    stepsAccordion.open = true;
     await act(async () => markStepComplete.click());
-    assert.equal(checkbox.checked, true, "Completing a learning step checks its mapped skill");
+    assert.ok(skillPill.classList.contains("is-checked"), "Completing a learning step marks its mapped skill as acquired.");
+    assert.ok(skillPill.querySelector("svg"), "Completed skills display a checkmark.");
     assert.ok(markStepComplete.disabled);
-    scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
+    const scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
     assert.ok(scoreBadge.textContent.includes("78") && scoreBadge.textContent.includes("83"));
     assert.equal(scoreBadge.querySelector(".projected-score-note").textContent, "+5 pts");
 

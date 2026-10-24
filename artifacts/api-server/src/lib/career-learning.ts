@@ -12,43 +12,34 @@ export const LEARNING_RESOURCES: Record<string, Resource> = {
   climate: { resourceTitle: "GHG Protocol · Corporate Standard", resourceLink: "https://ghgprotocol.org/corporate-standard", cost: "Free standard and guidance; paid training not required" },
 };
 
-// Effort includes reading, practice, prerequisites and a small portfolio exercise,
-// not just the provider's advertised course duration. These are exploration plans,
-// not estimates of time until employment or professional qualification.
-const PLANS: Record<string, [string, number, string][]> = {
-  "ai-operations-specialist": [
-    ["Learn responsible AI basics; map one workflow and its human approval points.", 20, "ethics"],
-    ["Use the NIST framework to prototype and test an AI-assisted workflow on non-sensitive examples.", 35, "risk"],
-    ["Create a portfolio evaluation with failure cases, governance checks and stakeholder feedback.", 30, "risk"],
-  ],
-  "business-intelligence-analyst": [
-    ["Practice SQL joins and aggregations on a public dataset.", 30, "sql"],
-    ["Learn Python plotting prerequisites and build a decision-focused visualization.", 35, "viz"],
-    ["Audit data quality and write a portfolio case study with business metrics and limitations.", 35, "pandas"],
-  ],
-  "customer-success-operations-lead": [
-    ["Map a customer journey and learn to query handoff and retention metrics.", 25, "sql"],
-    ["Build a small reporting example; evaluate CRM automation benefits and human escalation.", 30, "ethics"],
-    ["Create a customer-operations pilot proposal and visualize adoption and retention measures.", 30, "viz"],
-  ],
-  "cyber-risk-coordinator": [
-    ["Study security fundamentals and document a threat and control inventory.", 35, "cyber"],
-    ["Translate an AI vendor risk assessment into plain business language.", 35, "risk"],
-    ["Create a portfolio tabletop exercise and document oversight and escalation controls.", 35, "risk"],
-  ],
-  "sustainability-data-associate": [
-    ["Read the GHG Corporate Standard and map organizational emissions boundaries.", 30, "climate"],
-    ["Learn data manipulation prerequisites and validate a small sustainability dataset.", 35, "pandas"],
-    ["Compare public disclosures and create a sample inventory with explicit data limitations.", 35, "climate"],
-  ],
-};
+const RESOURCE_RULES: Array<[RegExp, keyof typeof LEARNING_RESOURCES]> = [
+  [/sql|database|query|crm analytics/i, "sql"],
+  [/visual|dashboard|storytelling|metric|analytics|data analysis/i, "viz"],
+  [/pandas|data quality|data manipulation/i, "pandas"],
+  [/cyber|security/i, "cyber"],
+  [/risk|policy|vendor|assessment|governance|oversight|evaluation/i, "risk"],
+  [/climate|sustainability|emissions|environment|greenhouse|stakeholder research/i, "climate"],
+  [/ai|ethics|workflow|process|change|facilitation|systems|customer|escalation/i, "ethics"],
+];
 
-export function learningPlan(roleId: string, fast: boolean): ReskillingStep[] {
-  const plan = PLANS[roleId];
-  if (!plan) throw new Error(`Missing learning plan for catalog role: ${roleId}`);
-  return plan.map(([step, hours, key], index) => ({
-    step: fast && index === 2 ? `${step} Add AI output validation and a human fallback.` : step,
-    estimatedHours: hours + (fast && index === 2 ? 15 : 0),
-    ...LEARNING_RESOURCES[key], checkedAt: REVIEWED_AT,
-  }));
+function resourceForSkill(skill: string): Resource {
+  const key = RESOURCE_RULES.find(([pattern]) => pattern.test(skill))?.[1] ?? "risk";
+  return LEARNING_RESOURCES[key];
+}
+
+// Each identified gap gets one step that explicitly names the skill it teaches.
+// Effort covers guided learning and practice, not just a provider's course runtime.
+export function learningPlan(roleTitle: string, skillsGap: string[], fast: boolean): ReskillingStep[] {
+  return skillsGap.map((skill) => {
+    const resource = resourceForSkill(skill);
+    const isAdvanced = /risk|security|policy|assessment|framework|climate|data quality/i.test(skill);
+    const estimatedHours = (isAdvanced ? 24 : 18) + (fast && /ai/i.test(skill) ? 4 : 0);
+    return {
+      step: `Study ${skill} with ${resource.resourceTitle}, then apply it in a small ${roleTitle} practice project.`,
+      teachesSkill: skill,
+      estimatedHours,
+      ...resource,
+      checkedAt: REVIEWED_AT,
+    };
+  });
 }

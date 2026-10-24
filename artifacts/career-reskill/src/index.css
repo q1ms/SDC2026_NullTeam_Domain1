@@ -262,10 +262,14 @@ html { @apply scroll-smooth; }
 .skill-chip { @apply rounded-full bg-[#edf3ef] px-2 py-[5px] text-[9px] text-[#42675d]; }
 .skill-chip.known { @apply bg-[#e3ede8] text-[#287465]; }
 .skill-chip.missing { @apply bg-[#f6e8df] text-[#a36349]; }
-.skill-chip-checkable { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; transition: background-color .16s ease, color .16s ease, border-color .16s ease; }
-.skill-chip-checkable input { width: 13px; height: 13px; margin: 0; accent-color: hsl(var(--primary)); }
-.skill-chip-checkable:focus-within { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
-.skill-chip-checkable.is-checked { border: 1px solid hsl(164 57% 34%); background: hsl(164 57% 34%); color: #f5fffb; }
+.skill-chip.missing.skill-chip-state { display: inline-flex; align-items: center; gap: 5px; border: 1px solid hsl(var(--border)); background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+.skill-chip.missing.skill-chip-state.is-checked { border-color: hsl(164 57% 34%); background: hsl(164 57% 34%); color: #f5fffb; }
+.pace-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 12px 0; padding: 10px 12px; border: 1px solid hsl(var(--border)); border-radius: 9px; background: hsl(var(--secondary) / .6); }
+.pace-metric { display: grid; grid-template-columns: 16px minmax(0, 1fr); align-items: center; column-gap: 6px; row-gap: 2px; font-size: 9px; }
+.pace-metric svg { grid-row: span 2; color: hsl(var(--primary)); }
+.pace-metric > span { color: hsl(var(--muted-foreground)); }
+.pace-metric strong { font-size: 11px; color: hsl(var(--foreground)); }
+.pace-disclaimer { grid-column: 1 / -1; margin: 2px 0 0; padding-top: 7px; border-top: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); font-size: 9px; line-height: 1.45; }
 .learning-path { @apply mt-[17px] border-t border-border pt-[15px]; }
 .learning-path summary { @apply flex cursor-pointer list-none items-center justify-between text-[11px] font-bold; }
 .learning-path summary::-webkit-details-marker { display:none; }
@@ -280,6 +284,8 @@ html { @apply scroll-smooth; }
 .learning-path li::marker { @apply font-mono text-[#3d8376]; }
 .scenario-step { @apply flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between; }
 .scenario-step-copy { @apply flex flex-wrap items-center gap-x-2 gap-y-1; }
+.scenario-step-teaches { display: inline-flex; gap: 4px; align-items: baseline; border-radius: 5px; padding: 2px 6px; background: hsl(var(--primary) / .08); color: hsl(var(--muted-foreground)); font-size: 9px; }
+.scenario-step-teaches strong { color: hsl(var(--primary)); font-weight: 700; }
 .scenario-step-complete { display: inline-flex; align-items: center; gap: 4px; border: 1px solid hsl(var(--primary) / .4); border-radius: 999px; padding: 4px 8px; background: transparent; color: hsl(var(--primary)); font-size: 9px; font-weight: 700; cursor: pointer; transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
 .scenario-step-complete:hover:not(:disabled) { background: hsl(var(--primary) / .1); }
 .scenario-step-complete:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
@@ -533,7 +539,8 @@ body { background:
   color: hsl(174 42% 77%);
 }
 .dark .scenario-step-resource:hover { background: hsl(174 24% 26%); }
-.dark .skill-chip-checkable.is-checked, .dark .scenario-step-complete.is-complete { border-color: hsl(164 57% 34%); background: hsl(164 57% 34%); color: #f5fffb; }
+.dark .skill-chip.missing.skill-chip-state { border-color: hsl(var(--border)); background: hsl(var(--secondary)); color: hsl(var(--muted-foreground)); }
+.dark .skill-chip.missing.skill-chip-state.is-checked, .dark .scenario-step-complete.is-complete { border-color: hsl(164 57% 34%); background: hsl(164 57% 34%); color: #f5fffb; }
 
 /* Evidence + adoption comparison */
 .evidence-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BookOpen, Check, ChevronDown, Clock3, ExternalLink, Globe2, GraduationCap, Info, Link2Off } from "lucide-react";
+import { BookOpen, CalendarClock, CalendarDays, Check, ChevronDown, Clock3, ExternalLink, Globe2, GraduationCap, Info, Link2Off } from "lucide-react";
 import type { CareerSignal, PathwayScenario } from "@workspace/api-client-react";
 import { getPivotInterests } from "../lib/career-pivot-copy";
 import { getLearningResourceLink } from "../lib/pathway-resource-links";
@@ -13,6 +13,7 @@ export function ScenarioCard({
   rank,
   evidence,
   profileInterests,
+  weeklyHours = 4,
   otherScore,
   otherLabel,
 }: {
@@ -21,6 +22,7 @@ export function ScenarioCard({
   rank?: number;
   evidence?: Map<string, CareerSignal>;
   profileInterests?: string[];
+  weeklyHours?: number;
   otherScore?: number;
   otherLabel?: string;
 }) {
@@ -29,6 +31,8 @@ export function ScenarioCard({
   const delta = otherScore === undefined ? undefined : scenario.matchScore - otherScore;
   const projectedScore = Math.min(99, scenario.matchScore + acquiredSkills.length * 5);
   const projectedGain = projectedScore - scenario.matchScore;
+  const totalEffort = scenario.reskillingPathway.reduce((total, step) => total + step.estimatedHours, 0);
+  const timelineWeeks = weeklyHours > 0 ? Math.ceil(totalEffort / weeklyHours) : 0;
   const pivotInterests = getPivotInterests(profileInterests, scenario.explainableReason);
   const pivotIntro = pivotInterests.length === 1
     ? t("pathway.pivotOne").replace("{interest}", pivotInterests[0])
@@ -38,12 +42,6 @@ export function ScenarioCard({
   const addAcquiredSkill = (skill: string) => {
     setAcquiredSkills((current) => current.includes(skill) ? current : [...current, skill]);
   };
-  const toggleSkill = (skill: string) => {
-    setAcquiredSkills((current) => current.includes(skill)
-      ? current.filter((item) => item !== skill)
-      : [...current, skill]);
-  };
-
   return (
     <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-scenario-${index}`}>
       <div className="role-head">
@@ -111,7 +109,24 @@ export function ScenarioCard({
         </div>
       )}
       <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{pivotIntro}</p>
-      {scenario.paceEstimate && <div className="metric-tag" data-testid={`text-scenario-pace-${index}`}><Clock3 size={11} /> Estimated pace: {scenario.paceEstimate}</div>}
+      <div className="pace-summary" data-testid={`text-scenario-pace-${index}`}>
+        <div className="pace-metric">
+          <Clock3 size={14} aria-hidden="true" />
+          <span>{t("pathway.totalEffort")}</span>
+          <strong>{totalEffort} {t("pathway.hours")}</strong>
+        </div>
+        <div className="pace-metric">
+          <CalendarClock size={14} aria-hidden="true" />
+          <span>{t("pathway.yourPace")}</span>
+          <strong>{weeklyHours} {t("pathway.hoursPerWeek")}</strong>
+        </div>
+        <div className="pace-metric">
+          <CalendarDays size={14} aria-hidden="true" />
+          <span>{t("pathway.timeline")}</span>
+          <strong>{t("pathway.weeks").replace("{count}", String(timelineWeeks))}</strong>
+        </div>
+        <p className="pace-disclaimer">{t("pathway.paceDisclaimer")}</p>
+      </div>
       <div className="scenario-sdg" data-testid={`text-scenario-sdg-${index}`}><Globe2 size={13} />{scenario.unSdgTag}</div>
       {scenario.matchedSkills && scenario.matchedSkills.length > 0 && (
         <>
@@ -127,21 +142,14 @@ export function ScenarioCard({
           {scenario.skillsGap.map((skill, skillIndex) => {
             const isChecked = acquiredSkills.includes(skill);
             return (
-              <label
-                className={`skill-chip missing skill-chip-checkable${isChecked ? " is-checked" : ""}`}
+              <span
+                className={`skill-chip missing skill-chip-state${isChecked ? " is-checked" : ""}`}
                 key={`${skill}-${skillIndex}`}
                 data-testid={`label-scenario-skill-${index}-${skillIndex}`}
               >
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={() => toggleSkill(skill)}
-                  aria-label={`${t("pathway.markSkillBuilt")}: ${skill}`}
-                  data-testid={`checkbox-scenario-skill-${index}-${skillIndex}`}
-                />
                 {isChecked && <Check size={11} aria-hidden="true" />}
                 <span>{skill}</span>
-              </label>
+              </span>
             );
           })}
         </div>
@@ -176,12 +184,13 @@ export function ScenarioCard({
         <ol>
           {scenario.reskillingPathway.map((step, stepIndex) => {
             const resource = getLearningResourceLink(step.resourceLink, step.resourceTitle);
-            const stepSkill = getStepSkill(step.step, scenario.skillsGap, stepIndex);
+            const stepSkill = step.teachesSkill ?? getStepSkill(step.step, scenario.skillsGap, stepIndex);
             const stepComplete = stepSkill ? acquiredSkills.includes(stepSkill) : false;
             return (
               <li className="scenario-step" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
                 <span className="scenario-step-copy">
                   <span>{step.step}</span>
+                  {stepSkill && <span className="scenario-step-teaches">{t("pathway.teachesSkill")}: <strong>{stepSkill}</strong></span>}
                   {resource.available ? (
                     <a className="scenario-step-resource" href={resource.href} target="_blank" rel="noopener noreferrer" aria-label={`${resource.label} for ${step.step}`} data-testid={`link-scenario-step-resource-${index}-${stepIndex}`}>
                       {resource.label}<ExternalLink size={11} aria-hidden="true" />
