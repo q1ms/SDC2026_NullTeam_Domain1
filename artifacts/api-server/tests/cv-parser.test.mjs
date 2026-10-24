@@ -33,10 +33,15 @@ test("validates exactly the requested profile shape and normalizes skill names",
   assert.deepEqual(validateParsedCv(expected), expected);
   assert.deepEqual(validateParsedCv("```json\n" + JSON.stringify(expected) + "\n```"), expected);
   assert.deepEqual(validateParsedCv(`<json>\n${JSON.stringify(expected)}\n</json>`), expected);
+  assert.deepEqual(
+    validateParsedCv(`AI result:\n${JSON.stringify(expected)}\nGenerated successfully.\u200B`),
+    expected,
+  );
   assert.throws(() => validateParsedCv({ ...expected, extra: true }), /unexpected shape/);
   assert.throws(() => validateParsedCv({ ...expected, yearsOfExperience: "9" }), /invalid profile fields/);
   assert.throws(() => validateParsedCv({ ...expected, yearsOfExperience: 41 }), /invalid profile fields/);
   assert.throws(() => validateParsedCv({ ...expected, skills: ["SQL", 10] }), /invalid profile fields/);
+  assert.throws(() => validateParsedCv("The AI response contained no profile object."), /No JSON object could be extracted/);
 });
 
 test("runs the async RunPod job and parses the returned JSON envelope", async () => {

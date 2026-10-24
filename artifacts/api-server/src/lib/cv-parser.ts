@@ -40,17 +40,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function parseJsonText(rawText: string): unknown {
-  const cleanedText = rawText
-    .replace(/```(?:\s*json)?/gi, "")
-    .replace(/<\/?json>/gi, "")
-    .trim();
-  const start = cleanedText.indexOf("{");
-  const end = cleanedText.lastIndexOf("}");
-  if (start < 0 || end < start) {
-    throw new Error("The CV model response did not contain a JSON object.");
+function parseJsonText(llmTextResponse: string): unknown {
+  const jsonMatch = llmTextResponse.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("No JSON object could be extracted from the AI response.");
   }
-  return JSON.parse(cleanedText.slice(start, end + 1)) as unknown;
+  return JSON.parse(jsonMatch[0]) as unknown;
 }
 
 function unwrapModelOutput(output: unknown): unknown {
