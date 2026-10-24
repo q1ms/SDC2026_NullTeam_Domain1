@@ -181,6 +181,24 @@ html { @apply scroll-smooth; }
 .legend-dot.coral { @apply bg-[#d98162]; }
 .chart-wrap { @apply h-[305px] w-full; }
 .chart-note { @apply border-t border-border pt-[11px] text-[10px] text-muted-foreground; }
+.momentum-legend { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-bottom: 12px; font-size: 11px; color: hsl(var(--muted-foreground)); }
+.momentum-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.momentum-legend i { width: 9px; height: 9px; border-radius: 3px; }
+.momentum-list { list-style: none; margin: 14px 0; padding: 0; }
+.momentum-row { padding: 17px 0; border-top: 1px solid hsl(var(--border)); min-width: 0; }
+.momentum-label, .momentum-detail { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px 16px; }
+.momentum-label strong { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; overflow-wrap: anywhere; }
+.momentum-label strong svg { flex-shrink: 0; }
+.momentum-badge { border: 1px solid; border-radius: 20px; padding: 3px 8px; font-size: 10px; }
+.momentum-bars { display: grid; gap: 5px; margin: 12px 0 8px; }
+.momentum-track { width: 100%; background: hsl(var(--muted) / .3); border-radius: 3px; height: 10px; }
+.momentum-track:first-child { height: 5px; }
+.momentum-track span { display: block; height: 100%; border-radius: inherit; }
+.momentum-previous { background: #979797; }
+.momentum-detail { color: hsl(var(--muted-foreground)); font-size: 11px; }
+.momentum-detail > span { display: inline-flex; align-items: center; gap: 5px; }
+.momentum-leader { display: block; color: #61A9BD; margin-top: 6px; font-size: 10px; }
+.momentum-chart .chart-note p { margin: 0 0 8px; line-height: 1.7; }
 .lower-grid { @apply mt-[17px] grid gap-[17px]; grid-template-columns:minmax(0,1.45fr) minmax(255px,.8fr); }
 .category-card,.signals-card { @apply p-5; }
 .trend-list { @apply mt-[14px] grid gap-0; }

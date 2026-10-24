@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CoverageMomentum } from './coverageMomentum';
 
 export interface LiveTrend {
   topic: string;
@@ -15,4 +16,5 @@ export interface LiveTrend {
   sourceName: string;
   articleUrl: string;
   publishedAt: Date;
+  coverageMomentum?: CoverageMomentum;
 }

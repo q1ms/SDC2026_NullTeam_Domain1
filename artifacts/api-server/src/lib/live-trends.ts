@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
+import { summarizeCoverage } from "./coverage-momentum";
 
 const FEED_URL =
   "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
@@ -180,7 +181,7 @@ function classifyArticle(article: FeedArticle): string | null {
   return null;
 }
 
-function buildTopics(articles: FeedArticle[]): LiveTrend[] {
+function buildTopics(articles: FeedArticle[], now: Date): LiveTrend[] {
   const topics = new Map<string, TopicAccumulator>();
 
   for (const article of articles) {
@@ -223,7 +224,18 @@ function buildTopics(articles: FeedArticle[]): LiveTrend[] {
   if (ranked.length < 5) {
     throw new Error("The news feed returned fewer than five usable AI topics");
   }
-  return ranked;
+  const sampleDates = articles.map((article) => article.publishedAt);
+  return ranked.map((trend) => ({
+    ...trend,
+    coverageMomentum: summarizeCoverage(
+      articles.filter((article) => TOPIC_RULES.some((rule) => rule.topic === trend.topic)
+        ? classifyArticle(article) === trend.topic
+        : article.articleUrl === trend.articleUrl)
+        .map((article) => article.publishedAt),
+      sampleDates,
+      now,
+    ),
+  }));
 }
 
 export async function getLiveTrends(): Promise<LiveTrendsResponse> {
@@ -244,20 +256,27 @@ export async function getLiveTrends(): Promise<LiveTrendsResponse> {
 
   const feed = asRecord(parser.parse(xml));
   const channel = asRecord(asRecord(feed.rss).channel);
+  const seenUrls = new Set<string>();
   const articles = asList(channel.item)
     .map(parseArticle)
     .filter((article): article is FeedArticle => article !== null)
+    .filter((article) => {
+      if (seenUrls.has(article.articleUrl)) return false;
+      seenUrls.add(article.articleUrl);
+      return true;
+    })
     .sort((left, right) => articleTime(right) - articleTime(left));
 
   if (articles.length === 0) {
     throw new Error("AI news RSS feed contained no usable articles");
   }
 
+  const now = new Date();
   const result: LiveTrendsResponse = {
     source: "Google News RSS",
     feedUrl: FEED_URL,
-    fetchedAt: new Date(),
-    trends: buildTopics(articles),
+    fetchedAt: now,
+    trends: buildTopics(articles, now),
   };
 
   cachedResponse = result;

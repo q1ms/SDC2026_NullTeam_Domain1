@@ -15,6 +15,7 @@ export * from './careerProfileInputProfileMode';
 export * from './careerProfileProfileMode';
 export * from './careerSignal';
 export * from './careerSignalKind';
+export * from './coverageMomentum';
 export * from './evidenceSnapshot';
 export * from './generatedPathway';
 export * from './healthStatus';

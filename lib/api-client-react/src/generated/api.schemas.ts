@@ -330,6 +330,17 @@ export interface SdgSkillMapping {
   skills: string[];
 }
 
+/**
+ * Dated story counts in equal rolling seven-day windows within the returned RSS sample, not hiring demand.
+ */
+export interface CoverageMomentum {
+  /** @minimum 0 */
+  recentCount: number;
+  /** @minimum 0 */
+  previousCount: number;
+  baselineAvailable: boolean;
+}
+
 export interface LiveTrend {
   topic: string;
   /** @minimum 1 */
@@ -339,6 +350,7 @@ export interface LiveTrend {
   sourceName: string;
   articleUrl: string;
   publishedAt: string;
+  coverageMomentum?: CoverageMomentum;
 }
 
 export interface LiveTrendsResponse {
