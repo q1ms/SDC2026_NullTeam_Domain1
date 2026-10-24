@@ -3,6 +3,7 @@ import { test } from "node:test";
 import {
   addInterestSelection,
   getInterestSuggestions,
+  getInterestEntryOptions,
   INTEREST_OPTIONS,
   toggleInterestSelection,
 } from "../src/data/catalog.ts";
@@ -10,6 +11,27 @@ import {
   GeneratePathwayBody,
   SaveCareerProfileBody,
 } from "../../../lib/api-zod/src/generated/api.ts";
+
+test("custom interests can be added, removed, and submitted without an allowlist", () => {
+  assert.deepEqual(getInterestEntryOptions("  goon  "), ["goon"]);
+  assert.ok(getInterestEntryOptions("tech").includes("tech"));
+  assert.ok(getInterestEntryOptions("tech").includes("AI & automation"));
+  assert.deepEqual(getInterestEntryOptions("   "), []);
+  assert.ok(!getInterestEntryOptions(" edtech ").includes("edtech"));
+  assert.deepEqual(getInterestEntryOptions("GOON", ["goon"]), []);
+  const interests = addInterestSelection(["EdTech"], "  goon  ");
+  assert.deepEqual(interests, ["EdTech", "goon"]);
+  assert.deepEqual(addInterestSelection(interests, "GOON"), interests);
+  assert.deepEqual(addInterestSelection(interests, " "), interests);
+  assert.deepEqual(toggleInterestSelection(interests, "goon"), ["EdTech"]);
+  const multilingual = addInterestSelection(interests, "Seni & budaya");
+  const profile = { currentRole: "Student", industry: "Education", yearsExperience: 0,
+    skills: ["Communication"], weeklyHours: 4, interests: multilingual };
+  assert.deepEqual(SaveCareerProfileBody.parse(profile).interests, multilingual);
+  assert.deepEqual(GeneratePathwayBody.parse({
+    profileId: "00000000-0000-4000-8000-000000000001", profile,
+  }).profile.interests, multilingual);
+});
 
 test("includes the requested cross-sector career areas without duplicates", () => {
   const requested = [

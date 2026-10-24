@@ -8,7 +8,8 @@ import {
 import { ArrowRight, Clock3, ExternalLink, Layers, LoaderCircle, Search, ShieldCheck, UserRound, X, Zap } from 'lucide-react';
 import {
   addInterestSelection,
-  getInterestSuggestions,
+  getInterestEntryOptions,
+  INTEREST_OPTIONS,
   toggleInterestSelection,
   type CareerProfile,
 } from '../data/catalog';
@@ -145,7 +146,7 @@ export function IntakePage({
     control?.focus({ preventScroll: true });
     control?.scrollIntoView({ block: 'center' });
   }, [focusRequest]);
-  const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
+  const interestSuggestions = getInterestEntryOptions(interestSearch, form.interests);
   const interestSuggestionsKey = interestSuggestions.join('\u0000');
   const isInterestDropdownOpen = Boolean(interestSearch.trim());
   const activeSuggestionIndex = interestSuggestions.length
@@ -220,7 +221,13 @@ export function IntakePage({
       setActiveInterestIndex(0);
       return;
     }
-    if (!interestSuggestions.length) return;
+    if (!interestSuggestions.length) {
+      if (event.key === 'Enter' && interestSearch.trim()) {
+        event.preventDefault();
+        setInterestSearch('');
+      }
+      return;
+    }
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       setActiveInterestIndex((current) => (current + 1) % interestSuggestions.length);
@@ -342,6 +349,7 @@ export function IntakePage({
     <>
       <div className="field" data-testid="group-interest-options">
         <label htmlFor="interest-search">Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
+        <p className="field-hint" id="interest-help">Choose a suggestion or add your own interest.</p>
         <div
           className="interest-search"
           style={isInterestDropdownOpen ? { paddingBottom: `${interestDropdownHeight + 8}px` } : undefined}
@@ -361,6 +369,7 @@ export function IntakePage({
               onKeyDown={handleInterestSearchKeyDown}
               placeholder="Search areas of interest (e.g., tech, health, AI)..."
               aria-label="Search areas of interest"
+              aria-describedby="interest-help"
               role="combobox"
               aria-autocomplete="list"
               aria-expanded={isInterestDropdownOpen}
@@ -394,10 +403,10 @@ export function IntakePage({
                     onClick={() => addInterest(interest)}
                     data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
                   >
-                    <span>{interest}</span><span className="interest-suggestion-hint">Add</span>
+                    <span>{INTEREST_OPTIONS.includes(interest) ? interest : `Add “${interest}”`}</span><span className="interest-suggestion-hint">{INTEREST_OPTIONS.includes(interest) ? 'Add' : 'Custom'}</span>
                   </div>
                 )) : (
-                  <p className="interest-no-results" role="status" data-testid="text-no-interest-results">No matching areas found.</p>
+                  <p className="interest-no-results" role="status" data-testid="text-no-interest-results">This interest is already selected.</p>
                 )}
               </div>
             )}

@@ -96,7 +96,18 @@ export function getInterestSuggestions(query: string, selectedInterests: readonl
 }
 
 export function addInterestSelection(current: readonly string[], interest: string): string[] {
-  return current.includes(interest) ? [...current] : [...current, interest];
+  const trimmed = interest.trim();
+  const key = (value: string) => value.trim().normalize('NFC').toLowerCase();
+  return !trimmed || current.some((item) => key(item) === key(trimmed))
+    ? [...current] : [...current, trimmed];
+}
+
+export function getInterestEntryOptions(query: string, selected: readonly string[] = []): string[] {
+  const suggestions = getInterestSuggestions(query, selected);
+  const value = query.trim();
+  const key = (text: string) => text.trim().normalize('NFC').toLowerCase();
+  const exists = [...INTEREST_OPTIONS, ...selected].some((item) => key(item) === key(value));
+  return value && !exists ? [...suggestions, value] : suggestions;
 }
 
 export function toggleInterestSelection(current: readonly string[], interest: string): string[] {

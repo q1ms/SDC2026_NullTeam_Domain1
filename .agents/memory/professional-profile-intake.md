@@ -20,3 +20,9 @@ Detailed profile uses manual fields without the “Import from text” panel; re
 **Why:** The user subsequently asked to remove text import from Detailed profile, superseding the earlier paste-to-import choice.
 
 **How to apply:** Do not reintroduce the import panel into Detailed profile. Preserve existing profile data and distinguish saved links from authenticated LinkedIn connections; revisit import or OAuth only if explicitly requested.
+
+Areas of interest are open-ended; the suggestions are not an allowed-values list.
+
+**Why:** The user explicitly wants this field to accept answers outside the predefined list.
+
+**How to apply:** Allow custom interests as removable tags in both modes, and preserve them through saving and pathway generation without requiring a known category.
