@@ -188,7 +188,7 @@ export function PathwayPage({
         <span className="field-hint" data-testid="text-scenario-count">{t('pathway.pathwayCount').replace('{count}', String(scenarios.length))}</span>
       </div>
       {scenarios.length ? (
-        <div className="role-grid">
+        <div className="role-grid items-start">
           {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} weeklyHours={weeklyHours} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
         </div>
       ) : (
@@ -218,7 +218,7 @@ export function PathwayPage({
       {sdgsQuery.isLoading && <div className="section-card loading-card" role="status" data-testid="status-sdgs-loading">Loading SDG skill mappings…</div>}
       {sdgsQuery.isError && <div className="form-errors" role="alert" data-testid="status-sdgs-error">Could not load the SDG skill mappings.</div>}
       {prioritizedSdgs && (
-        <div className="sdg-grid" data-testid="list-sdg-mappings">
+        <div className="sdg-grid items-start" data-testid="list-sdg-mappings">
           {prioritizedSdgs.map((goal) => {
             const isPersonalized = personalizedSdgNumbers.has(goal.number);
             return (

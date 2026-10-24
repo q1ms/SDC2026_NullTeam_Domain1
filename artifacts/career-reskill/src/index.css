@@ -243,8 +243,8 @@ html { @apply scroll-smooth; }
 .aside-step { @apply flex gap-[10px] border-t border-[#d9e1d7] py-3; }
 .step-number { @apply grid size-5 shrink-0 place-items-center rounded-full bg-[#d8e8df] font-mono text-[10px] text-[#2e7468]; }
 .aside-step span:last-child { @apply text-[10px] leading-relaxed text-[#53665c]; }
-.role-grid { @apply mt-[23px] grid grid-cols-2 gap-[15px]; }
-.role-card { @apply relative overflow-hidden p-[21px] transition-[transform,box-shadow] duration-200; }
+.role-grid { @apply mt-[23px] grid grid-cols-2 items-start gap-[15px]; }
+.role-card { @apply relative self-start overflow-hidden p-[21px] transition-[transform,box-shadow] duration-200; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; }
 .role-card:hover { @apply -translate-y-0.5 shadow-xl; }
 .role-card:before { @apply absolute -top-[45px] -right-7 size-[104px] rounded-full; background:rgba(126,182,168,.13); content:''; }
 .role-head { @apply relative flex items-start justify-between gap-3; }
@@ -310,8 +310,8 @@ html { @apply scroll-smooth; }
 .section-header p { @apply mt-[5px] text-[10px] text-muted-foreground; }
 .sdg-header h2 { @apply flex items-center gap-2; }
 .sdg-header h2 svg { @apply text-[#34796d]; }
-.sdg-grid { @apply grid grid-cols-2 gap-[9px]; }
-.sdg-card { @apply rounded-[9px] border border-[#e2e0d6] bg-[#fffefa] px-[13px]; }
+.sdg-grid { @apply grid grid-cols-2 items-start gap-[9px]; }
+.sdg-card { @apply self-start rounded-[9px] border border-[#e2e0d6] bg-[#fffefa] px-[13px]; }
 .sdg-card summary { @apply flex min-h-[46px] cursor-pointer list-none items-center gap-[10px]; }
 .sdg-card summary::-webkit-details-marker { display:none; }
 .sdg-card summary:after { @apply ml-auto text-[13px] text-[#34796d]; content:'＋'; }

@@ -64,6 +64,8 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     client.setQueryData(["/api/pathway-demo"], pathway);
     client.setQueryData(["/api/sdgs/skills"], []);
     const html = render(PathwayPage, { profileId: pathway.profileId, profile: null, profileLoading: false });
+    assert.ok(html.includes('class="role-grid items-start"'), "Career cards should align to the top rather than stretch to equal heights.");
+    assert.ok(html.includes('class="sdg-grid items-start"'), "Expanded SDG cards should retain independent row heights.");
     for (const text of ["Read-only sample demo", "personal profile is untouched", "Gradual AI adoption", "Faster AI adoption",
       "not probabilities", "Fixture Labor Office",
       "United States", "Aug 27, 2026", "Oct 23, 2026", "Not local vacancies", "SQLBolt", "Free",
