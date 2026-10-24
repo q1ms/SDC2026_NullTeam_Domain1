@@ -41,9 +41,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function parseJsonText(llmTextResponse: string): unknown {
-  const jsonMatch = llmTextResponse.match(/\{[\s\S]*\}/);
+  const cleanText = llmTextResponse.replace(/```json/gi, "").replace(/```/g, "").trim();
+  const jsonMatch = cleanText.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
   if (!jsonMatch) {
-    throw new Error("No JSON object could be extracted from the AI response.");
+    // Raw model text may contain personal résumé details; keep it out of errors and server logs.
+    throw new Error("No JSON object or array could be extracted from the AI response.");
   }
   return JSON.parse(jsonMatch[0]) as unknown;
 }
@@ -126,6 +128,7 @@ export function buildCvExtractionInput(rawText: string): Record<string, unknown>
       "Do not include markdown, code fences, explanations, or additional keys.",
       "Résumé text as a JSON-encoded string:",
       JSON.stringify(rawText),
+      "You must return ONLY raw, valid JSON. Do not include markdown formatting, do not use ```json backticks, and do not include any conversational text.",
     ].join("\n"),
     sampling_params: {
       max_tokens: 1200,
