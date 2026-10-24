@@ -184,6 +184,9 @@ html { @apply scroll-smooth; }
 .legend-dot { @apply size-[7px] rounded-full bg-[#347a70]; }
 .legend-dot.coral { @apply bg-[#d98162]; }
 .chart-wrap { @apply h-[305px] w-full; }
+.trend-tooltip { display: grid; min-width: 184px; gap: 5px; border: 1px solid rgba(114,199,181,.34); border-radius: 10px; padding: 11px 13px; background: rgba(8,20,23,.97); color: #f2f7f5; box-shadow: 0 14px 36px rgba(0,0,0,.42); backdrop-filter: blur(12px); }
+.trend-tooltip-label { color: #9dbbb5; font-size: 10px; line-height: 1.35; }
+.trend-tooltip-count { color: #f4fbf8; font-size: 12px; font-weight: 750; line-height: 1.4; }
 .chart-note { @apply border-t border-border pt-[11px] text-[10px] text-muted-foreground; }
 .lower-grid { @apply mt-[17px] grid gap-[17px]; grid-template-columns:minmax(0,1.45fr) minmax(255px,.8fr); }
 .category-card,.signals-card { @apply p-5; }

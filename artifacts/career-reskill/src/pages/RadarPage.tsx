@@ -1,13 +1,34 @@
 import { Link } from 'wouter';
 import { Activity, ArrowRight, BrainCircuit, ChartNoAxesCombined, RefreshCw, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
-import { CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Cell } from 'recharts';
+import { CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar } from 'recharts';
 import { useGetCareerEvidence, useGetLiveTrends } from '@workspace/api-client-react';
 import { EvidenceList } from '../components/EvidenceList';
 import type { CareerProfile } from '../data/catalog';
 import { CoverageList } from '../components/CoverageList';
 import { useLanguage } from '../i18n/LanguageContext';
 
-const COLORS = ['#72c7b5', '#87bfae', '#9bc9b2', '#a5c7bd', '#b1cab0', '#ccce9c', '#dacb94'];
+type RecentArticleTooltipProps = {
+  active?: boolean;
+  label?: string | number;
+  payload?: Array<{ value?: unknown }>;
+};
+
+export function RecentArticleTooltip({ active, payload, label }: RecentArticleTooltipProps) {
+  const { t } = useLanguage();
+  if (!active || !payload?.length) return null;
+
+  const count = Number(payload[0].value);
+  if (!Number.isFinite(count)) return null;
+
+  return (
+    <div className="trend-tooltip" role="status" data-testid="tooltip-recent-articles">
+      <span className="trend-tooltip-label">{label}</span>
+      <strong className="trend-tooltip-count">
+        {count.toLocaleString()} {t(count === 1 ? "radar.recentArticleFound" : "radar.recentArticlesFound")}
+      </strong>
+    </div>
+  );
+}
 
 export function RadarPage({ profile }: { profile: CareerProfile | null }) {
   const { t } = useLanguage();
@@ -74,13 +95,17 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
             <div className="chart-wrap" data-testid="chart-skill-trends">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trends} layout="vertical" margin={{ top: 4, right: 22, bottom: 0, left: 12 }} barCategoryGap={11}>
-                  <CartesianGrid horizontal={false} stroke="hsl(var(--border))" />
+                  <defs>
+                    <linearGradient id="trend-bar-gradient" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#216c64" />
+                      <stop offset="100%" stopColor="#72c7b5" />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid horizontal={false} vertical stroke="hsl(var(--border))" strokeDasharray="3 5" strokeOpacity={0.16} />
                   <XAxis type="number" domain={[0, 'dataMax + 1']} allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
                   <YAxis type="category" dataKey="topic" width={190} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--foreground))', fontSize: 10 }} />
-                  <Tooltip cursor={{ fill: 'rgba(114,199,181,.08)' }} contentStyle={{ background: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', borderRadius: 8 }} itemStyle={{ color: 'hsl(var(--primary))' }} formatter={(value) => [`${value} recent stories`, 'Coverage']} />
-                  <Bar dataKey="mentions" radius={[0, 4, 4, 0]} maxBarSize={17} animationDuration={850}>
-                    {trends.map((trend, index) => <Cell key={trend.topic} fill={COLORS[index % COLORS.length]} />)}
-                  </Bar>
+                  <Tooltip cursor={{ fill: 'rgba(114,199,181,.07)' }} content={<RecentArticleTooltip />} />
+                  <Bar dataKey="mentions" fill="url(#trend-bar-gradient)" radius={[0, 7, 7, 0]} maxBarSize={18} animationBegin={0} animationDuration={950} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

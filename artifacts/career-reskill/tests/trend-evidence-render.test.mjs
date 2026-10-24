@@ -58,7 +58,7 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
       createElement(Router, { ssrPath: path }, createElement(component, props))));
   try {
     const { PathwayPage } = await server.ssrLoadModule("/src/pages/PathwayPage.tsx");
-    const { RadarPage } = await server.ssrLoadModule("/src/pages/RadarPage.tsx");
+    const { RadarPage, RecentArticleTooltip } = await server.ssrLoadModule("/src/pages/RadarPage.tsx");
     const { AdoptionComparisonPanel } = await server.ssrLoadModule("/src/components/AdoptionComparisonPanel.tsx");
     const { ScenarioCard } = await server.ssrLoadModule("/src/components/ScenarioCard.tsx");
     client.setQueryData(["/api/pathway-demo"], pathway);
@@ -105,6 +105,10 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     // Empty live coverage avoids a chart dependency; public evidence still renders.
     client.setQueryData(["/api/trends"], { source: "Fixture RSS", fetchedAt: "2026-10-23T00:00:00Z", trends: [] });
     const radar = render(RadarPage, { profile: null }, "/radar");
+    const tooltip = render(RecentArticleTooltip, { active: true, label: "AI agents", payload: [{ value: 21 }] });
+    assert.ok(tooltip.includes("AI agents"));
+    assert.ok(tooltip.includes("21 recent articles found"));
+    assert.equal(render(RecentArticleTooltip, { active: false, label: "AI agents", payload: [{ value: 21 }] }), "");
     for (const text of ["Fixture Labor Office", "Labor market data", "United States", "Fixture snapshot",
       "href=\"https://example.test/report\"", "/pathway?demo=1"]) assert.ok(radar.includes(text), `Radar missing ${text}`);
     const evidenceStart = radar.indexOf('<details class="evidence-details" data-testid="details-evidence-fixture-report">');
