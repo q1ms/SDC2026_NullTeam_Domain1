@@ -65,13 +65,13 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     client.setQueryData(["/api/pathway-demo"], pathway);
     client.setQueryData(["/api/sdgs/skills"], []);
     const html = render(PathwayPage, { profileId: pathway.profileId, profile: null, profileLoading: false });
-    for (const text of ["Read-only sample demo", "personal profile is untouched", "Moderate adoption", "Fast adoption",
+    for (const text of ["Read-only sample demo", "personal profile is untouched", "Gradual AI adoption", "Faster AI adoption",
       "Fixture deterministic model", "not probabilities", "You decide", "Fixture Labor Office",
       "United States", "Aug 27, 2026", "Oct 23, 2026", "Not local vacancies", "SQLBolt", "Free",
       "href=\"https://sqlbolt.com/\"", "href=\"#evidence-fixture-report\"", "5 learning h/week"]) {
       assert.ok(html.includes(text), `Missing ${text}`);
     }
-    assert.match(html, /data-testid="button-comparison-moderate"[^>]*>Moderate adoption/);
+    assert.match(html, /data-testid="button-comparison-moderate"[^>]*>[\s\S]*?Gradual AI adoption/);
     assert.ok(!html.includes("empty-pathway-profile"));
     assert.ok(!html.includes("youtube.com/results"));
     assert.ok(!html.includes("row-personalized-reading"));

@@ -20,6 +20,7 @@ import { PersonalizedReading } from "../components/PersonalizedReading";
 import { ScenarioCard } from "../components/ScenarioCard";
 import { EvidenceList } from "../components/EvidenceList";
 import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
+import { scenarioLabel } from "../lib/adoption-comparison";
 import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
 
 export function PathwayPage({
@@ -107,6 +108,8 @@ export function PathwayPage({
 
   const scenarios = activeComparison?.scenarios ?? pathwayQuery.data.scenarios;
   const otherComparison = analysis?.comparisons.find((c) => c !== activeComparison);
+  const activeComparisonLabel = activeComparison ? scenarioLabel(activeComparison.id, activeComparison.name) : undefined;
+  const otherComparisonLabel = otherComparison ? scenarioLabel(otherComparison.id, otherComparison.name) : undefined;
   const top = scenarios[0];
   const personalizedSdgNumbers = getPersonalizedSdgNumbers(scenarios.map((scenario) => scenario.unSdgTag));
   const prioritizedSdgs = sdgsQuery.data
@@ -161,17 +164,17 @@ export function PathwayPage({
             <h2>{top.roleTitle}</h2>
             <p>{top.explainableReason}</p>
           </div>
-          <div className="banner-figure">{top.matchScore}<small>{activeComparison ? `${activeComparison.name} score` : "profile match"}</small></div>
+          <div className="banner-figure">{top.matchScore}<small>{activeComparisonLabel ? `${activeComparisonLabel} fit score` : "profile match"}</small></div>
         </section>
       )}
 
       <div className="section-header fade-in delay-2">
-        <div><h2>Career scenarios{activeComparison ? ` · ${activeComparison.name}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
+        <div><h2>Career scenarios{activeComparisonLabel ? ` · ${activeComparisonLabel}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
         <span className="field-hint" data-testid="text-scenario-count">{scenarios.length} pathways</span>
       </div>
       {scenarios.length ? (
         <div className="role-grid">
-          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparison?.name} />)}
+          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
         </div>
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">No career scenarios are available yet.</div>
