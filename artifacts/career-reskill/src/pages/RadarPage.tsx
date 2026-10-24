@@ -1,10 +1,12 @@
 import { Link } from 'wouter';
 import { Activity, ArrowRight, BrainCircuit, ChartNoAxesCombined, RefreshCw, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
+import { CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Cell } from 'recharts';
 import { useGetCareerEvidence, useGetLiveTrends } from '@workspace/api-client-react';
 import { EvidenceList } from '../components/EvidenceList';
 import type { CareerProfile } from '../data/catalog';
 import { CoverageList } from '../components/CoverageList';
-import { TopicMomentumChart } from '../components/TopicMomentumChart';
+
+const COLORS = ['#72c7b5', '#87bfae', '#9bc9b2', '#a5c7bd', '#b1cab0', '#ccce9c', '#dacb94'];
 
 export function RadarPage({ profile }: { profile: CareerProfile | null }) {
   const trendsQuery = useGetLiveTrends({
@@ -54,7 +56,8 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
 
       <section className="section-card trend-card fade-in delay-2" aria-labelledby="trend-title">
         <div className="card-head">
-          <div><h2 className="card-title" id="trend-title">AI topics in recent coverage</h2><p className="card-description">What’s rising, holding steady, or cooling in the news · latest seven days versus the previous seven</p></div>
+          <div><h2 className="card-title" id="trend-title">AI topics in recent coverage</h2><p className="card-description">Ranked by how many recent feed stories mention each topic</p></div>
+          <div className="legend"><span className="legend-item"><i className="legend-dot" />News mentions</span></div>
         </div>
         {trendsQuery.isLoading && <div className="trend-state" role="status" data-testid="status-trends-loading">Fetching current AI news topics…</div>}
         {trendsQuery.isError && (
@@ -67,7 +70,20 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
         )}
         {trends.length > 0 && (
           <>
-            <TopicMomentumChart trends={trends} fetchedAt={trendsQuery.data?.fetchedAt} />
+            <div className="chart-wrap" data-testid="chart-skill-trends">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={trends} layout="vertical" margin={{ top: 4, right: 22, bottom: 0, left: 12 }} barCategoryGap={11}>
+                  <CartesianGrid horizontal={false} stroke="hsl(var(--border))" />
+                  <XAxis type="number" domain={[0, 'dataMax + 1']} allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} />
+                  <YAxis type="category" dataKey="topic" width={190} tickLine={false} axisLine={false} tick={{ fill: 'hsl(var(--foreground))', fontSize: 10 }} />
+                  <Tooltip cursor={{ fill: 'rgba(114,199,181,.08)' }} contentStyle={{ background: 'hsl(var(--popover))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))', borderRadius: 8 }} itemStyle={{ color: 'hsl(var(--primary))' }} formatter={(value) => [`${value} recent stories`, 'Coverage']} />
+                  <Bar dataKey="mentions" radius={[0, 4, 4, 0]} maxBarSize={17} animationDuration={850}>
+                    {trends.map((trend, index) => <Cell key={trend.topic} fill={COLORS[index % COLORS.length]} />)}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="chart-note">Counts are distinct stories in the feed, not job-demand estimates or forecasts.</div>
           </>
         )}
       </section>

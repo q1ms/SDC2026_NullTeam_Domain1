@@ -626,8 +626,6 @@ components:
         publishedAt:
           type: string
           format: date-time
-        coverageMomentum:
-          $ref: "#/components/schemas/CoverageMomentum"
       required:
         - topic
         - mentions
@@ -636,22 +634,6 @@ components:
         - sourceName
         - articleUrl
         - publishedAt
-    CoverageMomentum:
-      type: object
-      description: Dated story counts in equal rolling seven-day windows within the returned RSS sample, not hiring demand.
-      properties:
-        recentCount:
-          type: integer
-          minimum: 0
-        previousCount:
-          type: integer
-          minimum: 0
-        baselineAvailable:
-          type: boolean
-      required:
-        - recentCount
-        - previousCount
-        - baselineAvailable
     LiveTrendsResponse:
       type: object
       properties:

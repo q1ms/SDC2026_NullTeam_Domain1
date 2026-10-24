@@ -3398,10 +3398,6 @@ export const ListSdgSkillMappingsResponse = zod.array(ListSdgSkillMappingsRespon
  * @summary Get five current AI topics from recent news coverage
  */
 
-export const getLiveTrendsResponseTrendsItemCoverageMomentumRecentCountMin = 0;
-
-export const getLiveTrendsResponseTrendsItemCoverageMomentumPreviousCountMin = 0;
-
 export const getLiveTrendsResponseTrendsMin = 5;
 export const getLiveTrendsResponseTrendsMax = 5;
 
@@ -3418,12 +3414,7 @@ export const GetLiveTrendsResponse = zod.object({
   "summary": zod.string(),
   "sourceName": zod.string(),
   "articleUrl": zod.string().url(),
-  "publishedAt": zod.coerce.date(),
-  "coverageMomentum": zod.object({
-  "recentCount": zod.number().int().min(getLiveTrendsResponseTrendsItemCoverageMomentumRecentCountMin),
-  "previousCount": zod.number().int().min(getLiveTrendsResponseTrendsItemCoverageMomentumPreviousCountMin),
-  "baselineAvailable": zod.boolean()
-}).optional().describe('Dated story counts in equal rolling seven-day windows within the returned RSS sample, not hiring demand.')
+  "publishedAt": zod.coerce.date()
 })).min(getLiveTrendsResponseTrendsMin).max(getLiveTrendsResponseTrendsMax)
 })
 
