@@ -413,7 +413,13 @@ export function IntakePage({
         clearUnsavedWarning();
         isDirty.current = false;
       } catch (error) {
-        setSaveFailed(saveErrorMessage(error) ?? 'Your profile could not be saved. Check the API server and try again.');
+        console.error('Profile save failed:', error);
+        setSaveFailed(
+          saveErrorMessage(error)
+          ?? (error instanceof Error && error.message.trim()
+            ? error.message
+            : 'Your profile could not be saved. Check the API server and try again.'),
+        );
         return;
       }
 
