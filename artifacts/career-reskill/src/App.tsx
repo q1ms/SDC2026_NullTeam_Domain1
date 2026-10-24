@@ -15,14 +15,22 @@ import { IntakePage } from './pages/IntakePage';
 import { PathwayPage } from './pages/PathwayPage';
 import { RadarPage } from './pages/RadarPage';
 import type { CareerProfile } from './data/catalog';
-import { clearLegacyProfile, getProfileId, readLegacyProfile } from './data/profile';
+import {
+  clearLegacyProfile,
+  clearStoredProfileId,
+  getProfileIdentity,
+  isProfileNotFoundError,
+  readLegacyProfile,
+} from './data/profile';
 import { LanguageProvider } from './i18n/LanguageContext';
 
 const queryClient = new QueryClient();
 
-function Router() {
-  const [profileId] = useState(() => getProfileId());
+export function CareerReskillRouter() {
+  const [profileIdentity, setProfileIdentity] = useState(() => getProfileIdentity());
+  const profileId = profileIdentity.profileId;
   const queryClient = useQueryClient();
+  const [location, setLocation] = useLocation();
   const profileQuery = useGetCareerProfile(profileId, {
     query: {
       queryKey: getGetCareerProfileQueryKey(profileId),
@@ -32,8 +40,33 @@ function Router() {
   });
   const saveMutation = useSaveCareerProfile();
   const migrationAttempted = useRef(false);
+  const missingProfileHandled = useRef<string | null>(null);
   const legacyProfile = useRef(readLegacyProfile());
   const [isMigrating, setIsMigrating] = useState(false);
+  const profileNotFound =
+    profileQuery.isError && isProfileNotFoundError(profileQuery.error);
+
+  useEffect(() => {
+    if (!profileNotFound || missingProfileHandled.current === profileId) return;
+
+    missingProfileHandled.current = profileId;
+    if (!profileIdentity.isNew) {
+      clearStoredProfileId();
+      setProfileIdentity(getProfileIdentity());
+      queryClient.removeQueries({ queryKey: getGetCareerProfileQueryKey(profileId) });
+    }
+    if (location !== "/intake") {
+      setLocation("/intake", { replace: true });
+    }
+  }, [
+    location,
+    profileId,
+    profileIdentity.isNew,
+    profileNotFound,
+    queryClient,
+    setLocation,
+  ]);
+
   useEffect(() => {
     if (
       !profileQuery.isSuccess ||
@@ -51,6 +84,7 @@ function Router() {
       {
         onSuccess: (saved) => {
           queryClient.setQueryData(getGetCareerProfileQueryKey(profileId), saved);
+          setProfileIdentity((current) => ({ ...current, isNew: false }));
           clearLegacyProfile();
           setIsMigrating(false);
         },
@@ -62,13 +96,14 @@ function Router() {
   const updateProfile = async (next: CareerProfile): Promise<void> => {
     const saved = await saveMutation.mutateAsync({ profileId, data: next });
     queryClient.setQueryData(getGetCareerProfileQueryKey(profileId), saved);
+    setProfileIdentity((current) => ({ ...current, isNew: false }));
   };
   const profile =
     profileQuery.data ??
     (profileQuery.data === null ? legacyProfile.current : null);
   const profileLoading = profileQuery.isLoading || isMigrating;
   const profileError =
-    profileQuery.isError
+    profileQuery.isError && !profileNotFound
       ? 'Could not load your saved profile. Check the API server and refresh the page.'
       : undefined;
 
@@ -99,7 +134,7 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
           <LanguageProvider>
-            <Router />
+            <CareerReskillRouter />
           </LanguageProvider>
         </WouterRouter>
         <Toaster />

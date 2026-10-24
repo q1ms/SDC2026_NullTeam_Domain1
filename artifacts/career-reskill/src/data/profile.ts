@@ -3,13 +3,32 @@ import type { CareerProfile } from "./catalog";
 const PROFILE_ID_KEY = "career-reskill-profile-id-v1";
 const LEGACY_PROFILE_KEY = "career-compass-profile-v1";
 
-export function getProfileId(): string {
+export type ProfileIdentity = {
+  profileId: string;
+  isNew: boolean;
+};
+
+export function getProfileIdentity(): ProfileIdentity {
   const existing = localStorage.getItem(PROFILE_ID_KEY);
-  if (existing) return existing;
+  if (existing) return { profileId: existing, isNew: false };
 
   const profileId = crypto.randomUUID();
   localStorage.setItem(PROFILE_ID_KEY, profileId);
-  return profileId;
+  return { profileId, isNew: true };
+}
+
+export function getProfileId(): string {
+  return getProfileIdentity().profileId;
+}
+
+export function clearStoredProfileId(): void {
+  localStorage.removeItem(PROFILE_ID_KEY);
+}
+
+export function isProfileNotFoundError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const value = error as { status?: unknown; response?: { status?: unknown } };
+  return value.status === 404 || value.response?.status === 404;
 }
 
 export function readLegacyProfile(): CareerProfile | null {

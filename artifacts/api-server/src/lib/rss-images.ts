@@ -1,4 +1,6 @@
 const IMAGE_EXTENSION = /\.(?:avif|gif|jpe?g|png|webp)(?:[?#]|$)/i;
+export const FALLBACK_ARTICLE_IMAGE_URL =
+  "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=500&q=80";
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -59,4 +61,8 @@ export function extractRssImageUrl(item: unknown): string | undefined {
   const description = readText(record.description);
   const imageSource = description.match(/<img\b[^>]*\bsrc\s*=\s*(["'])(.*?)\1/i)?.[2];
   return imageSource ? safeHttpsImageUrl(imageSource) : undefined;
+}
+
+export function resolveRssImageUrl(item: unknown): string {
+  return extractRssImageUrl(item) ?? FALLBACK_ARTICLE_IMAGE_URL;
 }

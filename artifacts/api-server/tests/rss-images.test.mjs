@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { extractRssImageUrl } from "../src/lib/rss-images.ts";
+import {
+  extractRssImageUrl,
+  FALLBACK_ARTICLE_IMAGE_URL,
+  resolveRssImageUrl,
+} from "../src/lib/rss-images.ts";
 
 test("reads image URLs from RSS media thumbnails, image content, and enclosures", () => {
   assert.equal(
@@ -38,4 +42,16 @@ test("ignores unsafe, non-image and absent RSS media", () => {
     undefined,
   );
   assert.equal(extractRssImageUrl({ title: "No image here" }), undefined);
+});
+
+test("uses the polished AI placeholder whenever an article has no safe thumbnail", () => {
+  assert.equal(resolveRssImageUrl({ title: "No image here" }), FALLBACK_ARTICLE_IMAGE_URL);
+  assert.equal(
+    resolveRssImageUrl({ "media:thumbnail": { "@_url": "javascript:alert(1)" } }),
+    FALLBACK_ARTICLE_IMAGE_URL,
+  );
+  assert.equal(
+    resolveRssImageUrl({ "media:thumbnail": { "@_url": "https://cdn.example.test/story.jpg" } }),
+    "https://cdn.example.test/story.jpg",
+  );
 });

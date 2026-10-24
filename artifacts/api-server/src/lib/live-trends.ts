@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
-import { extractRssImageUrl } from "./rss-images";
+import { resolveRssImageUrl } from "./rss-images";
 
 const FEED_URL =
   "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
@@ -64,7 +64,7 @@ type FeedArticle = {
   sourceName: string;
   articleUrl: string;
   publishedAt: Date;
-  imageUrl?: string;
+  imageUrl: string;
 };
 
 type TopicAccumulator = {
@@ -132,7 +132,7 @@ function parseArticle(item: unknown): FeedArticle | null {
   if (!parsedDate || Number.isNaN(parsedDate.getTime())) return null;
   const sourceName =
     cleanHtml(readText(record.source)) || new URL(articleUrl).hostname.replace(/^www\./, "");
-  const imageUrl = extractRssImageUrl(record);
+  const imageUrl = resolveRssImageUrl(record);
 
   return {
     title,
@@ -140,7 +140,7 @@ function parseArticle(item: unknown): FeedArticle | null {
     sourceName,
     articleUrl,
     publishedAt: parsedDate,
-    ...(imageUrl ? { imageUrl } : {}),
+    imageUrl,
   };
 }
 
@@ -157,7 +157,7 @@ function toLiveTrend(topic: string, value: TopicAccumulator): LiveTrend {
     sourceName: value.article.sourceName,
     articleUrl: value.article.articleUrl,
     publishedAt: value.article.publishedAt,
-    ...(value.article.imageUrl ? { imageUrl: value.article.imageUrl } : {}),
+    imageUrl: value.article.imageUrl,
   };
 }
 
