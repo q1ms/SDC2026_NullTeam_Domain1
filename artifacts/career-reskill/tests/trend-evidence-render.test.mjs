@@ -92,6 +92,23 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     const radar = render(RadarPage, { profile: null }, "/radar");
     for (const text of ["Fixture Labor Office", "Labor market data", "United States", "Fixture snapshot",
       "href=\"https://example.test/report\"", "/pathway?demo=1"]) assert.ok(radar.includes(text), `Radar missing ${text}`);
+    const evidenceStart = radar.indexOf('<details class="evidence-details" data-testid="details-evidence-fixture-report">');
+    assert.ok(evidenceStart >= 0, "Evidence citation should use a native collapsible details item");
+    const summaryStart = radar.indexOf("<summary", evidenceStart);
+    const summaryEnd = radar.indexOf("</summary>", summaryStart);
+    const summary = radar.slice(summaryStart, summaryEnd);
+    assert.ok(summary.includes("Fixture workforce report"));
+    assert.ok(summary.includes("Labor market data"));
+    assert.ok(summary.includes("Aug 27, 2026"));
+    assert.ok(summary.includes("View details"));
+    assert.ok(!summary.includes("Scope:") && !summary.includes("Limitation:"));
+    assert.ok(!summary.includes("Fixture Labor Office"), "Full source and scope details should stay collapsed");
+    assert.ok(!summary.includes("role: ai-operations-specialist"));
+    assert.doesNotMatch(radar.slice(evidenceStart, summaryStart), /<details[^>]* open/);
+    assert.ok(radar.slice(summaryEnd).includes("Scope:</strong> United States"));
+    assert.ok(radar.slice(summaryEnd).includes("Limitation:</strong> Not local vacancies"));
+    assert.ok(radar.slice(summaryEnd).includes('data-testid="link-evidence-fixture-report"'));
+    assert.ok(radar.slice(summaryEnd).includes("role: ai-operations-specialist"));
 
     client.getQueryCache().find({ queryKey: ["/api/pathway-demo"] }).setState({ status: "error", error: new Error("Fixture error") });
     assert.match(render(PathwayPage, { profileId: pathway.profileId, profile: null, profileLoading: false }), /status-pathway-error/);
