@@ -1,19 +1,26 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useState, type AriaAttributes, type ReactNode } from 'react';
 import type { ProfessionalEntry } from '@workspace/api-client-react';
 import { AlertTriangle, Check, ChevronDown, ExternalLink, Pencil, Plus, Trash2 } from 'lucide-react';
 import {
   MAX_ENTRIES,
+  SECTIONS,
   formatDateRange,
   isDateOrderValid,
   isValidDate,
   safeExternalUrl,
   splitListText,
   makeEntryId,
+  entryControlId,
+  issueAttributes,
+  type ErrorFocusRequest,
+  type ProfileIssue,
   type EntryField,
   type SectionDef,
 } from '../../data/professional-profile';
 
-function ListField({ id, value, kind, placeholder, onChange }: { id: string; value: string[]; kind: 'lines' | 'tags'; placeholder?: string; onChange: (next: string[]) => void }) {
+const SAVED_FIELDS = [...new Map(SECTIONS.flatMap((section) => section.fields).map((field) => [field.key, field])).values()];
+
+function ListField({ id, value, kind, placeholder, onChange, accessibility }: { id: string; value: string[]; kind: 'lines' | 'tags'; placeholder?: string; onChange: (next: string[]) => void; accessibility: AriaAttributes }) {
   const joiner = kind === 'tags' ? ', ' : '\n';
   const [text, setText] = useState(value.join(joiner));
   const valueKey = value.join('\u0000');
@@ -25,6 +32,7 @@ function ListField({ id, value, kind, placeholder, onChange }: { id: string; val
   return (
     <Tag
       id={id}
+      {...accessibility}
       className={kind === 'tags' ? 'input-control' : 'textarea-control pi-textarea-sm'}
       value={text}
       placeholder={placeholder}
@@ -34,20 +42,21 @@ function ListField({ id, value, kind, placeholder, onChange }: { id: string; val
   );
 }
 
-function FieldControl({ field, entry, id, onPatch }: { field: EntryField; entry: ProfessionalEntry; id: string; onPatch: (patch: Partial<ProfessionalEntry>) => void }) {
+function FieldControl({ field, entry, id, onPatch, accessibility }: { field: EntryField; entry: ProfessionalEntry; id: string; onPatch: (patch: Partial<ProfessionalEntry>) => void; accessibility: AriaAttributes }) {
   const rec = entry as unknown as Record<string, unknown>;
   if (field.kind === 'lines' || field.kind === 'tags') {
     const list = (rec[field.key] as string[] | undefined) ?? [];
-    return <ListField id={id} value={list} kind={field.kind} placeholder={field.placeholder} onChange={(next) => onPatch({ [field.key]: next } as Partial<ProfessionalEntry>)} />;
+    return <ListField id={id} accessibility={accessibility} value={list} kind={field.kind} placeholder={field.placeholder} onChange={(next) => onPatch({ [field.key]: next } as Partial<ProfessionalEntry>)} />;
   }
   const value = String(rec[field.key] ?? '');
   const set = (v: string) => onPatch({ [field.key]: v } as Partial<ProfessionalEntry>);
   if (field.kind === 'textarea') {
-    return <textarea id={id} className="textarea-control pi-textarea-sm" value={value} onChange={(e) => set(e.target.value)} placeholder={field.placeholder} data-testid={`input-${id}`} />;
+    return <textarea id={id} {...accessibility} className="textarea-control pi-textarea-sm" value={value} onChange={(e) => set(e.target.value)} placeholder={field.placeholder} data-testid={`input-${id}`} />;
   }
   return (
     <input
       id={id}
+      {...accessibility}
       className="input-control"
       value={value}
       inputMode={field.kind === 'date' ? 'numeric' : field.kind === 'url' ? 'url' : undefined}
@@ -75,8 +84,9 @@ function fieldProblem(field: EntryField, entry: ProfessionalEntry): string | nul
   return null;
 }
 
-function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, idPrefix, warnings }: {
+function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, idPrefix, warnings, issues }: {
   section: SectionDef; entry: ProfessionalEntry; index: number; editing: boolean; idPrefix: string; warnings?: string[];
+  issues: ProfileIssue[];
   onEdit: (open: boolean) => void; onPatch: (patch: Partial<ProfessionalEntry>) => void; onRemove: () => void;
 }) {
   const [confirming, setConfirming] = useState(false);
@@ -84,6 +94,10 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
   const dates = formatDateRange(entry);
   const sub = entry.organization || entry.degree || entry.contribution || entry.proficiency || entry.score;
   const links = [entry.url, entry.secondaryUrl].map(safeExternalUrl).filter((v): v is string => Boolean(v));
+  // The shared entry contract can carry fields not normally offered in this
+  // section. Keep supplied fields editable so every validation target exists.
+  const fields = [...section.fields, ...SAVED_FIELDS.filter((field) =>
+    Object.hasOwn(entry, field.key) && !section.fields.some((normal) => normal.key === field.key))];
   return (
     <li className={`pi-entry ${editing ? 'is-editing' : ''}`} data-testid={`card-${base}`}>
       <div className="pi-entry-head">
@@ -105,10 +119,10 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
             </>
           ) : (
             <>
-              <button type="button" className="pi-chip-button" onClick={() => onEdit(!editing)} aria-expanded={editing} aria-controls={`${base}-editor`} data-testid={`button-${base}-edit`}>
+              <button type="button" className="pi-chip-button" onClick={() => onEdit(!editing)} aria-label={`${editing ? 'Done editing' : 'Edit'} ${section.label} #${index + 1}: ${entry.title || section.singular}`} aria-expanded={editing} aria-controls={`${base}-editor`} data-testid={`button-${base}-edit`}>
                 {editing ? <><Check size={12} aria-hidden="true" /> Done</> : <><Pencil size={12} aria-hidden="true" /> Edit</>}
               </button>
-              <button type="button" className="pi-chip-button" onClick={() => setConfirming(true)} aria-label={`Remove ${entry.title || section.singular}`} data-testid={`button-${base}-remove`}>
+              <button type="button" className="pi-chip-button" onClick={() => setConfirming(true)} aria-label={`Remove ${section.label} #${index + 1}: ${entry.title || section.singular}`} data-testid={`button-${base}-remove`}>
                 <Trash2 size={12} aria-hidden="true" />
               </button>
             </>
@@ -122,15 +136,20 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
       )}
       {editing && (
         <div id={`${base}-editor`} className="pi-entry-editor">
-          {section.fields.map((field) => {
-            if (field.key === 'endDate' && entry.current) return null;
-            const id = `${base}-${field.key}`;
+          {fields.map((field) => {
+            const id = entryControlId(idPrefix, section.key, entry.id, field.key);
+            const associations = issueAttributes(issues, id);
+            if (field.key === 'endDate' && entry.current && !associations['aria-invalid']) return null;
             const problem = fieldProblem(field, entry);
+            const accessibility = {
+              'aria-invalid': associations['aria-invalid'] || Boolean(problem) || undefined,
+              'aria-describedby': [associations['aria-describedby'], problem ? `${id}-problem` : ''].filter(Boolean).join(' ') || undefined,
+            };
             return (
               <div key={field.key} className={`field ${field.wide ? 'pi-wide' : ''}`}>
                 <label htmlFor={id}>{field.label}{field.key === 'title' ? <span className="field-hint">Required</span> : field.hint ? <span className="field-hint">{field.hint}</span> : null}</label>
-                <FieldControl field={field} entry={entry} id={id} onPatch={onPatch} />
-                {problem && <p className="pi-field-error" role="alert">{problem}</p>}
+                <FieldControl field={field} entry={entry} id={id} onPatch={onPatch} accessibility={accessibility} />
+                {problem && <p id={`${id}-problem`} className="pi-field-error" role="alert">{problem}</p>}
               </div>
             );
           })}
@@ -147,7 +166,7 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
   );
 }
 
-export function SectionEditor({ section, entries, onChange, idPrefix, warnings, defaultOpen = false, headerExtra }: {
+export function SectionEditor({ section, entries, onChange, idPrefix, warnings, defaultOpen = false, headerExtra, issues = [], focusRequest }: {
   section: SectionDef;
   entries: ProfessionalEntry[];
   onChange: (next: ProfessionalEntry[]) => void;
@@ -155,12 +174,28 @@ export function SectionEditor({ section, entries, onChange, idPrefix, warnings, 
   warnings?: Record<string, string[]>;
   defaultOpen?: boolean;
   headerExtra?: ReactNode;
+  issues?: ProfileIssue[];
+  focusRequest?: ErrorFocusRequest | null;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [editingId, setEditingId] = useState<string | null>(null);
   const panelId = `${idPrefix}-${section.key}-panel`;
   const headId = `${idPrefix}-${section.key}-head`;
   const full = entries.length >= MAX_ENTRIES;
+  const [handledRequest, setHandledRequest] = useState<ErrorFocusRequest | null>(null);
+  useLayoutEffect(() => {
+    if (!focusRequest || focusRequest === handledRequest || focusRequest.section !== section.key) return;
+    // Opening and focusing happen in separate commits so the requested input exists.
+    if (!open || (focusRequest.entryId && editingId !== focusRequest.entryId)) {
+      setOpen(true);
+      if (focusRequest.entryId) setEditingId(focusRequest.entryId);
+      return;
+    }
+    const control = document.getElementById(focusRequest.controlId);
+    control?.focus({ preventScroll: true });
+    control?.scrollIntoView({ block: 'center' });
+    setHandledRequest(focusRequest);
+  }, [focusRequest, handledRequest, section.key, open, editingId]);
   const add = () => {
     if (full) return;
     const entry: ProfessionalEntry = { id: makeEntryId(), title: '' };
@@ -171,7 +206,7 @@ export function SectionEditor({ section, entries, onChange, idPrefix, warnings, 
   return (
     <section className={`pi-section ${open ? 'is-open' : ''}`} data-testid={`section-${idPrefix}-${section.key}`}>
       <h3 className="pi-section-heading">
-        <button type="button" id={headId} className="pi-section-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)} data-testid={`button-toggle-${idPrefix}-${section.key}`}>
+        <button type="button" id={headId} {...issueAttributes(issues, headId)} className="pi-section-toggle" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)} data-testid={`button-toggle-${idPrefix}-${section.key}`}>
           <span className="pi-section-name">{section.label}</span>
           <span className="pi-section-blurb">{section.blurb}</span>
           <span className={`pi-count ${entries.length ? 'has-items' : ''}`} key={entries.length} data-testid={`text-count-${idPrefix}-${section.key}`}>{entries.length}</span>
@@ -192,6 +227,7 @@ export function SectionEditor({ section, entries, onChange, idPrefix, warnings, 
                 index={index}
                 idPrefix={idPrefix}
                 warnings={warnings?.[entry.id]}
+                issues={issues}
                 editing={editingId === entry.id}
                 onEdit={(o) => setEditingId(o ? entry.id : null)}
                 onPatch={(patch) => onChange(entries.map((e) => e.id === entry.id ? { ...e, ...patch } : e))}

@@ -199,53 +199,98 @@ export function cleanBackground(bg: ProfessionalBackground | undefined): Profess
 }
 
 /* ---------- validation ---------- */
-export function validateEntry(section: SectionDef, entry: ProfessionalEntry, index: number): string[] {
+export type ValidationTarget = {
+  controlId: string;
+  detailedOnly?: boolean;
+  section?: SectionKey;
+  entryId?: string;
+};
+export type ProfileIssue = { id: string; message: string; target: ValidationTarget };
+export type ErrorFocusRequest = ValidationTarget & { requestId: number };
+
+export function entryControlId(prefix: string, section: SectionKey, entryId: string, field: string): string {
+  return `${prefix}-${section}-entry-${encodeURIComponent(entryId)}-${field}`;
+}
+
+export function issueAttributes(issues: ProfileIssue[], controlId: string) {
+  const ids = issues.filter((issue) => issue.target.controlId === controlId).map((issue) => issue.id);
+  return {
+    'aria-invalid': ids.length ? true as const : undefined,
+    'aria-describedby': ids.length ? ids.join(' ') : undefined,
+  };
+}
+
+export function validateEntryIssues(section: SectionDef, entry: ProfessionalEntry, index: number): ProfileIssue[] {
   const where = `${section.label} #${index + 1}${entry.title?.trim() ? ` (${entry.title.trim()})` : ''}`;
-  const issues: string[] = [];
+  const issues: ProfileIssue[] = [];
+  const add = (field: string, message: string) => {
+    const controlId = entryControlId('profile', section.key, entry.id, field);
+    issues.push({
+      id: `error-${controlId}-${issues.length}`,
+      message,
+      target: { controlId, detailedOnly: true, section: section.key, entryId: entry.id },
+    });
+  };
   const rec = entry as unknown as Record<string, unknown>;
-  if (!entry.title?.trim()) issues.push(`${where}: add a ${section.fields[0].label.toLowerCase()} or remove the entry.`);
+  if (!entry.title?.trim()) add('title', `${where}: add a ${section.fields[0].label.toLowerCase()} or remove the entry.`);
   for (const key of TEXT_KEYS) {
     const v = String(rec[key] ?? '').trim();
-    if (v.length > TEXT_MAX[key]) issues.push(`${where}: ${key} is ${v.length} characters; shorten it to ${TEXT_MAX[key]}.`);
+    if (v.length > TEXT_MAX[key]) add(key, `${where}: ${key} is ${v.length} characters; shorten it to ${TEXT_MAX[key]}.`);
   }
   for (const key of LIST_KEYS) {
     const list = ((rec[key] as string[] | undefined) ?? []).filter((v) => v.trim());
-    if (list.length > MAX_LIST_ITEMS) issues.push(`${where}: ${list.length} ${key} items; remove ${list.length - MAX_LIST_ITEMS} (limit ${MAX_LIST_ITEMS}).`);
+    if (list.length > MAX_LIST_ITEMS) add(key, `${where}: ${list.length} ${key} items; remove ${list.length - MAX_LIST_ITEMS} (limit ${MAX_LIST_ITEMS}).`);
     const long = list.find((v) => v.trim().length > LIST_ITEM_MAX[key]);
-    if (long) issues.push(`${where}: a ${key} item is longer than ${LIST_ITEM_MAX[key]} characters.`);
+    if (long) add(key, `${where}: a ${key} item is longer than ${LIST_ITEM_MAX[key]} characters.`);
   }
   const s = entry.startDate?.trim();
   const e = entry.current ? '' : entry.endDate?.trim();
-  if (s && !isValidDate(s)) issues.push(`${where}: start date "${s}" must be a real YYYY, YYYY-MM or YYYY-MM-DD date.`);
-  if (e && !isValidDate(e)) issues.push(`${where}: end date "${e}" must be a real YYYY, YYYY-MM or YYYY-MM-DD date.`);
-  if (s && e && !isDateOrderValid(s, e)) issues.push(`${where}: end date is before the start date.`);
+  if (s && !isValidDate(s)) add('startDate', `${where}: start date "${s}" must be a real YYYY, YYYY-MM or YYYY-MM-DD date.`);
+  if (e && !isValidDate(e)) add('endDate', `${where}: end date "${e}" must be a real YYYY, YYYY-MM or YYYY-MM-DD date.`);
+  if (s && e && !isDateOrderValid(s, e)) add('endDate', `${where}: end date is before the start date.`);
   for (const key of ['url', 'secondaryUrl'] as const) {
     const v = entry[key]?.trim();
-    if (v && !safeExternalUrl(v)) issues.push(`${where}: links must start with http:// or https://.`);
+    if (v && !safeExternalUrl(v)) add(key, `${where}: links must start with http:// or https://.`);
+  }
+  return issues;
+}
+
+export function validateEntry(section: SectionDef, entry: ProfessionalEntry, index: number): string[] {
+  return validateEntryIssues(section, entry, index).map((issue) => issue.message);
+}
+
+const SCALAR_CONTROL_IDS: Record<string, string> = {
+  displayName: 'bg-display-name', headline: 'bg-headline', about: 'bg-about',
+  location: 'bg-location', targetIndustry: 'bg-target-industry', linkedinUrl: 'bg-linkedin',
+};
+
+export function validateProfileIssues(profile: CareerProfile, skills: string[]): ProfileIssue[] {
+  const issues: ProfileIssue[] = [];
+  const add = (controlId: string, message: string, detailedOnly = false, section?: SectionKey) => {
+    issues.push({ id: `error-${controlId}-${issues.length}`, message, target: { controlId, detailedOnly, section } });
+  };
+  if (!profile.currentRole.trim()) add('current-role', 'Add your current role or status (for example, Student).');
+  if (!profile.industry.trim()) add('industry', 'Choose or enter your industry.');
+  if (!skills.length) add('existing-skills', 'Add at least one skill or strength.');
+  if (skills.length > MAX_SKILLS) add('existing-skills', `You have ${skills.length} skills; remove ${skills.length - MAX_SKILLS} to stay within ${MAX_SKILLS}.`);
+  if (!profile.interests.length) add('interest-search', 'Choose at least one area of interest.');
+  const bg = (profile.professionalBackground ?? {}) as Record<string, unknown>;
+  for (const [key, max] of Object.entries(BG_SCALAR_MAX)) {
+    const v = String(bg[key] ?? '').trim();
+    if (v.length > max) add(SCALAR_CONTROL_IDS[key], `${SCALAR_LABELS[key as ScalarKey]} is ${v.length} characters; shorten it to ${max}.`, true);
+  }
+  const link = String(bg.linkedinUrl ?? '').trim();
+  if (link && !isLinkedInProfileUrl(link)) add('bg-linkedin', 'LinkedIn URL must look like https://www.linkedin.com/in/your-name.', true);
+  for (const section of SECTIONS) {
+    const entries = ((bg[section.key] as ProfessionalEntry[] | undefined) ?? []).filter((e) => !isEntryBlank(e));
+    if (entries.length > MAX_ENTRIES) add(`profile-${section.key}-head`, `${section.label} has ${entries.length} entries; remove ${entries.length - MAX_ENTRIES} (limit ${MAX_ENTRIES}).`, true, section.key);
+    entries.forEach((entry, i) => issues.push(...validateEntryIssues(section, entry, i)));
   }
   return issues;
 }
 
 export function validateProfileDraft(profile: CareerProfile, skills: string[]): string[] {
-  const issues: string[] = [];
-  if (!profile.currentRole.trim()) issues.push('Add your current role or status (for example, Student).');
-  if (!profile.industry.trim()) issues.push('Choose or enter your industry.');
-  if (!skills.length) issues.push('Add at least one skill or strength.');
-  if (skills.length > MAX_SKILLS) issues.push(`You have ${skills.length} skills; remove ${skills.length - MAX_SKILLS} to stay within ${MAX_SKILLS}.`);
-  if (!profile.interests.length) issues.push('Choose at least one area of interest.');
-  const bg = (profile.professionalBackground ?? {}) as Record<string, unknown>;
-  for (const [key, max] of Object.entries(BG_SCALAR_MAX)) {
-    const v = String(bg[key] ?? '').trim();
-    if (v.length > max) issues.push(`${SCALAR_LABELS[key as ScalarKey]} is ${v.length} characters; shorten it to ${max}.`);
-  }
-  const link = String(bg.linkedinUrl ?? '').trim();
-  if (link && !isLinkedInProfileUrl(link)) issues.push('LinkedIn URL must look like https://www.linkedin.com/in/your-name.');
-  for (const section of SECTIONS) {
-    const entries = ((bg[section.key] as ProfessionalEntry[] | undefined) ?? []).filter((e) => !isEntryBlank(e));
-    if (entries.length > MAX_ENTRIES) issues.push(`${section.label} has ${entries.length} entries; remove ${entries.length - MAX_ENTRIES} (limit ${MAX_ENTRIES}).`);
-    entries.forEach((entry, i) => issues.push(...validateEntry(section, entry, i)));
-  }
-  return issues;
+  return validateProfileIssues(profile, skills).map((issue) => issue.message);
 }
 
 /* ---------- paste import ---------- */

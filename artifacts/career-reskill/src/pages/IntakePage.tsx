@@ -19,7 +19,10 @@ import {
   isLinkedInProfileUrl,
   parseSkills,
   safeExternalUrl,
-  validateProfileDraft,
+  validateProfileIssues,
+  issueAttributes,
+  type ErrorFocusRequest,
+  type ProfileIssue,
   type SectionKey,
 } from '../data/professional-profile';
 import { SectionEditor } from '../components/profile/SectionEditor';
@@ -104,7 +107,10 @@ export function IntakePage({
   const queryClient = useQueryClient();
   const [form, setForm] = useState<CareerProfile>(() => toDraft(profile));
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
-  const [errors, setErrors] = useState<string[]>([]);
+  const [validationAttempted, setValidationAttempted] = useState(false);
+  const [focusRequest, setFocusRequest] = useState<ErrorFocusRequest | null>(null);
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const [validationAttempt, setValidationAttempt] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
@@ -119,6 +125,27 @@ export function IntakePage({
   const interestSuggestionsRef = useRef<HTMLDivElement>(null);
   const isSubmitting = isSaving || isFormSubmitting;
   const mode = form.profileMode === 'detailed' ? 'detailed' : 'quick';
+  // Recompute after the first attempt so corrected or deleted fields never leave stale links.
+  const errors = validationAttempted ? validateProfileIssues(form, parseSkills(skillsText)) : [];
+  const errorProps = (id: string) => issueAttributes(errors, id);
+  const followError = (issue: ProfileIssue) => {
+    if (issue.target.detailedOnly && mode !== 'detailed') update('profileMode', 'detailed');
+    setFocusRequest((current) => ({ ...issue.target, requestId: (current?.requestId ?? 0) + 1 }));
+  };
+
+  useLayoutEffect(() => {
+    if (validationAttempt) {
+      errorSummaryRef.current?.focus();
+      errorSummaryRef.current?.scrollIntoView({ block: 'center' });
+    }
+  }, [validationAttempt]);
+
+  useLayoutEffect(() => {
+    if (!focusRequest || focusRequest.section) return;
+    const control = document.getElementById(focusRequest.controlId);
+    control?.focus({ preventScroll: true });
+    control?.scrollIntoView({ block: 'center' });
+  }, [focusRequest]);
   const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
   const interestSuggestionsKey = interestSuggestions.join('\u0000');
   const isInterestDropdownOpen = Boolean(interestSearch.trim());
@@ -215,8 +242,13 @@ export function IntakePage({
   const submit = async () => {
     if (submissionLock.current || isSubmitting) return;
     const skills = parseSkills(skillsText);
-    const issues = validateProfileDraft(form, skills);
-    if (issues.length) { setErrors(issues); setSaved(false); return; }
+    const issues = validateProfileIssues(form, skills);
+    if (issues.length) {
+      setValidationAttempted(true);
+      setValidationAttempt((current) => current + 1);
+      setSaved(false);
+      return;
+    }
     const cleaned: CareerProfile = {
       ...form,
       currentRole: form.currentRole.trim(),
@@ -225,7 +257,7 @@ export function IntakePage({
       profileMode: mode,
       professionalBackground: cleanBackground(form.professionalBackground),
     };
-    setErrors([]);
+    setValidationAttempted(false);
     setSaved(false);
     setSaveFailed(false);
     setPathwayError(null);
@@ -286,7 +318,7 @@ export function IntakePage({
     <div className="field-grid">
       <div className="field">
         <label htmlFor="current-role">Current role or status <span className="field-hint">Required</span></label>
-        <input id="current-role" className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
+        <input id="current-role" {...errorProps('current-role')} className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
         <div className="pi-presets">
           {STATUS_PRESETS.map((preset) => (
             <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{preset}</button>
@@ -295,7 +327,7 @@ export function IntakePage({
       </div>
       <div className="field">
         <label htmlFor="industry">{mode === 'detailed' ? 'Current industry' : 'Industry'} <span className="field-hint">Required</span></label>
-        <input id="industry" className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
+        <input id="industry" {...errorProps('industry')} className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
         <datalist id="industry-options">{['Healthcare', 'Financial services', 'Education', 'Manufacturing', 'Technology', 'Government', 'Retail', 'Energy', 'Professional services'].map((industry) => <option key={industry} value={industry} />)}</datalist>
       </div>
     </div>
@@ -309,7 +341,7 @@ export function IntakePage({
   const skillsField = (
     <div className="field">
       <label htmlFor="existing-skills">Skills, strengths, and tools <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">Required · {skillCount} / {MAX_SKILLS}, separate with commas</span></label>
-      <textarea id="existing-skills" className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
+      <textarea id="existing-skills" {...errorProps('existing-skills')} className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
       {skillCount > MAX_SKILLS && <p className="pi-field-error" role="alert" data-testid="status-skill-limit">You have {skillCount} skills. Remove {skillCount - MAX_SKILLS} to save; nothing is trimmed automatically.</p>}
     </div>
   );
@@ -325,6 +357,7 @@ export function IntakePage({
             <Search size={15} aria-hidden="true" />
             <input
               id="interest-search"
+              {...errorProps('interest-search')}
               className="input-control interest-search-input"
               type="text"
               value={interestSearch}
@@ -394,7 +427,18 @@ export function IntakePage({
   );
   const statusAndFooter = (
     <>
-      {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors"><strong className="pi-errors-title">Fix {errors.length === 1 ? 'this' : `these ${errors.length} items`} before saving:</strong><ul className="pi-error-list">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div>}
+      {errors.length > 0 && (
+        <div ref={errorSummaryRef} className="form-errors pi-error-summary" role="alert" tabIndex={-1} aria-labelledby="profile-errors-title" data-testid="status-form-errors">
+          <strong id="profile-errors-title" className="pi-errors-title">Fix {errors.length === 1 ? 'this' : `these ${errors.length} items`} before saving:</strong>
+          <ul className="pi-error-list">{errors.map((issue) => (
+            <li key={issue.id} id={issue.id}>
+              <a className="pi-error-link" href={`#${issue.target.controlId}`} onClick={(event) => { event.preventDefault(); followError(issue); }}>
+                {issue.message}{issue.target.detailedOnly && mode === 'quick' && <span className="pi-error-mode"> (opens Detailed profile)</span>}
+              </a>
+            </li>
+          ))}</ul>
+        </div>
+      )}
       {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">{saveFailed}</div>}
       {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{SUBMISSION_MESSAGES[loadingMessageIndex]}</div>}
       {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
@@ -419,6 +463,7 @@ export function IntakePage({
       </div>
       <div className="form-layout fade-in delay-1">
       <form
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
           void submit();
@@ -437,7 +482,7 @@ export function IntakePage({
             ['detailed', 'Detailed profile', 'Experience, education, projects and more', Layers],
           ] as const).map(([value, label, caption, Icon]) => (
             <label key={value} className={`pi-mode-option ${mode === value ? 'is-active' : ''}`} data-testid={`option-mode-${value}`}>
-              <input type="radio" name="profile-mode" value={value} checked={mode === value} onChange={() => update('profileMode', value)} data-testid={`radio-mode-${value}`} />
+              <input type="radio" name="profile-mode" value={value} checked={mode === value} onChange={() => { setFocusRequest(null); update('profileMode', value); }} data-testid={`radio-mode-${value}`} />
               <Icon size={15} aria-hidden="true" />
               <span><strong>{label}</strong><small>{caption}</small></span>
             </label>
@@ -471,29 +516,29 @@ export function IntakePage({
               <div className="field-grid">
                 <div className="field">
                   <label htmlFor="bg-display-name">Display name</label>
-                  <input id="bg-display-name" className="input-control" value={background.displayName ?? ''} onChange={(e) => updateBackground('displayName', e.target.value)} data-testid="input-display-name" />
+                  <input id="bg-display-name" {...errorProps('bg-display-name')} className="input-control" value={background.displayName ?? ''} onChange={(e) => updateBackground('displayName', e.target.value)} data-testid="input-display-name" />
                 </div>
                 <div className="field">
                   <label htmlFor="bg-location">Location <span className="field-hint">Context only</span></label>
-                  <input id="bg-location" className="input-control" value={background.location ?? ''} onChange={(e) => updateBackground('location', e.target.value)} placeholder="e.g. Kuala Lumpur, Malaysia" data-testid="input-location" />
+                  <input id="bg-location" {...errorProps('bg-location')} className="input-control" value={background.location ?? ''} onChange={(e) => updateBackground('location', e.target.value)} placeholder="e.g. Kuala Lumpur, Malaysia" data-testid="input-location" />
                 </div>
               </div>
               <div className="field">
                 <label htmlFor="bg-headline">Professional headline</label>
-                <input id="bg-headline" className="input-control" value={background.headline ?? ''} onChange={(e) => updateBackground('headline', e.target.value)} placeholder="e.g. Final-year CS student building data tools" data-testid="input-headline" />
+                <input id="bg-headline" {...errorProps('bg-headline')} className="input-control" value={background.headline ?? ''} onChange={(e) => updateBackground('headline', e.target.value)} placeholder="e.g. Final-year CS student building data tools" data-testid="input-headline" />
               </div>
               <div className="field">
                 <label htmlFor="bg-target-industry">Target industry</label>
-                <input id="bg-target-industry" className="input-control" list="industry-options" value={background.targetIndustry ?? ''} onChange={(e) => updateBackground('targetIndustry', e.target.value)} placeholder="e.g. Software development" data-testid="input-target-industry" />
+                <input id="bg-target-industry" {...errorProps('bg-target-industry')} className="input-control" list="industry-options" value={background.targetIndustry ?? ''} onChange={(e) => updateBackground('targetIndustry', e.target.value)} placeholder="e.g. Software development" data-testid="input-target-industry" />
               </div>
               <div className="field">
                 <label htmlFor="bg-about">About <span className="field-hint">{(background.about ?? '').length} / 5000</span></label>
-                <textarea id="bg-about" className="textarea-control" value={background.about ?? ''} onChange={(e) => updateBackground('about', e.target.value)} placeholder="A short summary in your own words" data-testid="input-about" />
+                <textarea id="bg-about" {...errorProps('bg-about')} className="textarea-control" value={background.about ?? ''} onChange={(e) => updateBackground('about', e.target.value)} placeholder="A short summary in your own words" data-testid="input-about" />
               </div>
               <div className="field">
                 <label htmlFor="bg-linkedin">LinkedIn profile URL</label>
-                <input id="bg-linkedin" className="input-control" type="url" inputMode="url" value={background.linkedinUrl ?? ''} onChange={(e) => updateBackground('linkedinUrl', e.target.value)} placeholder="https://www.linkedin.com/in/your-name" data-testid="input-linkedin-url" />
-                {linkedinValue && !linkedinHref && <p className="pi-field-error" role="alert">Use a profile link like https://www.linkedin.com/in/your-name.</p>}
+                <input id="bg-linkedin" {...errorProps('bg-linkedin')} aria-invalid={errorProps('bg-linkedin')['aria-invalid'] || Boolean(linkedinValue && !linkedinHref) || undefined} aria-describedby={[errorProps('bg-linkedin')['aria-describedby'], linkedinValue && !linkedinHref ? 'linkedin-url-error' : ''].filter(Boolean).join(' ') || undefined} className="input-control" type="url" inputMode="url" value={background.linkedinUrl ?? ''} onChange={(e) => updateBackground('linkedinUrl', e.target.value)} placeholder="https://www.linkedin.com/in/your-name" data-testid="input-linkedin-url" />
+                {linkedinValue && !linkedinHref && <p id="linkedin-url-error" className="pi-field-error" role="alert">Use a profile link like https://www.linkedin.com/in/your-name.</p>}
                 <p className="pi-helper">Saved as a link for your reference only. It does not connect your LinkedIn account or retrieve your profile.
                   {linkedinHref && <> <a className="pi-link" href={linkedinHref} target="_blank" rel="noopener noreferrer" data-testid="link-linkedin-profile">Open link<ExternalLink size={11} aria-hidden="true" /></a></>}
                 </p>
@@ -514,6 +559,8 @@ export function IntakePage({
                   entries={background[section.key] ?? []}
                   onChange={(entries) => updateSection(section.key, entries)}
                   idPrefix="profile"
+                  issues={errors}
+                  focusRequest={focusRequest}
                 />
               ))}
             </section>
