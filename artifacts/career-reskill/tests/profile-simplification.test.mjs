@@ -8,7 +8,7 @@ import { memoryLocation } from "wouter/memory-location";
 import { createServer } from "vite";
 import { Window } from "happy-dom";
 
-test("CV placeholder and language selection never submit; saving preserves core and hidden background records", async () => {
+test("CV placeholder never submits; saving preserves core and hidden background records", async () => {
   const window = new Window({ url: "http://localhost/intake" });
   const previous = new Map();
   for (const [key, value] of Object.entries({
@@ -75,12 +75,6 @@ test("CV placeholder and language selection never submit; saving preserves core 
     assert.equal(upload.type, "button");
     await act(async () => upload.click());
     assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /not available yet/);
-    const language = container.querySelector("#profile-language");
-    await act(async () => {
-      language.value = "Bahasa Malaysia";
-      language.dispatchEvent(new window.Event("change", { bubbles: true }));
-    });
-    assert.equal(language.value, "Bahasa Malaysia");
     assert.equal(saves.length, 0);
     assert.equal(requests.length, 0);
     assert.equal(container.querySelectorAll('[data-testid^="button-toggle-profile-"]').length, 4);

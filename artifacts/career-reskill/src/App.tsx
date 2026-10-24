@@ -16,6 +16,7 @@ import { PathwayPage } from './pages/PathwayPage';
 import { RadarPage } from './pages/RadarPage';
 import type { CareerProfile } from './data/catalog';
 import { clearLegacyProfile, getProfileId, readLegacyProfile } from './data/profile';
+import { LanguageProvider } from './i18n/LanguageContext';
 
 const queryClient = new QueryClient();
 
@@ -97,7 +98,9 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
+          <LanguageProvider>
+            <Router />
+          </LanguageProvider>
         </WouterRouter>
         <Toaster />
       </TooltipProvider>

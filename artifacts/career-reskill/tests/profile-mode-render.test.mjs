@@ -57,10 +57,7 @@ test("profile modes render exclusively with one complete, mode-appropriate form"
     }
     assert.match(detailed, /Learning preferences/);
     for (const html of [quick, detailed]) {
-      assert.match(html, /data-testid="select-profile-language"/);
-      for (const language of ["English", "Bahasa Malaysia", "Chinese"]) {
-        assert.ok(html.includes(`value="${language}"`));
-      }
+      assert.doesNotMatch(html, /select-global-language|select-profile-language/);
       assert.equal((html.match(/<form\b/g) ?? []).length, 1);
       assert.equal((html.match(/type="submit"/g) ?? []).length, 1);
       for (const id of ["current-role", "industry", "years-experience", "existing-skills", "interest-search", "weekly-hours", "industry-options"]) {

@@ -22,6 +22,7 @@ import { EvidenceList } from "../components/EvidenceList";
 import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
 import { scenarioLabel } from "../lib/adoption-comparison";
 import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export function PathwayPage({
   profileId,
@@ -32,6 +33,7 @@ export function PathwayPage({
   profile: CareerProfile | null;
   profileLoading: boolean;
 }) {
+  const { t } = useLanguage();
   const search = useSearch();
   const isDemo = new URLSearchParams(search).get("demo") === "1";
   const [comparisonId, setComparisonId] = useState<string>("moderate");
@@ -64,11 +66,11 @@ export function PathwayPage({
   if (!isDemo && !profile) {
     return (
       <div className="page-content">
-        <div className="eyebrow">Career pathways</div>
-        <h1 className="page-title">A route that starts<br />where you are.</h1>
+        <div className="eyebrow">{t('navigation.pathways')}</div>
+        <h1 className="page-title">{t('pathway.emptyTitle')}</h1>
         <div className="empty-card" style={{ marginTop: 28 }} data-testid="empty-pathway-profile">
           <div className="empty-mark"><Compass size={23} /></div>
-          <h2>Your profile helps make this personal.</h2>
+          <h2>{t('pathway.noProfile')}</h2>
           <p>Share your experience, existing skills, and interests first. We’ll use them to rank a few adjacent roles and show the skills to build next.</p>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-intake">Create your profile <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo">View sample demo</Link></div>
         </div>
@@ -94,11 +96,11 @@ export function PathwayPage({
   if (!pathwayQuery.data) {
     return (
       <div className="page-content">
-        <div className="eyebrow">Career pathways</div>
-        <h1 className="page-title">Your next steps<br />start here.</h1>
+        <div className="eyebrow">{t('navigation.pathways')}</div>
+        <h1 className="page-title">{t('pathway.noGeneratedTitle')}</h1>
         <div className="empty-card" style={{ marginTop: 28 }} data-testid="empty-pathway-generated">
           <div className="empty-mark"><Compass size={23} /></div>
-          <h2>No career paths have been generated yet.</h2>
+          <h2>{t('pathway.noPaths')}</h2>
           <p>Submit your profile to generate three personalized career scenarios and learning steps.</p>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-generate">Build your pathways <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo-empty">View sample demo</Link></div>
         </div>
@@ -120,8 +122,8 @@ export function PathwayPage({
     <div className="page-content">
       <div className="hero-row fade-in">
         <div>
-          <div className="eyebrow">Your next chapter</div>
-          <h1 className="page-title">Good options.<br />Clear next steps.</h1>
+          <div className="eyebrow">{t('pathway.eyebrow')}</div>
+          <h1 className="page-title">{t('pathway.title')}</h1>
           <p className="page-subtitle">A starting set of adjacent directions shaped by the skills and interests you shared. These are possibilities to explore—not a verdict.</p>
         </div>
         <Link href="/intake" className="button-quiet" data-testid="button-edit-profile"><BookmarkCheck size={15} /> Edit your profile</Link>
@@ -169,7 +171,7 @@ export function PathwayPage({
       )}
 
       <div className="section-header fade-in delay-2">
-        <div><h2>Career scenarios{activeComparisonLabel ? ` · ${activeComparisonLabel}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
+        <div><h2>{t('pathway.scenarios')}{activeComparisonLabel ? ` · ${activeComparisonLabel}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
         <span className="field-hint" data-testid="text-scenario-count">{scenarios.length} pathways</span>
       </div>
       {scenarios.length ? (

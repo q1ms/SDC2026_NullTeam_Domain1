@@ -1,16 +1,18 @@
 import { Link, useLocation } from 'wouter';
-import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Layers3, Waypoints } from 'lucide-react';
+import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Languages, Layers3, Waypoints } from 'lucide-react';
 import type { CareerProfile } from '../data/catalog';
 import { LightRays } from './effects/LightRays';
 import { useMagicSurfaces } from './effects/useMagicSurfaces';
+import { useLanguage, type AppLanguage } from '../i18n/LanguageContext';
 
 export function Shell({ children, profile }: { children: React.ReactNode; profile: CareerProfile | null }) {
   const [location] = useLocation();
+  const { language, setLanguage, t } = useLanguage();
   useMagicSurfaces();
   const links = [
-    { href: '/intake', label: 'Your profile', icon: Compass },
-    { href: '/radar', label: 'Skills radar', icon: Activity },
-    { href: '/pathway', label: 'Career pathways', icon: Waypoints },
+    { href: '/intake', label: t('navigation.profile'), icon: Compass, id: 'profile' },
+    { href: '/radar', label: t('navigation.radar'), icon: Activity, id: 'radar' },
+    { href: '/pathway', label: t('navigation.pathways'), icon: Waypoints, id: 'pathways' },
   ];
   return (
     <div className="app-shell">
@@ -20,10 +22,10 @@ export function Shell({ children, profile }: { children: React.ReactNode; profil
           <span className="brand-mark"><Layers3 size={19} /></span>
           <span><span className="brand-name">Northstar</span><span className="brand-caption">Career companion</span></span>
         </Link>
-        <div className="nav-caption">Your next chapter</div>
-        <nav className="nav-list pill-nav" aria-label="Main navigation">
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link href={href} key={href} className={`nav-link ${location === href ? 'active' : ''}`} aria-current={location === href ? "page" : undefined} data-testid={`link-nav-${label.toLowerCase().replaceAll(' ', '-')}`}>
+        <div className="nav-caption">{t('navigation.chapter')}</div>
+        <nav className="nav-list pill-nav" aria-label={t('navigation.chapter')}>
+          {links.map(({ href, label, icon: Icon, id }) => (
+            <Link href={href} key={href} className={`nav-link ${location === href ? 'active' : ''}`} aria-current={location === href ? "page" : undefined} data-testid={`link-nav-${id}`}>
               <span className="pill-hover" aria-hidden="true" /><Icon size={17} strokeWidth={1.8} /><span className="pill-label">{label}</span>
             </Link>
           ))}
@@ -37,11 +39,27 @@ export function Shell({ children, profile }: { children: React.ReactNode; profil
       </aside>
       <div className="main-area">
         <header className="topbar">
-          <div className="topbar-kicker">Career resilience, made personal</div>
+          <div className="topbar-kicker">{t('header.kicker')}</div>
           <div className="topbar-right">
+            <label className="global-language-control">
+              <Languages size={13} aria-hidden="true" />
+              <span className="sr-only">{t('language.label')}</span>
+              <select
+                id="global-language"
+                className="global-language-select"
+                value={language}
+                onChange={(event) => setLanguage(event.target.value as AppLanguage)}
+                aria-label={t('language.label')}
+                data-testid="select-global-language"
+              >
+                <option value="en">English</option>
+                <option value="ms">Bahasa Malaysia</option>
+                <option value="zh">Chinese</option>
+              </select>
+            </label>
             {profile
-              ? <span className="profile-status"><Check size={13} strokeWidth={2.5} aria-hidden="true" /> Profile saved</span>
-              : <span>A practical guide to what’s next</span>}
+              ? <span className="profile-status"><Check size={13} strokeWidth={2.5} aria-hidden="true" /> {t('header.saved')}</span>
+              : <span>{t('header.guide')}</span>}
             <span className="profile-dot" data-testid="status-profile">{profile ? profile.currentRole.split(' ').map((word) => word[0]).join('').slice(0, 2).toUpperCase() : <ArrowUpRight size={14} />}</span>
           </div>
         </header>

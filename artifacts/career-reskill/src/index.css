@@ -148,6 +148,10 @@ html { @apply scroll-smooth; }
 .nav-link.active { @apply bg-[#7eb6a8]/20 text-[#a3d1c3]; }
 .nav-link.active svg { @apply stroke-[2.2]; }
 .sidebar-bottom { @apply mt-auto; }
+.global-language-control { @apply inline-flex shrink-0 items-center gap-1.5 text-muted-foreground; }
+.global-language-select { @apply min-h-8 max-w-[118px] rounded-md border border-border bg-background px-2 text-[11px] text-foreground outline-none transition-colors; }
+.global-language-select:focus-visible { @apply border-primary ring-2 ring-primary/30; }
+.global-language-select option { @apply bg-background text-foreground; }
 .side-note { @apply rounded-xl border border-white/10 bg-white/[0.04] p-[15px]; }
 .side-note-label { @apply font-mono text-[10px] uppercase tracking-[0.1em] text-[#98c5b8]; }
 .side-note p { @apply mt-[9px] text-xs leading-relaxed text-[#f4efde]/70; }
@@ -535,6 +539,12 @@ body { background:
   .evidence-summary { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 8px; }
   .evidence-summary-title { grid-column: 1 / -1; }
   .evidence-toggle { justify-self: end; }
+}
+@media (max-width: 767px) {
+  .topbar { @apply justify-end; }
+  .topbar-kicker { @apply hidden; }
+  .topbar-right > .profile-status,
+  .topbar-right > span:not(.profile-dot) { @apply hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   .evidence-toggle svg { transition: none; }

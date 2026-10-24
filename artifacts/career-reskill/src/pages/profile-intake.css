@@ -3,10 +3,6 @@
 .pi-fieldset:disabled { opacity: .78; }
 .pi-fieldset:disabled * { cursor: not-allowed; }
 
-.pi-language-picker { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px 12px; color: hsl(var(--muted-foreground)); font-size: 12px; }
-.pi-language-picker label { display: inline-flex; align-items: center; gap: 6px; }
-.pi-language-picker select { width: auto; max-width: 100%; min-height: 40px; font-size: 12px; }
-.pi-language-picker small { flex-basis: 100%; text-align: right; font-size: 11px; }
 .pi-cv-upload { padding: 20px; border-color: hsl(var(--primary) / .35); background: hsl(var(--primary) / .06); }
 .pi-cv-upload .button-primary { white-space: normal; text-align: center; min-height: 46px; }
 .pi-cv-upload .pi-helper { margin: 10px 0 0; }

@@ -5,10 +5,12 @@ import { useGetCareerEvidence, useGetLiveTrends } from '@workspace/api-client-re
 import { EvidenceList } from '../components/EvidenceList';
 import type { CareerProfile } from '../data/catalog';
 import { CoverageList } from '../components/CoverageList';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const COLORS = ['#72c7b5', '#87bfae', '#9bc9b2', '#a5c7bd', '#b1cab0', '#ccce9c', '#dacb94'];
 
 export function RadarPage({ profile }: { profile: CareerProfile | null }) {
+  const { t } = useLanguage();
   const trendsQuery = useGetLiveTrends({
     query: { staleTime: 10 * 60 * 1000, refetchOnMount: 'always' },
   });
@@ -22,9 +24,9 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
     <div className="page-content">
       <div className="hero-row fade-in">
         <div>
-          <div className="eyebrow">Live AI topics · recent news</div>
-          <h1 className="page-title">A clearer view of<br />what’s changing.</h1>
-          <p className="page-subtitle">Five current AI themes extracted from public news coverage, with source articles so you can explore the signal for yourself.</p>
+          <div className="eyebrow">{t('radar.eyebrow')}</div>
+          <h1 className="page-title" data-testid="heading-radar-title">{t('radar.title')}</h1>
+          <p className="page-subtitle">{t('radar.subtitle')}</p>
         </div>
         {profile
           ? <Link href="/pathway" className="button-primary" data-testid="button-view-pathway">See your pathways <ArrowRight size={15} /></Link>
@@ -90,7 +92,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
 
       <div className="lower-grid fade-in delay-2">
         <section className="section-card category-card">
-          <div className="card-head"><div><h2 className="card-title">Recent coverage</h2><p className="card-description">Source articles behind the five topics</p></div><TrendingUp size={18} color="#458173" /></div>
+          <div className="card-head"><div><h2 className="card-title">{t('radar.coverage')}</h2><p className="card-description">Source articles behind the five topics</p></div><TrendingUp size={18} color="#458173" /></div>
           {trends.length > 0 ? (
             <CoverageList articles={trends} />
           ) : trendsQuery.isLoading ? (
@@ -109,7 +111,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
       <section className="section-card fade-in delay-2" style={{ padding: 20, marginTop: 17 }} data-testid="card-career-evidence">
         <div className="card-head">
           <div>
-            <h2 className="card-title">Evidence behind pathway rankings</h2>
+            <h2 className="card-title">{t('radar.evidence')}</h2>
             <p className="card-description">
               {evidenceQuery.data ? `Snapshot checked ${new Date(evidenceQuery.data.fetchedAt).toLocaleString()} · ${evidenceQuery.data.newsStatus}` : 'Sources, dates, scope and limitations used to rank roles'}
             </p>

@@ -5,7 +5,7 @@ import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Clock3, ExternalLink, Languages, Layers, LoaderCircle, Search, ShieldCheck, Upload, UserRound, X, Zap } from 'lucide-react';
+import { ArrowRight, Clock3, ExternalLink, Layers, LoaderCircle, Search, ShieldCheck, Upload, UserRound, X, Zap } from 'lucide-react';
 import {
   addInterestSelection,
   getInterestEntryOptions,
@@ -29,6 +29,7 @@ import {
 import { SectionEditor } from '../components/profile/SectionEditor';
 import { useUnsavedChanges } from '../hooks/use-unsaved-changes';
 import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
+import { useLanguage } from '../i18n/LanguageContext';
 import './profile-intake.css';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4, profileMode: 'quick', professionalBackground: {} };
@@ -112,6 +113,7 @@ export function IntakePage({
   onSave: (profile: CareerProfile) => Promise<void>;
   isSaving: boolean;
 }) {
+  const { t } = useLanguage();
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<CareerProfile>(() => toDraft(profile));
@@ -124,7 +126,6 @@ export function IntakePage({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const [validationAttempt, setValidationAttempt] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
-  const [preferredLanguage, setPreferredLanguage] = useState('English');
   const [cvUploadNotice, setCvUploadNotice] = useState(false);
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
@@ -476,9 +477,9 @@ export function IntakePage({
   return (
     <div className="page-content">
       <div className="fade-in">
-        <div className="eyebrow">A little about you</div>
-        <h1 className="page-title">Your experience is<br />a strong starting point.</h1>
-        <p className="page-subtitle">Start quick, or add the detail that tells your story. Both views edit the same profile, saved on this device.</p>
+        <div className="eyebrow">{t('profile.eyebrow')}</div>
+        <h1 className="page-title" data-testid="heading-profile-title">{t('profile.title')}</h1>
+        <p className="page-subtitle">{t('profile.subtitle')}</p>
       </div>
       <div className="form-layout fade-in delay-1">
       <form
@@ -495,19 +496,10 @@ export function IntakePage({
         data-testid="form-career-profile"
       >
         <fieldset className="pi-fieldset" disabled={isSubmitting} data-testid="fieldset-career-profile">
-        <div className="pi-language-picker">
-          <label htmlFor="profile-language"><Languages size={14} aria-hidden="true" /> Preferred language</label>
-          <select id="profile-language" className="input-control" value={preferredLanguage} onChange={(event) => setPreferredLanguage(event.target.value)} aria-describedby="profile-language-help" data-testid="select-profile-language">
-            <option value="English">English</option>
-            <option value="Bahasa Malaysia">Bahasa Malaysia</option>
-            <option value="Chinese">Chinese</option>
-          </select>
-          <small id="profile-language-help">Preference for this session only. This form is currently in English.</small>
-        </div>
         <div className="pi-mode" role="radiogroup" aria-label="Profile detail level" data-testid="group-profile-mode">
           {([
-            ['quick', 'Quick profile', 'Six essentials, about two minutes', Zap],
-            ['detailed', 'Detailed profile', 'Experience, education, projects and more', Layers],
+            ['quick', t('profile.quick'), 'Six essentials, about two minutes', Zap],
+            ['detailed', t('profile.detailed'), 'Experience, education, projects and more', Layers],
           ] as const).map(([value, label, caption, Icon]) => (
             <label key={value} className={`pi-mode-option ${mode === value ? 'is-active' : ''}`} data-testid={`option-mode-${value}`}>
               <input type="radio" name="profile-mode" value={value} checked={mode === value} onChange={() => { setFocusRequest(null); update('profileMode', value); }} data-testid={`radio-mode-${value}`} />
@@ -519,11 +511,11 @@ export function IntakePage({
         </div>
         {mode === 'quick' && (
         <section className="section-card form-panel" data-testid="panel-quick-profile">
-          <h2 className="form-section-title">Your experience</h2>
+          <h2 className="form-section-title">{t('profile.experience')}</h2>
           {roleAndIndustryFields}
           {experienceField}
           {skillsField}
-          <h2 className="form-section-title" style={{ marginTop: 23 }}>What draws your attention?</h2>
+          <h2 className="form-section-title" style={{ marginTop: 23 }}>{t('profile.curiosity')}</h2>
           {learningPreferences}
           {statusAndFooter}
         </section>
@@ -539,7 +531,7 @@ export function IntakePage({
               {cvUploadNotice && <p className="pi-helper" role="status" data-testid="status-cv-upload">CV auto-fill is not available yet. No file has been uploaded or profile information changed.</p>}
             </div>
             <section className="section-card form-panel">
-              <h2 className="form-section-title">Professional identity</h2>
+              <h2 className="form-section-title">{t('profile.identity')}</h2>
               {roleAndIndustryFields}
               {experienceField}
               <p className="pi-helper">The details below are optional. Add only what you want to share.</p>
@@ -580,7 +572,7 @@ export function IntakePage({
             </section>
 
             <section className="section-card form-panel pi-sections">
-              <h2 className="form-section-title">Background <span className="pi-optional">Professional records optional</span></h2>
+              <h2 className="form-section-title">{t('profile.background')} <span className="pi-optional">Professional records optional</span></h2>
               {skillsField}
               {CORE_BACKGROUND_SECTIONS.map((section) => (
                 <SectionEditor
@@ -596,7 +588,7 @@ export function IntakePage({
             </section>
 
             <section className="section-card form-panel" data-testid="panel-learning-preferences">
-              <h2 className="form-section-title">Learning preferences</h2>
+              <h2 className="form-section-title">{t('profile.learning')}</h2>
               {learningPreferences}
             </section>
             <section className="section-card form-panel">{statusAndFooter}</section>
