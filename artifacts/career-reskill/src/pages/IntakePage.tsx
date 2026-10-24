@@ -27,6 +27,7 @@ import {
   type SectionKey,
 } from '../data/professional-profile';
 import { SectionEditor } from '../components/profile/SectionEditor';
+import { useUnsavedChanges } from '../hooks/use-unsaved-changes';
 import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
 import './profile-intake.css';
 
@@ -45,6 +46,12 @@ function toDraft(profile: CareerProfile | null): CareerProfile {
     profileMode: profile.profileMode === 'detailed' ? 'detailed' : 'quick',
     professionalBackground: profile.professionalBackground ?? {},
   };
+}
+
+function draftSnapshot(form: CareerProfile, skillsText: string): string {
+  // Preserve raw text (including unfinished skill input) and compare values, not
+  // edit events, so reverting an edit restores the clean state.
+  return JSON.stringify({ ...form, skills: skillsText });
 }
 
 function saveErrorMessage(error: unknown): string | null {
@@ -107,6 +114,9 @@ export function IntakePage({
   const queryClient = useQueryClient();
   const [form, setForm] = useState<CareerProfile>(() => toDraft(profile));
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
+  const [savedSnapshot, setSavedSnapshot] = useState(() =>
+    draftSnapshot(toDraft(profile), (profile?.skills ?? []).join(', ')));
+  const clearUnsavedWarning = useUnsavedChanges(draftSnapshot(form, skillsText) !== savedSnapshot);
   const [validationAttempted, setValidationAttempted] = useState(false);
   const [focusRequest, setFocusRequest] = useState<ErrorFocusRequest | null>(null);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
@@ -177,6 +187,7 @@ export function IntakePage({
   useEffect(() => {
     if (!profile || initializedFor.current === profileId) return;
     initializedFor.current = profileId;
+    setSavedSnapshot(draftSnapshot(toDraft(profile), profile.skills.join(', ')));
     if (isDirty.current) return;
     setForm(toDraft(profile));
     setSkillsText(profile.skills.join(', '));
@@ -270,6 +281,8 @@ export function IntakePage({
         await onSave(cleaned);
         setForm(cleaned);
         setSkillsText(cleaned.skills.join(', '));
+        setSavedSnapshot(draftSnapshot(cleaned, cleaned.skills.join(', ')));
+        clearUnsavedWarning();
         isDirty.current = false;
       } catch (error) {
         setSaveFailed(saveErrorMessage(error) ?? 'Your profile could not be saved. Check the API server and try again.');
