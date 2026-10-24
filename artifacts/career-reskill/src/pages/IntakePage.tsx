@@ -28,7 +28,7 @@ import {
 } from '../data/professional-profile';
 import { SectionEditor } from '../components/profile/SectionEditor';
 import { useUnsavedChanges } from '../hooks/use-unsaved-changes';
-import { readResumeFile } from '../lib/resume-extraction';
+import { readResumeText } from '../lib/resume-text';
 import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './profile-intake.css';
@@ -233,9 +233,39 @@ export function IntakePage({
     setSaved(false);
     setPathwayError(null);
     try {
-      const extracted = await readResumeFile(file);
+      const extractedText = await readResumeText(file);
+      if (import.meta.env.DEV) console.log("Raw CV Text:", extractedText);
+      const response = await fetch('/api/parse-cv', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({ rawText: extractedText }),
+      });
+      const result: unknown = await response.json().catch(() => null);
+      if (!response.ok || !isRecord(result)) throw new Error('cv-analysis-failed');
+      if (
+        typeof result.currentRole !== 'string'
+        || typeof result.industry !== 'string'
+        || typeof result.yearsOfExperience !== 'number'
+        || !Number.isInteger(result.yearsOfExperience)
+        || result.yearsOfExperience < 0
+        || result.yearsOfExperience > 40
+        || !Array.isArray(result.skills)
+        || result.skills.some((skill) => typeof skill !== 'string')
+      ) {
+        throw new Error('cv-analysis-failed');
+      }
+      const extracted = {
+        currentRole: result.currentRole.trim(),
+        industry: result.industry.trim(),
+        yearsExperience: result.yearsOfExperience,
+        skills: [...new Set((result.skills as string[]).map((skill) => skill.trim()).filter(Boolean))],
+      };
       const hasExtractedData = Boolean(
-        extracted.currentRole || extracted.industry || extracted.yearsExperience !== undefined || extracted.skills.length,
+        extracted.currentRole || extracted.industry || extracted.yearsExperience > 0 || extracted.skills.length,
       );
       if (!hasExtractedData) {
         setCvUploadStatus('error');

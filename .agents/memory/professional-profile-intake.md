@@ -27,8 +27,8 @@ Areas of interest are open-ended; the suggestions are not an allowed-values list
 
 **How to apply:** Allow custom interests as removable tags in both modes, and preserve them through saving and pathway generation without requiring a known category.
 
-Résumé upload should extract text locally in the browser and map only the user's reviewed profile fields into the existing save flow. Do not send or persist the uploaded document bytes.
+Résumé upload should extract text from PDF, DOCX and TXT files locally in the browser, then send only that extracted text to the AI service for profile analysis. Do not upload or persist the original document bytes or log raw text on the server.
 
-**Why:** Career documents can contain sensitive personal information; the user requested field auto-fill, not document storage or server-side processing.
+**Why:** The user wants AI-assisted extraction because résumé formats vary, while keeping the original file local and making the text-to-AI transfer clear in the interface.
 
-**How to apply:** Keep PDF, DOCX and TXT parsing client-side. Treat extracted values as editable suggestions, avoid duplicate skills, and save only when the user submits the profile form.
+**How to apply:** Keep file decoding client-side and disclose that extracted text is sent for analysis. Treat returned values as editable suggestions, avoid duplicate skills, save only when the user submits, and restrict any requested raw-text browser logging to development mode.
