@@ -31,6 +31,11 @@ export function CareerReskillRouter() {
   const profileId = profileIdentity.profileId;
   const queryClient = useQueryClient();
   const [location, setLocation] = useLocation();
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.scrollTo(0, 0);
+  }, [location]);
+
   const profileQuery = useGetCareerProfile(profileId, {
     query: {
       queryKey: getGetCareerProfileQueryKey(profileId),
