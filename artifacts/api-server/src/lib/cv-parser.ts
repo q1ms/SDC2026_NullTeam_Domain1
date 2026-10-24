@@ -51,7 +51,7 @@ function parseJsonText(llmTextResponse: string): unknown {
 }
 
 function unwrapModelOutput(output: unknown): unknown {
-  if (typeof output === "string") return parseJsonText(output);
+  if (typeof output === "string") return unwrapModelOutput(parseJsonText(output));
   if (Array.isArray(output)) {
     if (!output.length) throw new Error("The CV model response was empty.");
     return unwrapModelOutput(output[0]);
