@@ -46,6 +46,7 @@ test("profile modes render exclusively with one complete, mode-appropriate form"
     assert.doesNotMatch(detailed, /data-testid="panel-quick-profile"|>Your experience<\/h2>|What draws your attention/);
     assert.doesNotMatch(detailed, /data-testid="button-open-import"|Import from text|Read text/);
     assert.match(detailed, /Professional identity/);
+    assert.match(detailed, /data-testid="panel-detailed-content"/);
     assert.match(detailed, /data-testid="button-upload-cv"/);
     assert.doesNotMatch(quick, /data-testid="button-upload-cv"/);
     assert.ok(detailed.indexOf('data-testid="button-upload-cv"') < detailed.indexOf("Professional identity"));
@@ -56,6 +57,11 @@ test("profile modes render exclusively with one complete, mode-appropriate form"
       assert.doesNotMatch(detailed, new RegExp(`data-testid="button-toggle-profile-${key}"`));
     }
     assert.match(detailed, /Learning preferences/);
+    const combinedCard = detailed.slice(detailed.indexOf('data-testid="panel-detailed-content"'));
+    for (const testId of ["panel-professional-identity", "panel-background", "panel-learning-preferences", "panel-profile-actions", "button-save-profile"]) {
+      assert.ok(combinedCard.includes(`data-testid="${testId}"`), `${testId} belongs in the shared detailed-profile box`);
+    }
+    assert.equal((combinedCard.match(/class="section-card form-panel/g) ?? []).length, 0);
     for (const html of [quick, detailed]) {
       assert.doesNotMatch(html, /select-global-language|select-profile-language/);
       assert.equal((html.match(/<form\b/g) ?? []).length, 1);

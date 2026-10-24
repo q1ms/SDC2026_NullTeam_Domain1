@@ -627,7 +627,8 @@ export function IntakePage({
               {cvUploadStatus === 'error' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeError')}</p>}
               {cvUploadStatus === 'too-large' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeTooLarge')}</p>}
             </div>
-            <section className="section-card form-panel">
+            <div className="section-card pi-detail-card" data-testid="panel-detailed-content">
+              <section className="pi-detail-section" data-testid="panel-professional-identity">
               <h2 className="form-section-title">{t('profile.identity')}</h2>
               {roleAndIndustryFields}
               {experienceField}
@@ -666,9 +667,9 @@ export function IntakePage({
                 <ShieldCheck size={15} aria-hidden="true" />
                 <p><strong>What informs your matches.</strong> Only explicitly tagged skills on entries, education coursework, project technologies and exact course or certification titles feed the analysis. Descriptions, achievements, GPA, test scores, names, location and links are kept for your record but never treated as proof of qualification or boost ranking.</p>
               </div>
-            </section>
+              </section>
 
-            <section className="section-card form-panel pi-sections">
+            <section className="pi-detail-section pi-sections" data-testid="panel-background">
               <h2 className="form-section-title">{t('profile.background')} <span className="pi-optional">Professional records optional</span></h2>
               {skillsField}
               {CORE_BACKGROUND_SECTIONS.map((section) => (
@@ -684,11 +685,15 @@ export function IntakePage({
               ))}
             </section>
 
-            <section className="section-card form-panel" data-testid="panel-learning-preferences">
+            <section className="pi-detail-section" data-testid="panel-learning-preferences">
               <h2 className="form-section-title">{t('profile.learning')}</h2>
               {learningPreferences}
             </section>
-            <section className="section-card form-panel">{statusAndFooter}</section>
+
+            <div className="pi-detail-section pi-detail-actions" data-testid="panel-profile-actions">
+              {statusAndFooter}
+            </div>
+            </div>
           </div>
         )}
         </fieldset>

@@ -27,6 +27,11 @@
 .pi-preset.is-active { border-color: hsl(var(--primary)); color: hsl(var(--primary)); background: hsl(var(--primary) / .1); }
 
 .pi-detailed { display: grid; gap: 17px; animation: fade-up .4s cubic-bezier(.2,.7,.2,1) both; }
+.pi-detail-card { display: grid; gap: 0; padding: 0; overflow: hidden; }
+.pi-detail-section { padding: clamp(17px, 2.5vw, 25px); }
+.pi-detail-section + .pi-detail-section { border-top: 1px solid hsl(var(--border)); }
+.pi-detail-actions { background: hsl(var(--background) / .18); }
+.pi-detail-actions .form-footer { margin-top: 0; }
 .pi-optional { margin-left: 8px; color: hsl(var(--muted-foreground)); text-transform: none; letter-spacing: 0; font-family: var(--app-font-sans); }
 .pi-over { color: hsl(var(--destructive)) !important; font-weight: 600; }
 .pi-field-error { margin: 6px 0 0; font-size: 10px; color: hsl(10 75% 72%); }
