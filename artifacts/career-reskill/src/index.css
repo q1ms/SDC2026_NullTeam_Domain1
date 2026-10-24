@@ -344,7 +344,9 @@ html { @apply scroll-smooth; }
 .trend-state { @apply rounded-lg border border-dashed border-[#d8d7cb] bg-[#faf8f0] px-4 py-8 text-center text-xs text-muted-foreground; }
 .trend-error { @apply flex items-center justify-between gap-4 rounded-lg border border-[#e6c4b7] bg-[#faeee8] p-4 text-xs text-[#97513c]; }
 .coverage-list { @apply mt-[14px] grid; }
-.coverage-item { @apply border-t border-border py-4; }
+.coverage-item { @apply border-t border-border py-4; display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 12px; }
+.coverage-item.has-image { grid-template-columns: minmax(80px, 112px) minmax(0, 1fr); }
+.coverage-image { display: block; width: 100%; aspect-ratio: 4 / 3; border: 1px solid hsl(var(--border)); border-radius: 8px; background: hsl(var(--secondary)); object-fit: cover; }
 .coverage-copy { @apply min-w-0; }
 .coverage-topic { @apply mb-2 flex flex-wrap items-center gap-2; }
 .topic-badge { @apply rounded-full bg-[#e8f1e8] px-2.5 py-1 text-[10px] font-semibold text-[#42675d]; }
@@ -354,6 +356,7 @@ html { @apply scroll-smooth; }
 .coverage-headline svg { @apply mt-0.5 shrink-0 text-muted-foreground; }
 .coverage-copy p { @apply mt-1.5 text-[10px] leading-relaxed text-muted-foreground; }
 .coverage-meta { @apply mt-2 flex flex-wrap items-center gap-1.5 text-[9px] text-muted-foreground; }
+@media (max-width: 480px) { .coverage-item.has-image { grid-template-columns: 82px minmax(0, 1fr); gap: 9px; } }
 .fade-in { animation:fade-up .45s cubic-bezier(.2,.7,.2,1) both; }
 .delay-1 { animation-delay:.08s; }
 .delay-2 { animation-delay:.16s; }

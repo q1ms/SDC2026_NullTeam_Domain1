@@ -3408,6 +3408,7 @@ export const GetLiveTrendsResponse = zod.object({
   "summary": zod.string(),
   "sourceName": zod.string(),
   "articleUrl": zod.string().url(),
+  "imageUrl": zod.string().url().optional(),
   "publishedAt": zod.coerce.date()
 })).min(getLiveTrendsResponseTrendsMin).max(getLiveTrendsResponseTrendsMax)
 })

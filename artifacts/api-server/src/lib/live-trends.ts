@@ -1,5 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
+import { resolveGoogleNewsImageUrl } from "./article-images";
 
 const FEED_URL =
   "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
@@ -253,11 +254,15 @@ export async function getLiveTrends(): Promise<LiveTrendsResponse> {
     throw new Error("AI news RSS feed contained no usable articles");
   }
 
+  const trends = await Promise.all(buildTopics(articles).map(async (trend) => {
+    const imageUrl = await resolveGoogleNewsImageUrl(trend.articleUrl);
+    return imageUrl ? { ...trend, imageUrl } : trend;
+  }));
   const result: LiveTrendsResponse = {
     source: "Google News RSS",
     feedUrl: FEED_URL,
     fetchedAt: new Date(),
-    trends: buildTopics(articles),
+    trends,
   };
 
   cachedResponse = result;

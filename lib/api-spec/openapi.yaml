@@ -625,6 +625,9 @@ components:
         articleUrl:
           type: string
           format: uri
+        imageUrl:
+          type: string
+          format: uri
         publishedAt:
           type: string
           format: date-time

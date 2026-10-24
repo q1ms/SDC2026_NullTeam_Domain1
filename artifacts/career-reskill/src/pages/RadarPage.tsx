@@ -116,7 +116,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
 
       <div className="lower-grid fade-in delay-2">
         <section className="section-card category-card">
-          <div className="card-head"><div><h2 className="card-title">{t('radar.coverage')}</h2><p className="card-description">Source articles behind the five topics</p></div><TrendingUp size={18} color="#458173" /></div>
+          <div className="card-head"><div><h2 className="card-title">{t('radar.coverage')}</h2><p className="card-description">{t('radar.coverageDescription')}</p></div><TrendingUp size={18} color="#458173" /></div>
           {trends.length > 0 ? (
             <CoverageList articles={trends} />
           ) : trendsQuery.isLoading ? (
@@ -136,6 +136,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
         <div className="card-head">
           <div>
             <h2 className="card-title">{t('radar.evidence')}</h2>
+            <p className="card-description">{t('radar.evidenceDescription')}</p>
             <p className="card-description">
               {evidenceQuery.data ? `Snapshot checked ${new Date(evidenceQuery.data.fetchedAt).toLocaleString()} · ${evidenceQuery.data.newsStatus}` : t('radar.evidenceFallback')}
             </p>

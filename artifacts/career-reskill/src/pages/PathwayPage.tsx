@@ -213,7 +213,7 @@ export function PathwayPage({
 
       {analysis && (
         <>
-          <div className="section-header"><div><h2>{t('pathway.evidenceSnapshot')}</h2><p>{t('pathway.evidenceDescription')} Checked {new Date(analysis.evidence.fetchedAt).toLocaleString()} · {analysis.evidence.newsStatus}</p></div><Link href="/radar" className="button-quiet" data-testid="link-pathway-radar">{t('pathway.openRadar')}</Link></div>
+          <div className="section-header"><div><h2>{t('pathway.evidenceSnapshot')}</h2><p>{t('pathway.evidenceDescription')}</p><p>Checked {new Date(analysis.evidence.fetchedAt).toLocaleString()} · {analysis.evidence.newsStatus}</p></div><Link href="/radar" className="button-quiet" data-testid="link-pathway-radar">{t('pathway.openRadar')}</Link></div>
           <section className="section-card" style={{ padding: 20 }}>
             <EvidenceList signals={analysis.evidence.signals} highlight={new Set(scenarios.flatMap((x) => x.evidenceIds ?? []))} />
           </section>

@@ -14,5 +14,6 @@ export interface LiveTrend {
   summary: string;
   sourceName: string;
   articleUrl: string;
+  imageUrl?: string;
   publishedAt: Date;
 }

@@ -34,6 +34,7 @@ test("reading UI renders real metadata and explicit loading, error and no-match 
         topic: "Healthcare", headline: "Nurse training", summary: "AI tools for healthcare.",
         sourceName: "Example News", articleUrl: "https://example.test/article",
         publishedAt: "2026-10-23T09:00:00Z", mentions: 1,
+        imageUrl: "https://images.example.test/nurse-training.jpg",
       }],
     };
     client.setQueryData(["/api/trends"], feed);
@@ -42,7 +43,9 @@ test("reading UI renders real metadata and explicit loading, error and no-match 
       feed.trends[0].articleUrl, "Nurse", "Healthcare", "AI &amp; automation"]) {
       assert.ok(matched.includes(value), `Expected rendered reading to include ${value}`);
     }
-    assert.match(matched, /class="coverage-item"/);
+    assert.match(matched, /class="coverage-item has-image"/);
+    assert.match(matched, /src="https:\/\/images\.example\.test\/nurse-training\.jpg"/);
+    assert.match(matched, /loading="lazy"/);
     client.setQueryData(["/api/trends"], { ...feed, trends: [] });
     assert.match(render(), /empty-personalized-reading/);
     client.getQueryCache().find({ queryKey: ["/api/trends"] }).setState({

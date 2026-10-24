@@ -2,9 +2,11 @@ import { useGetLiveTrends } from "@workspace/api-client-react";
 import { RefreshCw, TrendingUp } from "lucide-react";
 import type { CareerProfile } from "../data/catalog";
 import { getReadingTerms, selectPersonalizedCoverage } from "../lib/personalized-reading";
+import { useLanguage } from "../i18n/LanguageContext";
 import { CoverageList } from "./CoverageList";
 
 export function PersonalizedReading({ profile }: { profile: CareerProfile }) {
+  const { t } = useLanguage();
   const coverageQuery = useGetLiveTrends({
     query: { staleTime: 10 * 60 * 1000, refetchOnMount: "always" },
   });
@@ -15,8 +17,8 @@ export function PersonalizedReading({ profile }: { profile: CareerProfile }) {
     <section className="section-card category-card mt-6 fade-in delay-2" aria-labelledby="personalized-reading-title" data-testid="section-personalized-reading">
       <div className="card-head">
         <div>
-          <h2 className="card-title" id="personalized-reading-title">Personalized reading</h2>
-          <p className="card-description">Recent Skills radar coverage matched to your saved industry, current role, and areas of curiosity.</p>
+          <h2 className="card-title" id="personalized-reading-title">{t("pathway.personalizedReading")}</h2>
+          <p className="card-description">{t("pathway.personalizedReadingDescription")}</p>
         </div>
         <TrendingUp size={18} color="#458173" className="shrink-0" />
       </div>

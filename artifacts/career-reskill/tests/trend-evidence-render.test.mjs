@@ -110,7 +110,9 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     assert.ok(tooltip.includes("21 recent articles found"));
     assert.equal(render(RecentArticleTooltip, { active: false, label: "AI agents", payload: [{ value: 21 }] }), "");
     for (const text of ["Fixture Labor Office", "Labor market data", "United States", "Fixture snapshot",
-      "href=\"https://example.test/report\"", "/pathway?demo=1"]) assert.ok(radar.includes(text), `Radar missing ${text}`);
+      "href=\"https://example.test/report\"", "/pathway?demo=1",
+      "These reports and articles are the references behind the career suggestions.",
+      "news coverage is not a count of job openings"]) assert.ok(radar.includes(text), `Radar missing ${text}`);
     const evidenceStart = radar.indexOf('<details class="evidence-details" data-testid="details-evidence-fixture-report">');
     assert.ok(evidenceStart >= 0, "Evidence citation should use a native collapsible details item");
     const summaryStart = radar.indexOf("<summary", evidenceStart);
