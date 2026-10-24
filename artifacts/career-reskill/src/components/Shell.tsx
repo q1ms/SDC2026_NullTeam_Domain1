@@ -19,7 +19,7 @@ export function Shell({ children, profile }: { children: React.ReactNode; profil
       <div className="app-backdrop" aria-hidden="true"><LightRays /></div>
       <aside className="sidebar glow-edge" data-testid="navigation-sidebar">
         <Link href="/" className="brand" aria-label="JAX home" data-testid="link-brand-home">
-          <img className="brand-logo" src="/jax-emerald-orbit-logo.png" alt="JAX" />
+          <img className="brand-logo" src="/jax-wordmark.png" alt="JAX wordmark with star and orbit" />
         </Link>
         <div className="nav-caption">{t('navigation.chapter')}</div>
         <nav className="nav-list pill-nav" aria-label={t('navigation.chapter')}>

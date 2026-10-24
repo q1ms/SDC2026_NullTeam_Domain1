@@ -138,7 +138,7 @@ html { @apply scroll-smooth; }
 .app-shell { @apply flex min-h-screen bg-background text-foreground; }
 .sidebar { @apply sticky top-0 flex h-screen min-h-screen w-[252px] shrink-0 flex-col bg-[hsl(var(--sidebar))] px-[17px] pt-[27px] pb-[22px] text-[hsl(var(--sidebar-foreground))]; }
 .brand { @apply flex w-fit items-center px-2.5 pt-px pb-[27px]; }
-.brand-logo { @apply block size-[66px] shrink-0 object-contain; }
+.brand-logo { @apply block w-[152px] max-w-full h-auto shrink-0 object-contain; }
 .nav-caption { @apply px-3 pb-[11px] font-mono text-[10px] uppercase tracking-[0.12em] text-[#bcb8a7]/45; }
 .nav-list { @apply grid gap-[5px]; }
 .nav-link { @apply flex min-h-11 items-center gap-3 rounded-lg px-3 text-[13px] text-[#f4efde]/70 no-underline transition-[background,color,transform] duration-200; }
@@ -368,7 +368,7 @@ html { @apply scroll-smooth; }
   .app-shell { @apply block; }
   .sidebar { @apply sticky top-0 z-10 h-auto min-h-0 w-full px-4 pt-3 pb-[10px]; }
   .brand { @apply px-[3px] pt-0 pb-[11px]; }
-  .brand-logo { @apply size-[49px]; }
+  .brand-logo { @apply w-[126px]; }
   .sidebar .nav-caption,.sidebar-bottom { @apply hidden; }
   .nav-list { @apply flex gap-[5px] overflow-x-auto; }
   .nav-link { @apply min-h-9 gap-[7px] whitespace-nowrap px-[10px] text-[11px]; }
