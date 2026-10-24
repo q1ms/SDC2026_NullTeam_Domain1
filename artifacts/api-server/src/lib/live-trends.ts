@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser";
 import type { LiveTrend, LiveTrendsResponse } from "@workspace/api-zod";
-import { resolveRssImageUrl } from "./rss-images";
+import { extractRssImageUrl, resolveRssImageUrl } from "./rss-images";
 
 const FEED_URL =
   "https://news.google.com/rss/search?q=AI+jobs+OR+AI+skills+OR+AI+workplace+automation+when%3A30d&hl=en-US&gl=US&ceid=US:en";
@@ -64,7 +64,7 @@ type FeedArticle = {
   sourceName: string;
   articleUrl: string;
   publishedAt: Date;
-  imageUrl: string;
+  imageUrl?: string;
 };
 
 type TopicAccumulator = {
@@ -132,7 +132,7 @@ function parseArticle(item: unknown): FeedArticle | null {
   if (!parsedDate || Number.isNaN(parsedDate.getTime())) return null;
   const sourceName =
     cleanHtml(readText(record.source)) || new URL(articleUrl).hostname.replace(/^www\./, "");
-  const imageUrl = resolveRssImageUrl(record);
+  const imageUrl = extractRssImageUrl(record);
 
   return {
     title,
@@ -140,7 +140,7 @@ function parseArticle(item: unknown): FeedArticle | null {
     sourceName,
     articleUrl,
     publishedAt: parsedDate,
-    imageUrl,
+    ...(imageUrl ? { imageUrl } : {}),
   };
 }
 
@@ -148,7 +148,11 @@ function articleTime(article: FeedArticle): number {
   return article.publishedAt.getTime();
 }
 
-function toLiveTrend(topic: string, value: TopicAccumulator): LiveTrend {
+function toLiveTrend(
+  topic: string,
+  value: TopicAccumulator,
+  usedFallbackImages: Set<string>,
+): LiveTrend {
   return {
     topic,
     mentions: value.mentions,
@@ -157,7 +161,7 @@ function toLiveTrend(topic: string, value: TopicAccumulator): LiveTrend {
     sourceName: value.article.sourceName,
     articleUrl: value.article.articleUrl,
     publishedAt: value.article.publishedAt,
-    imageUrl: value.article.imageUrl,
+    imageUrl: resolveRssImageUrl(value.article, topic, usedFallbackImages),
   };
 }
 
@@ -187,6 +191,7 @@ function classifyArticle(article: FeedArticle): string | null {
 
 function buildTopics(articles: FeedArticle[]): LiveTrend[] {
   const topics = new Map<string, TopicAccumulator>();
+  const usedFallbackImages = new Set<string>();
 
   for (const article of articles) {
     const topic = classifyArticle(article);
@@ -210,7 +215,7 @@ function buildTopics(articles: FeedArticle[]): LiveTrend[] {
         articleTime(right.article) - articleTime(left.article),
     )
     .slice(0, 5)
-    .map(([topic, value]) => toLiveTrend(topic, value));
+    .map(([topic, value]) => toLiveTrend(topic, value, usedFallbackImages));
 
   const usedLabels = new Set(ranked.map((trend) => trend.topic.toLowerCase()));
   const usedArticleUrls = new Set(ranked.map((trend) => trend.articleUrl));
@@ -222,7 +227,7 @@ function buildTopics(articles: FeedArticle[]): LiveTrend[] {
 
     usedLabels.add(headlineTopic.toLowerCase());
     usedArticleUrls.add(article.articleUrl);
-    ranked.push(toLiveTrend(headlineTopic, { mentions: 1, article }));
+    ranked.push(toLiveTrend(headlineTopic, { mentions: 1, article }, usedFallbackImages));
   }
 
   if (ranked.length < 5) {
