@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import type { CareerProfile } from "../data/catalog";
 import { PersonalizedReading } from "../components/PersonalizedReading";
+import { ProfileContextDialog } from "../components/ProfileContextDialog";
 import { ScenarioCard } from "../components/ScenarioCard";
 import { EvidenceList } from "../components/EvidenceList";
 import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
@@ -154,7 +155,9 @@ export function PathwayPage({
       )}
       {analysis && activeComparison && (
         <>
-          {!isDemo && <p className="chart-note" data-testid="text-pathway-snapshot-profile">Recommendation profile snapshot: {analysis.profileSummary} If you have edited your profile since generation, regenerate before comparing these options.</p>}
+          {!isDemo && (
+            <ProfileContextDialog profileSummary={analysis.profileSummary} />
+          )}
           <AdoptionComparisonPanel analysis={analysis} selectedId={activeComparison.id} onSelect={setComparisonId} />
         </>
       )}

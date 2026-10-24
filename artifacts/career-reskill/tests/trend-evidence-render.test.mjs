@@ -85,6 +85,12 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     assert.ok(card.includes("AI output evaluation"));
     assert.ok(card.includes("AI Operations"));
     assert.ok(card.includes("href=\"#evidence-fixture-report\""));
+    assert.ok(card.includes('data-testid="details-scenario-evidence-0"'));
+    assert.ok(card.includes('data-testid="details-scenario-steps-0"'));
+    assert.ok(card.includes('type="checkbox"'));
+    assert.ok(!card.includes("Score basis:"));
+    assert.ok(!card.includes("Fixture: skills + interests + evidence + adoption assumption"));
+    assert.ok(!/details[^>]* open/.test(card), "Evidence and learning-step accordions should start collapsed");
 
     client.setQueryData(["/api/career-evidence"], evidence);
     // Empty live coverage avoids a chart dependency; public evidence still renders.

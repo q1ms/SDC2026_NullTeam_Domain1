@@ -1,7 +1,10 @@
-import { Check, Clock3, ExternalLink, Globe2, GraduationCap, Link2Off } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, Check, ChevronDown, Clock3, ExternalLink, Globe2, GraduationCap, Info, Link2Off } from "lucide-react";
 import type { CareerSignal, PathwayScenario } from "@workspace/api-client-react";
 import { getLearningResourceLink } from "../lib/pathway-resource-links";
 import { evidenceAnchor, formatDate } from "./EvidenceList";
+import { useLanguage } from "../i18n/LanguageContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 export function ScenarioCard({
   scenario,
@@ -18,12 +21,44 @@ export function ScenarioCard({
   otherScore?: number;
   otherLabel?: string;
 }) {
+  const { t } = useLanguage();
+  const [checkedSkills, setCheckedSkills] = useState<Set<number>>(() => new Set());
   const delta = otherScore === undefined ? undefined : scenario.matchScore - otherScore;
+  const toggleSkill = (skillIndex: number) => {
+    setCheckedSkills((current) => {
+      const next = new Set(current);
+      if (next.has(skillIndex)) next.delete(skillIndex);
+      else next.add(skillIndex);
+      return next;
+    });
+  };
+
   return (
     <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-scenario-${index}`}>
       <div className="role-head">
         <h3 className="role-title" data-testid={`text-scenario-title-${index}`}>{rank ? <span className="rank-num">#{rank}</span> : null}{scenario.roleTitle}</h3>
-        <span className="match-badge" data-testid={`status-scenario-match-${index}`}><Check size={11} /> {scenario.matchScore} score</span>
+        {scenario.scoreBasis ? (
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="match-badge match-badge-help"
+                  data-testid={`status-scenario-match-${index}`}
+                  aria-label={`${t("pathway.fitScore")} ${scenario.matchScore} / 100. ${t("pathway.whyThisScore")}`}
+                >
+                  <Check size={11} aria-hidden="true" /> {scenario.matchScore} {t("pathway.fitScore")} <Info size={12} aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="end" className="score-basis-tooltip" data-testid={`tooltip-scenario-basis-${index}`}>
+                <strong>{t("pathway.whyThisScore")}</strong>
+                <span>{scenario.scoreBasis}</span>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <span className="match-badge" data-testid={`status-scenario-match-${index}`}><Check size={11} /> {scenario.matchScore} {t("pathway.fitScore")}</span>
+        )}
       </div>
       {delta !== undefined && (
         <div className="field-hint" data-testid={`text-scenario-delta-${index}`}>
@@ -31,40 +66,68 @@ export function ScenarioCard({
         </div>
       )}
       <p className="role-description" data-testid={`text-scenario-reason-${index}`}>{scenario.explainableReason}</p>
-      {scenario.scoreBasis && <p className="role-description" data-testid={`text-scenario-basis-${index}`}><strong>Score basis:</strong> {scenario.scoreBasis}</p>}
       {scenario.paceEstimate && <div className="metric-tag" data-testid={`text-scenario-pace-${index}`}><Clock3 size={11} /> Estimated pace: {scenario.paceEstimate}</div>}
       <div className="scenario-sdg" data-testid={`text-scenario-sdg-${index}`}><Globe2 size={13} />{scenario.unSdgTag}</div>
       {scenario.matchedSkills && scenario.matchedSkills.length > 0 && (
         <>
-          <div className="gap-label">Skills you already bring</div>
+          <div className="gap-label">{t("pathway.skillsYouBring")}</div>
           <div className="skill-chips" style={{ marginBottom: 12 }}>
             {scenario.matchedSkills.map((skill) => <span className="skill-chip known" key={skill}>{skill}</span>)}
           </div>
         </>
       )}
-      <div className="gap-label">Skills to build</div>
+      <div className="gap-label">{t("pathway.skillsToBuild")}</div>
       {scenario.skillsGap.length ? (
         <div className="skill-chips">
-          {scenario.skillsGap.map((skill) => <span className="skill-chip missing" key={skill}>{skill}</span>)}
-        </div>
-      ) : (
-        <p className="role-description">Your current skills already cover this pathway’s listed gaps.</p>
-      )}
-      {scenario.evidenceIds && scenario.evidenceIds.length > 0 && (
-        <div className="evidence-refs" data-testid={`list-scenario-evidence-${index}`}>
-          <div className="gap-label">Evidence used</div>
-          {scenario.evidenceIds.map((id) => {
-            const sig = evidence?.get(id);
-            return sig ? (
-              <a key={id} href={`#${evidenceAnchor(id)}`} className="evidence-ref" data-testid={`link-scenario-evidence-${index}-${id}`}>{sig.source}: {sig.title}</a>
-            ) : (
-              <span key={id} className="evidence-ref missing">{id} (not in this snapshot)</span>
+          {scenario.skillsGap.map((skill, skillIndex) => {
+            const isChecked = checkedSkills.has(skillIndex);
+            return (
+              <label
+                className={`skill-chip missing skill-chip-checkable${isChecked ? " is-checked" : ""}`}
+                key={`${skill}-${skillIndex}`}
+                data-testid={`label-scenario-skill-${index}-${skillIndex}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleSkill(skillIndex)}
+                  aria-label={`${t("pathway.markSkillBuilt")}: ${skill}`}
+                  data-testid={`checkbox-scenario-skill-${index}-${skillIndex}`}
+                />
+                {isChecked && <Check size={11} aria-hidden="true" />}
+                <span>{skill}</span>
+              </label>
             );
           })}
         </div>
+      ) : (
+        <p className="role-description">{t("pathway.noSkillsGap")}</p>
+      )}
+      {scenario.evidenceIds && scenario.evidenceIds.length > 0 && (
+        <details className="learning-path scenario-accordion" data-testid={`details-scenario-evidence-${index}`}>
+          <summary>
+            <span className="scenario-accordion-title"><BookOpen size={14} aria-hidden="true" />{t("pathway.evidenceUsed")}</span>
+            <span className="scenario-accordion-meta">{t("pathway.sourceCount").replace("{count}", String(scenario.evidenceIds.length))}</span>
+            <ChevronDown size={14} className="scenario-accordion-chevron" aria-hidden="true" />
+          </summary>
+          <div className="evidence-refs" data-testid={`list-scenario-evidence-${index}`}>
+            {scenario.evidenceIds.map((id) => {
+              const sig = evidence?.get(id);
+              return sig ? (
+                <a key={id} href={`#${evidenceAnchor(id)}`} className="evidence-ref" data-testid={`link-scenario-evidence-${index}-${id}`}>{sig.source}: {sig.title}</a>
+              ) : (
+                <span key={id} className="evidence-ref missing">{id} (not in this snapshot)</span>
+              );
+            })}
+          </div>
+        </details>
       )}
       <details className="learning-path" data-testid={`details-scenario-steps-${index}`}>
-        <summary><span><GraduationCap size={14} style={{ verticalAlign: "middle", marginRight: 7, color: "#347a70" }} />Reskilling pathway</span><span className="field-hint">3 steps</span></summary>
+        <summary>
+          <span className="scenario-accordion-title"><GraduationCap size={14} aria-hidden="true" />{t("pathway.reskillingPathway")}</span>
+          <span className="scenario-accordion-meta">{t("pathway.stepsCount").replace("{count}", String(scenario.reskillingPathway.length))}</span>
+          <ChevronDown size={14} className="scenario-accordion-chevron" aria-hidden="true" />
+        </summary>
         <ol>
           {scenario.reskillingPathway.map((step, stepIndex) => {
             const resource = getLearningResourceLink(step.resourceLink, step.resourceTitle);
