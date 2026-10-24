@@ -244,28 +244,38 @@ export function IntakePage({
         credentials: 'same-origin',
         body: JSON.stringify({ rawText: extractedText }),
       });
-      const result: unknown = await response.json().catch(() => null);
-      if (!response.ok || !isRecord(result)) throw new Error('cv-analysis-failed');
+      const data: unknown = await response.json().catch(() => null);
+      if (!response.ok || !isRecord(data)) throw new Error('cv-analysis-failed');
       if (
-        typeof result.currentRole !== 'string'
-        || typeof result.industry !== 'string'
-        || typeof result.yearsOfExperience !== 'number'
-        || !Number.isInteger(result.yearsOfExperience)
-        || result.yearsOfExperience < 0
-        || result.yearsOfExperience > 40
-        || !Array.isArray(result.skills)
-        || result.skills.some((skill) => typeof skill !== 'string')
+        typeof data.displayName !== 'string'
+        || typeof data.location !== 'string'
+        || typeof data.headline !== 'string'
+        || typeof data.targetIndustry !== 'string'
+        || typeof data.currentRole !== 'string'
+        || typeof data.industry !== 'string'
+        || typeof data.yearsOfExperience !== 'number'
+        || !Number.isInteger(data.yearsOfExperience)
+        || data.yearsOfExperience < 0
+        || data.yearsOfExperience > 40
+        || !Array.isArray(data.skills)
+        || data.skills.some((skill) => typeof skill !== 'string')
       ) {
         throw new Error('cv-analysis-failed');
       }
+      if (import.meta.env.DEV) console.log("Parsed CV Data:", data);
       const extracted = {
-        currentRole: result.currentRole.trim(),
-        industry: result.industry.trim(),
-        yearsExperience: result.yearsOfExperience,
-        skills: [...new Set((result.skills as string[]).map((skill) => skill.trim()).filter(Boolean))],
+        displayName: data.displayName.trim(),
+        location: data.location.trim(),
+        headline: data.headline.trim(),
+        targetIndustry: data.targetIndustry.trim(),
+        currentRole: data.currentRole.trim(),
+        industry: data.industry.trim(),
+        yearsExperience: data.yearsOfExperience,
+        skills: [...new Set((data.skills as string[]).map((skill) => skill.trim()).filter(Boolean))],
       };
       const hasExtractedData = Boolean(
-        extracted.currentRole || extracted.industry || extracted.yearsExperience > 0 || extracted.skills.length,
+        extracted.displayName || extracted.location || extracted.headline || extracted.targetIndustry
+        || extracted.currentRole || extracted.industry || extracted.yearsExperience > 0 || extracted.skills.length,
       );
       if (!hasExtractedData) {
         setCvUploadStatus('error');
@@ -274,7 +284,11 @@ export function IntakePage({
 
       if (extracted.currentRole) update('currentRole', extracted.currentRole);
       if (extracted.industry) update('industry', extracted.industry);
-      if (extracted.yearsExperience !== undefined) update('yearsExperience', extracted.yearsExperience);
+      if (extracted.displayName) updateBackground('displayName', extracted.displayName);
+      if (extracted.location) updateBackground('location', extracted.location);
+      if (extracted.headline) updateBackground('headline', extracted.headline);
+      if (extracted.targetIndustry) updateBackground('targetIndustry', extracted.targetIndustry);
+      update('yearsExperience', extracted.yearsExperience);
       if (extracted.skills.length) {
         const mergedSkills = parseSkills(skillsText);
         const seen = new Set(mergedSkills.map((skill) => skill.toLocaleLowerCase()));

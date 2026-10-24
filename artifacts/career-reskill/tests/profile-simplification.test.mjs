@@ -55,6 +55,10 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
       return {
         ok: true,
         json: async () => ({
+          displayName: "Amina Example",
+          location: "Kuala Lumpur, Malaysia",
+          headline: "AI Product Manager with healthcare technology experience",
+          targetIndustry: "Healthcare technology",
           currentRole: "AI Product Manager",
           industry: "Healthcare technology",
           yearsOfExperience: 9,
@@ -107,6 +111,10 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
     assert.equal(container.querySelector('[data-testid="input-industry"]').value, "Healthcare technology");
     assert.equal(container.querySelector('[data-testid="text-years-value"]').textContent, "9");
     assert.equal(container.querySelector('[data-testid="input-existing-skills"]').value, "Python, Product analytics, Stakeholder management, SQL");
+    assert.equal(container.querySelector('[data-testid="input-display-name"]').value, "Amina Example");
+    assert.equal(container.querySelector('[data-testid="input-location"]').value, "Kuala Lumpur, Malaysia");
+    assert.equal(container.querySelector('[data-testid="input-headline"]').value, "AI Product Manager with healthcare technology experience");
+    assert.equal(container.querySelector('[data-testid="input-target-industry"]').value, "Healthcare technology");
     assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /CV loaded successfully/);
     assert.doesNotMatch(container.querySelector('[data-testid="panel-detailed-profile"]').textContent, /not available yet/);
     assert.equal(saves.length, 0);
