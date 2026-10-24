@@ -118,6 +118,7 @@ export function IntakePage({
   const isDirty = useRef(false);
   const interestSuggestionsRef = useRef<HTMLDivElement>(null);
   const isSubmitting = isSaving || isFormSubmitting;
+  const mode = form.profileMode === 'detailed' ? 'detailed' : 'quick';
   const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
   const interestSuggestionsKey = interestSuggestions.join('\u0000');
   const isInterestDropdownOpen = Boolean(interestSearch.trim());
@@ -143,7 +144,7 @@ export function IntakePage({
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateHeight);
     observer?.observe(dropdown);
     return () => observer?.disconnect();
-  }, [isInterestDropdownOpen, interestSuggestionsKey]);
+  }, [isInterestDropdownOpen, interestSuggestionsKey, mode]);
 
   // Initialise once per profile id; later cache updates/refetches never clobber the draft.
   useEffect(() => {
@@ -173,7 +174,6 @@ export function IntakePage({
     editForm((current) => ({ ...current, professionalBackground: { ...(current.professionalBackground ?? {}), [key]: value } }));
   const updateSection = (key: SectionKey, entries: ProfessionalEntry[]) => updateBackground(key, entries);
   const editSkills = (text: string) => { if (submissionLock.current) return; isDirty.current = true; setSkillsText(text); };
-  const mode = form.profileMode === 'detailed' ? 'detailed' : 'quick';
   const skillCount = parseSkills(skillsText).length;
   const linkedinValue = background.linkedinUrl?.trim() ?? '';
   const linkedinHref = linkedinValue && isLinkedInProfileUrl(linkedinValue) ? safeExternalUrl(linkedinValue) : null;
@@ -282,6 +282,116 @@ export function IntakePage({
     return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
   }
 
+  const roleAndIndustryFields = (
+    <div className="field-grid">
+      <div className="field">
+        <label htmlFor="current-role">Current role or status <span className="field-hint">Required</span></label>
+        <input id="current-role" className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
+        <div className="pi-presets">
+          {STATUS_PRESETS.map((preset) => (
+            <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{preset}</button>
+          ))}
+        </div>
+      </div>
+      <div className="field">
+        <label htmlFor="industry">{mode === 'detailed' ? 'Current industry' : 'Industry'} <span className="field-hint">Required</span></label>
+        <input id="industry" className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
+        <datalist id="industry-options">{['Healthcare', 'Financial services', 'Education', 'Manufacturing', 'Technology', 'Government', 'Retail', 'Energy', 'Professional services'].map((industry) => <option key={industry} value={industry} />)}</datalist>
+      </div>
+    </div>
+  );
+  const experienceField = (
+    <div className="field">
+      <label htmlFor="years-experience">Years of experience <span className="field-hint">{form.yearsExperience} years{form.yearsExperience === 0 ? ' (fine for students)' : ''}</span></label>
+      <div className="hours-control"><input id="years-experience" aria-label="Years of experience" type="range" min="0" max="40" value={form.yearsExperience} onChange={(event) => update('yearsExperience', Number(event.target.value))} data-testid="input-years-experience" /><span className="hours-number" data-testid="text-years-value">{form.yearsExperience}</span></div>
+    </div>
+  );
+  const skillsField = (
+    <div className="field">
+      <label htmlFor="existing-skills">Skills, strengths, and tools <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">Required · {skillCount} / {MAX_SKILLS}, separate with commas</span></label>
+      <textarea id="existing-skills" className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
+      {skillCount > MAX_SKILLS && <p className="pi-field-error" role="alert" data-testid="status-skill-limit">You have {skillCount} skills. Remove {skillCount - MAX_SKILLS} to save; nothing is trimmed automatically.</p>}
+    </div>
+  );
+  const learningPreferences = (
+    <>
+      <div className="field" data-testid="group-interest-options">
+        <label htmlFor="interest-search">Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
+        <div
+          className="interest-search"
+          style={isInterestDropdownOpen ? { paddingBottom: `${interestDropdownHeight + 8}px` } : undefined}
+        >
+          <div className="interest-search-anchor">
+            <Search size={15} aria-hidden="true" />
+            <input
+              id="interest-search"
+              className="input-control interest-search-input"
+              type="text"
+              value={interestSearch}
+              onChange={(event) => {
+                setInterestSearch(event.target.value);
+                setActiveInterestIndex(0);
+              }}
+              onKeyDown={handleInterestSearchKeyDown}
+              placeholder="Search areas of interest (e.g., tech, health, AI)..."
+              aria-label="Search areas of interest"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={isInterestDropdownOpen}
+              aria-controls="interest-suggestions"
+              aria-activedescendant={activeSuggestionIndex >= 0 ? `interest-suggestion-${activeSuggestionIndex}` : undefined}
+              data-testid="input-interest-search"
+            />
+            {interestSearch && (
+              <button type="button" className="interest-search-clear" onClick={() => setInterestSearch('')} aria-label="Clear interest search" data-testid="button-clear-interest-search">
+                <X size={14} aria-hidden="true" />
+              </button>
+            )}
+            {isInterestDropdownOpen && (
+              <div
+                ref={interestSuggestionsRef}
+                id="interest-suggestions"
+                className="interest-suggestions absolute left-0 right-0 top-full z-50"
+                role="listbox"
+                aria-label="Matching areas of interest"
+                data-testid="list-interest-suggestions"
+              >
+                {interestSuggestions.length ? interestSuggestions.map((interest, index) => (
+                  <div
+                    id={`interest-suggestion-${index}`}
+                    key={interest}
+                    className={`interest-suggestion ${index === activeSuggestionIndex ? 'active' : ''}`}
+                    role="option"
+                    aria-selected={index === activeSuggestionIndex}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onMouseEnter={() => setActiveInterestIndex(index)}
+                    onClick={() => addInterest(interest)}
+                    data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
+                  >
+                    <span>{interest}</span><span className="interest-suggestion-hint">Add</span>
+                  </div>
+                )) : (
+                  <p className="interest-no-results" role="status" data-testid="text-no-interest-results">No matching areas found.</p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="interest-tag-list" role="group" aria-label="Selected areas of interest" data-testid="list-selected-interests">
+          {form.interests.map((interest) => (
+            <button type="button" key={interest} className="interest-tag" onClick={() => toggleInterest(interest)} aria-label={`Remove ${interest}`} data-testid={`button-remove-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}>
+              <span>{interest}</span><X size={13} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="field" style={{ marginTop: 22 }}>
+        <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>
+        <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">How much time can you realistically dedicate to upskilling courses?</p>
+        <div className="hours-control"><input id="weekly-hours" type="range" min="1" max="15" value={form.weeklyHours} onChange={(event) => update('weeklyHours', Number(event.target.value))} data-testid="input-weekly-hours" /><span className="hours-number" data-testid="text-weekly-hours-value">{form.weeklyHours}h</span></div>
+      </div>
+    </>
+  );
   const statusAndFooter = (
     <>
       {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors"><strong className="pi-errors-title">Fix {errors.length === 1 ? 'this' : `these ${errors.length} items`} before saving:</strong><ul className="pi-error-list">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div>}
@@ -334,128 +444,17 @@ export function IntakePage({
           ))}
           <span className={`pi-mode-thumb ${mode}`} aria-hidden="true" />
         </div>
-        <section className="section-card form-panel">
+        {mode === 'quick' && (
+        <section className="section-card form-panel" data-testid="panel-quick-profile">
           <h2 className="form-section-title">Your experience</h2>
-          <div className="field-grid">
-            <div className="field">
-              <label htmlFor="current-role">Current role or status <span className="field-hint">Required</span></label>
-              <input id="current-role" className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
-              <div className="pi-presets">
-                {STATUS_PRESETS.map((preset) => (
-                  <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{preset}</button>
-                ))}
-              </div>
-            </div>
-            <div className="field">
-              <label htmlFor="industry">Industry <span className="field-hint">Required</span></label>
-              <input id="industry" className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
-              <datalist id="industry-options">{['Healthcare', 'Financial services', 'Education', 'Manufacturing', 'Technology', 'Government', 'Retail', 'Energy', 'Professional services'].map((industry) => <option key={industry} value={industry} />)}</datalist>
-            </div>
-          </div>
-          <div className="field">
-            <label htmlFor="years-experience">Years of experience <span className="field-hint">{form.yearsExperience} years{form.yearsExperience === 0 ? ' (fine for students)' : ''}</span></label>
-            <div className="hours-control"><input id="years-experience" aria-label="Years of experience" type="range" min="0" max="40" value={form.yearsExperience} onChange={(event) => update('yearsExperience', Number(event.target.value))} data-testid="input-years-experience" /><span className="hours-number" data-testid="text-years-value">{form.yearsExperience}</span></div>
-          </div>
-          <div className="field">
-            <label htmlFor="existing-skills">Skills, strengths, and tools <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">{skillCount} / {MAX_SKILLS}, separate with commas</span></label>
-            <textarea id="existing-skills" className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
-            {skillCount > MAX_SKILLS && <p className="pi-field-error" role="alert" data-testid="status-skill-limit">You have {skillCount} skills. Remove {skillCount - MAX_SKILLS} to save; nothing is trimmed automatically.</p>}
-          </div>
+          {roleAndIndustryFields}
+          {experienceField}
+          {skillsField}
           <h2 className="form-section-title" style={{ marginTop: 23 }}>What draws your attention?</h2>
-          <div className="field" data-testid="group-interest-options">
-            <label>Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
-            <div
-              className="interest-search"
-              style={isInterestDropdownOpen ? { paddingBottom: `${interestDropdownHeight + 8}px` } : undefined}
-            >
-              <div className="interest-search-anchor">
-                <Search size={15} aria-hidden="true" />
-                <input
-                  id="interest-search"
-                  className="input-control interest-search-input"
-                  type="text"
-                  value={interestSearch}
-                  onChange={(event) => {
-                    setInterestSearch(event.target.value);
-                    setActiveInterestIndex(0);
-                  }}
-                  onKeyDown={handleInterestSearchKeyDown}
-                  placeholder="Search areas of interest (e.g., tech, health, AI)..."
-                  aria-label="Search areas of interest"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-expanded={isInterestDropdownOpen}
-                  aria-controls="interest-suggestions"
-                  aria-activedescendant={activeSuggestionIndex >= 0 ? `interest-suggestion-${activeSuggestionIndex}` : undefined}
-                  data-testid="input-interest-search"
-                />
-                {interestSearch && (
-                  <button
-                    type="button"
-                    className="interest-search-clear"
-                    onClick={() => setInterestSearch('')}
-                    aria-label="Clear interest search"
-                    data-testid="button-clear-interest-search"
-                  >
-                    <X size={14} aria-hidden="true" />
-                  </button>
-                )}
-                {isInterestDropdownOpen && (
-                  <div
-                    ref={interestSuggestionsRef}
-                    id="interest-suggestions"
-                    className="interest-suggestions absolute left-0 right-0 top-full z-50"
-                    role="listbox"
-                    aria-label="Matching areas of interest"
-                    data-testid="list-interest-suggestions"
-                  >
-                    {interestSuggestions.length ? interestSuggestions.map((interest, index) => (
-                      <div
-                        id={`interest-suggestion-${index}`}
-                        key={interest}
-                        className={`interest-suggestion ${index === activeSuggestionIndex ? 'active' : ''}`}
-                        role="option"
-                        aria-selected={index === activeSuggestionIndex}
-                        onMouseDown={(event) => event.preventDefault()}
-                        onMouseEnter={() => setActiveInterestIndex(index)}
-                        onClick={() => addInterest(interest)}
-                        data-testid={`option-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
-                      >
-                        <span>{interest}</span>
-                        <span className="interest-suggestion-hint">Add</span>
-                      </div>
-                    )) : (
-                      <p className="interest-no-results" role="status" data-testid="text-no-interest-results">
-                        No matching areas found.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="interest-tag-list" role="group" aria-label="Selected areas of interest" data-testid="list-selected-interests">
-              {form.interests.map((interest) => (
-                <button
-                  type="button"
-                  key={interest}
-                  className="interest-tag"
-                  onClick={() => toggleInterest(interest)}
-                  aria-label={`Remove ${interest}`}
-                  data-testid={`button-remove-interest-${interest.toLowerCase().replaceAll(/[^a-z0-9]+/g, '-')}`}
-                >
-                  <span>{interest}</span>
-                  <X size={13} aria-hidden="true" />
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="field" style={{ marginTop: 22 }}>
-            <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>
-            <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">How much time can you realistically dedicate to upskilling courses?</p>
-            <div className="hours-control"><input id="weekly-hours" type="range" min="1" max="15" value={form.weeklyHours} onChange={(event) => update('weeklyHours', Number(event.target.value))} data-testid="input-weekly-hours" /><span className="hours-number" data-testid="text-weekly-hours-value">{form.weeklyHours}h</span></div>
-          </div>
-          {mode === 'quick' && statusAndFooter}
+          {learningPreferences}
+          {statusAndFooter}
         </section>
+        )}
 
         {mode === 'detailed' && (
           <div className="pi-detailed" data-testid="panel-detailed-profile">
@@ -465,7 +464,10 @@ export function IntakePage({
             </section>
 
             <section className="section-card form-panel">
-              <h2 className="form-section-title">Professional identity <span className="pi-optional">All optional</span></h2>
+              <h2 className="form-section-title">Professional identity</h2>
+              {roleAndIndustryFields}
+              {experienceField}
+              <p className="pi-helper">The details below are optional. Add only what you want to share.</p>
               <div className="field-grid">
                 <div className="field">
                   <label htmlFor="bg-display-name">Display name</label>
@@ -503,7 +505,8 @@ export function IntakePage({
             </section>
 
             <section className="section-card form-panel pi-sections">
-              <h2 className="form-section-title">Background <span className="pi-optional">Add what applies, skip the rest</span></h2>
+              <h2 className="form-section-title">Background <span className="pi-optional">Professional records optional</span></h2>
+              {skillsField}
               {SECTIONS.map((section) => (
                 <SectionEditor
                   key={section.key}
@@ -515,6 +518,10 @@ export function IntakePage({
               ))}
             </section>
 
+            <section className="section-card form-panel" data-testid="panel-learning-preferences">
+              <h2 className="form-section-title">Learning preferences</h2>
+              {learningPreferences}
+            </section>
             <section className="section-card form-panel">{statusAndFooter}</section>
           </div>
         )}
