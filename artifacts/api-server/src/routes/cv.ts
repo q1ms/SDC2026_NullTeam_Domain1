@@ -17,7 +17,13 @@ router.post("/parse-cv", async (req, res): Promise<void> => {
 
   const endpointId = process.env.RUNPOD_ENDPOINT_ID;
   const apiKey = process.env.RUNPOD_API_KEY;
-  if (!endpointId || !apiKey) {
+  if (!apiKey) {
+    req.log.error({ route: "/api/parse-cv" }, "Missing API Key: process.env.RUNPOD_API_KEY is undefined.");
+    res.status(503).json({ error: "The résumé analysis service is not configured because its API key is missing." });
+    return;
+  }
+  if (!endpointId) {
+    req.log.error({ route: "/api/parse-cv" }, "Missing RunPod endpoint: process.env.RUNPOD_ENDPOINT_ID is undefined.");
     res.status(503).json({ error: "The résumé analysis service is not configured." });
     return;
   }
@@ -25,9 +31,18 @@ router.post("/parse-cv", async (req, res): Promise<void> => {
   try {
     const fields = await parseCvWithRunpod(rawText, { endpointId, apiKey, runJob: runPathwayJob });
     res.json(fields);
-  } catch {
-    // Do not log résumé text or model output; both may contain personal information.
-    req.log.error({ route: "/api/parse-cv" }, "AI résumé parsing failed.");
+  } catch (error) {
+    // Log the concrete failure while keeping résumé text, model output and credentials out of logs.
+    const rawMessage = error instanceof Error ? error.message : String(error);
+    const safeMessage = rawMessage
+      .replaceAll(apiKey, "[REDACTED]")
+      .replaceAll(endpointId, "[REDACTED]")
+      .slice(0, 500);
+    req.log.error({
+      route: "/api/parse-cv",
+      errorName: error instanceof Error ? error.name : "UnknownError",
+      errorMessage: safeMessage,
+    }, "AI résumé parsing failed.");
     res.status(502).json({ error: "We couldn’t analyze this résumé. Please try again or enter your details manually." });
   }
 });

@@ -31,6 +31,8 @@ test("builds a JSON-only extraction prompt with the raw resume treated as data",
 
 test("validates exactly the requested profile shape and normalizes skill names", () => {
   assert.deepEqual(validateParsedCv(expected), expected);
+  assert.deepEqual(validateParsedCv("```json\n" + JSON.stringify(expected) + "\n```"), expected);
+  assert.deepEqual(validateParsedCv(`<json>\n${JSON.stringify(expected)}\n</json>`), expected);
   assert.throws(() => validateParsedCv({ ...expected, extra: true }), /unexpected shape/);
   assert.throws(() => validateParsedCv({ ...expected, yearsOfExperience: "9" }), /invalid profile fields/);
   assert.throws(() => validateParsedCv({ ...expected, yearsOfExperience: 41 }), /invalid profile fields/);

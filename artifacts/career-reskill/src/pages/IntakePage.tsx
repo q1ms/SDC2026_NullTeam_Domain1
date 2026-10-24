@@ -132,7 +132,7 @@ export function IntakePage({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const [validationAttempt, setValidationAttempt] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
-  const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'reading' | 'success' | 'error' | 'too-large'>('idle');
+  const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'reading' | 'success' | 'error' | 'unreadable' | 'too-large'>('idle');
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -234,6 +234,7 @@ export function IntakePage({
     setPathwayError(null);
     try {
       const extractedText = await readResumeText(file);
+      if (!extractedText.trim()) throw new Error('Could not read text from this file format.');
       if (import.meta.env.DEV) console.log("Raw CV Text:", extractedText);
       const response = await fetch('/api/parse-cv', {
         method: 'POST',
@@ -303,7 +304,13 @@ export function IntakePage({
       }
       setCvUploadStatus('success');
     } catch (error) {
-      setCvUploadStatus(error instanceof Error && error.message === 'file-too-large' ? 'too-large' : 'error');
+      if (error instanceof Error && error.message === 'file-too-large') {
+        setCvUploadStatus('too-large');
+      } else if (error instanceof Error && error.message === 'Could not read text from this file format.') {
+        setCvUploadStatus('unreadable');
+      } else {
+        setCvUploadStatus('error');
+      }
     }
   };
   const skillCount = parseSkills(skillsText).length;
@@ -639,6 +646,7 @@ export function IntakePage({
               </p>
               {cvUploadStatus === 'success' && <p className="pi-helper cv-upload-success" role="status" data-testid="status-cv-upload">{t('profile.resumeSuccess')}</p>}
               {cvUploadStatus === 'error' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeError')}</p>}
+              {cvUploadStatus === 'unreadable' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeUnreadable')}</p>}
               {cvUploadStatus === 'too-large' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeTooLarge')}</p>}
             </div>
             <div className="section-card pi-detail-card" data-testid="panel-detailed-content">

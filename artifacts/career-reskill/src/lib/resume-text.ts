@@ -36,6 +36,6 @@ export async function readResumeText(file: File): Promise<string> {
   }
 
   const extractedText = text.trim();
-  if (!extractedText) throw new Error("no-readable-text");
+  if (!extractedText) throw new Error("Could not read text from this file format.");
   return extractedText;
 }

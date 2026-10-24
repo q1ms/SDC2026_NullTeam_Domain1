@@ -96,6 +96,19 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
     assert.match(container.querySelector("#cv-upload-help").textContent, /Choose a PDF, DOCX, or TXT file/);
     assert.equal(saves.length, 0);
     assert.equal(requests.length, 0);
+    const emptyResumeFile = {
+      name: "empty-resume.txt",
+      size: 0,
+      arrayBuffer: async () => new ArrayBuffer(0),
+    };
+    Object.defineProperty(fileInput, "files", { configurable: true, value: [emptyResumeFile] });
+    await act(async () => {
+      fileInput.dispatchEvent(new window.Event("change", { bubbles: true }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /Could not read text from this file format/);
+    assert.equal(requests.length, 0);
+
     const resumeText = "A résumé with varied formatting and unstructured professional experience.";
     const resumeFile = {
       name: "haqim-resume.txt",
