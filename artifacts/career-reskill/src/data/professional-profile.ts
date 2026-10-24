@@ -294,13 +294,19 @@ export function validateProfileDraft(profile: CareerProfile, skills: string[]): 
 }
 
 /* ---------- paste import ---------- */
+export type ImportEntryWarning = {
+  id: string;
+  message: string;
+  field: EntryField['key'];
+};
+
 export type ImportResult = {
   scalars: Partial<Record<ScalarKey, string>>;
   sections: Partial<Record<SectionKey, ProfessionalEntry[]>>;
   skills: string[];
   unclassified: string[];
   warnings: string[];
-  entryWarnings: Record<string, string[]>;
+  entryWarnings: Record<string, ImportEntryWarning[]>;
   error?: string;
 };
 
@@ -402,11 +408,17 @@ function hasField(section: SectionKey, key: string) {
   return SECTION_BY_KEY[section].fields.some((fd) => fd.key === key);
 }
 
-function parseRecord(section: SectionKey, lines: string[], warnings: Record<string, string[]>): ProfessionalEntry {
+function parseRecord(section: SectionKey, lines: string[], warnings: Record<string, ImportEntryWarning[]>): ProfessionalEntry {
   const entry: Record<string, unknown> = { id: makeEntryId(), title: '' };
   const notes: string[] = [];
   const plain: string[] = [];
-  const own: string[] = [];
+  const own: ImportEntryWarning[] = [];
+  const warn = (message: string, field: EntryField['key']) => own.push({
+    id: `${entryControlId('import', section, String(entry.id), field)}-warning-${own.length}`,
+    message,
+    field,
+  });
+  const dateField = hasField(section, 'startDate') ? 'startDate' : 'endDate';
   const pushList = (key: EntryListKey, values: string[]) => { entry[key] = [...((entry[key] as string[]) ?? []), ...values]; };
   const applyDates = (d: DateParse, singleTo: 'startDate' | 'endDate') => {
     if (d.startDate && !entry.startDate) entry.startDate = d.startDate;
@@ -451,13 +463,13 @@ function parseRecord(section: SectionKey, lines: string[], warnings: Record<stri
       if (name === 'role' || name === 'position') target = section === 'projects' || section === 'organizations' ? 'contribution' : 'title';
       if (section === 'organizations' && (name === 'organization' || name === 'organisation')) target = 'title';
       if (target && value) {
-        if (target === 'dates') { const d = parseDateRange(value); if (d) applyDates(d, singleDefault); else { notes.push(line); own.push(`Could not read dates "${value}".`); } }
+        if (target === 'dates') { const d = parseDateRange(value); if (d) applyDates(d, singleDefault); else { notes.push(line); warn(`Could not read dates "${value}".`, dateField); } }
         else if (target === 'singleDate' || target === 'startDate' || target === 'endDate') {
           const p = parseDatePoint(value);
           const key = target === 'singleDate' ? singleDefault : target;
           if (p === PRESENT) entry.current = true;
           else if (p) entry[key] = p;
-          else { notes.push(line); own.push(`Could not read date "${value}".`); }
+          else { notes.push(line); warn(`Could not read date "${value}".`, hasField(section, key) ? key : 'title'); }
         }
         else if (target === 'current') { if (/^(yes|true|y|current)$/i.test(value)) entry.current = true; }
         else if (target === 'coursework' || target === 'technologies' || target === 'skills') pushList(target, splitListText(value, 'tags'));
@@ -489,11 +501,11 @@ function parseRecord(section: SectionKey, lines: string[], warnings: Record<stri
   if (notes.length) {
     const key = hasField(section, 'description') ? 'description' : null;
     if (key) entry.description = [entry.description, ...notes].filter(Boolean).join('\n');
-    else own.push(`Extra text kept for review: ${notes.join(' / ')}`);
+    else warn(`Extra text kept for review: ${notes.join(' / ')}`, 'title');
   }
-  if (!entry.title) own.push('No title recognised. Add one before saving.');
-  if (['experience', 'volunteering'].includes(section) && !entry.organization) own.push('No organization recognised.');
-  if (['experience', 'volunteering', 'education', 'projects'].includes(section) && !entry.startDate && !entry.endDate && !entry.current) own.push('No dates recognised.');
+  if (!entry.title) warn('No title recognised. Add one before saving.', 'title');
+  if (['experience', 'volunteering'].includes(section) && !entry.organization) warn('No organization recognised.', 'organization');
+  if (['experience', 'volunteering', 'education', 'projects'].includes(section) && !entry.startDate && !entry.endDate && !entry.current) warn('No dates recognised.', 'startDate');
   const result = entry as unknown as ProfessionalEntry;
   if (own.length) warnings[result.id] = own;
   return result;

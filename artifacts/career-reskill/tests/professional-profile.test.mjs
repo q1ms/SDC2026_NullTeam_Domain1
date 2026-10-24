@@ -67,7 +67,7 @@ test("parses LinkedIn-style and labelled records across sections", () => {
   assert.deepEqual(ta.achievements, ["Ran weekly tutorials"]);
   assert.deepEqual(ta.skills, ["Python", "Public speaking"]);
   assert.equal(freelance.startDate, "2021");
-  assert.ok(r.entryWarnings[freelance.id].some((w) => /organization/i.test(w)), "missing org flagged, not invented");
+  assert.ok(r.entryWarnings[freelance.id].some((w) => /organization/i.test(w.message)), "missing org flagged, not invented");
   const edu = r.sections.education[0];
   assert.deepEqual([edu.title, edu.degree, edu.startDate, edu.endDate, edu.gpa], ["Universiti Malaya", "BSc Computer Science", "2022", "2026", "3.8"]);
   assert.deepEqual(edu.coursework, ["Databases", "Statistics"]);

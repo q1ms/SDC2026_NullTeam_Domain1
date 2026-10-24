@@ -116,6 +116,9 @@
 
 .pi-error-link { color: inherit; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
 .pi-error-link:hover { text-decoration-thickness: 2px; }
+.pi-warning-link { border: 0; padding: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.pi-warning-link:hover { text-decoration-thickness: 2px; }
+.pi-warning-link:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 4px; border-radius: 3px; }
 .pi-error-link:focus-visible, .pi-error-summary:focus { outline: 2px solid hsl(var(--primary)); outline-offset: 4px; border-radius: 3px; }
 .pi-error-mode { font-size: .9em; }
 .pi-fieldset [id] { scroll-margin-block: 100px; }

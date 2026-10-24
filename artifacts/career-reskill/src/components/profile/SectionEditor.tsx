@@ -13,6 +13,7 @@ import {
   entryControlId,
   issueAttributes,
   type ErrorFocusRequest,
+  type ImportEntryWarning,
   type ProfileIssue,
   type EntryField,
   type SectionDef,
@@ -84,8 +85,10 @@ function fieldProblem(field: EntryField, entry: ProfessionalEntry): string | nul
   return null;
 }
 
-function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, idPrefix, warnings, issues }: {
-  section: SectionDef; entry: ProfessionalEntry; index: number; editing: boolean; idPrefix: string; warnings?: string[];
+function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, idPrefix, warnings, issues, onReviewWarning, reviewControlId }: {
+  section: SectionDef; entry: ProfessionalEntry; index: number; editing: boolean; idPrefix: string; warnings?: ImportEntryWarning[];
+  onReviewWarning?: (entry: ProfessionalEntry, warning: ImportEntryWarning) => void;
+  reviewControlId?: string;
   issues: ProfileIssue[];
   onEdit: (open: boolean) => void; onPatch: (patch: Partial<ProfessionalEntry>) => void; onRemove: () => void;
 }) {
@@ -131,7 +134,16 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
       </div>
       {warnings && warnings.length > 0 && (
         <ul className="pi-entry-warnings" data-testid={`status-${base}-warnings`}>
-          {warnings.map((w) => <li key={w}><AlertTriangle size={11} aria-hidden="true" />{w}</li>)}
+          {warnings.map((w) => (
+            <li key={w.id} id={w.id}>
+              <AlertTriangle size={11} aria-hidden="true" />
+              {onReviewWarning ? (
+                <button type="button" className="pi-warning-link" onClick={() => onReviewWarning(entry, w)}>
+                  {w.message}
+                </button>
+              ) : w.message}
+            </li>
+          ))}
         </ul>
       )}
       {editing && (
@@ -139,11 +151,11 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
           {fields.map((field) => {
             const id = entryControlId(idPrefix, section.key, entry.id, field.key);
             const associations = issueAttributes(issues, id);
-            if (field.key === 'endDate' && entry.current && !associations['aria-invalid']) return null;
+            if (field.key === 'endDate' && entry.current && !associations['aria-invalid'] && reviewControlId !== id) return null;
             const problem = fieldProblem(field, entry);
             const accessibility = {
               'aria-invalid': associations['aria-invalid'] || Boolean(problem) || undefined,
-              'aria-describedby': [associations['aria-describedby'], problem ? `${id}-problem` : ''].filter(Boolean).join(' ') || undefined,
+              'aria-describedby': [associations['aria-describedby'], problem ? `${id}-problem` : '', ...(warnings ?? []).filter((w) => w.field === field.key).map((w) => w.id)].filter(Boolean).join(' ') || undefined,
             };
             return (
               <div key={field.key} className={`field ${field.wide ? 'pi-wide' : ''}`}>
@@ -166,12 +178,13 @@ function EntryRow({ section, entry, index, editing, onEdit, onPatch, onRemove, i
   );
 }
 
-export function SectionEditor({ section, entries, onChange, idPrefix, warnings, defaultOpen = false, headerExtra, issues = [], focusRequest }: {
+export function SectionEditor({ section, entries, onChange, idPrefix, warnings, defaultOpen = false, headerExtra, issues = [], focusRequest, onReviewWarning }: {
   section: SectionDef;
   entries: ProfessionalEntry[];
   onChange: (next: ProfessionalEntry[]) => void;
   idPrefix: string;
-  warnings?: Record<string, string[]>;
+  warnings?: Record<string, ImportEntryWarning[]>;
+  onReviewWarning?: (entry: ProfessionalEntry, warning: ImportEntryWarning) => void;
   defaultOpen?: boolean;
   headerExtra?: ReactNode;
   issues?: ProfileIssue[];
@@ -227,6 +240,8 @@ export function SectionEditor({ section, entries, onChange, idPrefix, warnings, 
                 index={index}
                 idPrefix={idPrefix}
                 warnings={warnings?.[entry.id]}
+                onReviewWarning={onReviewWarning}
+                reviewControlId={focusRequest?.entryId === entry.id ? focusRequest.controlId : undefined}
                 issues={issues}
                 editing={editingId === entry.id}
                 onEdit={(o) => setEditingId(o ? entry.id : null)}

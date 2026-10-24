@@ -8,12 +8,15 @@ import {
   SECTION_BY_KEY,
   SECTION_KEYS,
   applyImport,
+  entryControlId,
   importReviewFields,
   parseProfileText,
   parseSkills,
   planImport,
   type ImportResult,
+  type ImportEntryWarning,
   type ImportSummary,
+  type ErrorFocusRequest,
   type ScalarKey,
   type SectionKey,
 } from '../../data/professional-profile';
@@ -61,6 +64,7 @@ export function ImportPanel({ profile, skills, locked, onApply }: {
   const [replaceFields, setReplaceFields] = useState<string[]>([]);
   const [mergeSections, setMergeSections] = useState<string[]>([]);
   const [lastSummary, setLastSummary] = useState<ImportSummary | null>(null);
+  const [focusRequest, setFocusRequest] = useState<ErrorFocusRequest | null>(null);
   const over = text.length > MAX_IMPORT_CHARS;
 
   const preview = useMemo<ImportResult | null>(() => result && { ...result, skills: parseSkills(skillsText) }, [result, skillsText]);
@@ -68,12 +72,20 @@ export function ImportPanel({ profile, skills, locked, onApply }: {
   const reviewFields = useMemo(() => preview ? importReviewFields(profile, skills, preview) : [], [preview, profile, skills]);
   const dryRun = useMemo(() => preview ? applyImport(profile, skills, preview, { replaceFields, mergeSections }) : null, [preview, profile, skills, replaceFields, mergeSections]);
 
-  const reset = () => { setStage('idle'); setResult(null); setReplaceFields([]); setMergeSections([]); setSkillsText(''); };
+  const reset = () => { setStage('idle'); setResult(null); setReplaceFields([]); setMergeSections([]); setSkillsText(''); setFocusRequest(null); };
+  const reviewWarning = (section: SectionKey, entry: ProfessionalEntry, warning: ImportEntryWarning) => {
+    setFocusRequest((previous) => ({
+      section, entryId: entry.id,
+      controlId: entryControlId('import', section, entry.id, warning.field),
+      requestId: (previous?.requestId ?? 0) + 1,
+    }));
+  };
   const toggle = (list: string[], set: (v: string[]) => void, key: string) => set(list.includes(key) ? list.filter((k) => k !== key) : [...list, key]);
   const parse = () => {
     const parsed = parseProfileText(text);
     if (parsed.error) { setResult(parsed); return; }
     setResult(parsed);
+    setFocusRequest(null);
     setSkillsText(parsed.skills.join(', '));
     setReplaceFields([]);
     setMergeSections([]);
@@ -148,9 +160,29 @@ export function ImportPanel({ profile, skills, locked, onApply }: {
         <>
           <p className="pi-note">This is a preview. Edit anything below; nothing changes in your draft until you confirm. Missing facts are flagged, never guessed.</p>
           {result.warnings.length > 0 && (
-            <ul className="pi-warnings" role="status" data-testid="status-import-warnings">
-              {result.warnings.map((w) => <li key={w}><AlertTriangle size={12} aria-hidden="true" />{w}</li>)}
-            </ul>
+            <div className="pi-review-group">
+              <h4>General import notes</h4>
+              <ul className="pi-warnings" role="status" data-testid="status-import-warnings">
+                {result.warnings.map((w, index) => <li key={index}><AlertTriangle size={12} aria-hidden="true" />{w}</li>)}
+              </ul>
+            </div>
+          )}
+          {SECTION_KEYS.some((key) => result.sections[key]?.some((entry) => result.entryWarnings[entry.id]?.length)) && (
+            <div className="pi-review-group" data-testid="status-import-record-warnings">
+              <h4>Records to review</h4>
+              <p className="pi-note">These are notes from the original pasted text, not field errors. Select a note to review its preview field. Notes stay visible as you edit.</p>
+              <ul className="pi-warnings">
+                {SECTION_KEYS.flatMap((key) => (result.sections[key] ?? []).flatMap((entry, index) =>
+                  (result.entryWarnings[entry.id] ?? []).map((warning) => (
+                    <li key={warning.id}>
+                      <AlertTriangle size={12} aria-hidden="true" />
+                      <button type="button" className="pi-warning-link" onClick={() => reviewWarning(key, entry, warning)}>
+                        {SECTION_BY_KEY[key].label} #{index + 1} ({entry.title?.trim() || 'Untitled'}): {warning.message}
+                      </button>
+                    </li>
+                  ))))}
+              </ul>
+            </div>
           )}
           {reviewFields.length > 0 && (
             <div className="pi-review-group">
@@ -194,6 +226,8 @@ export function ImportPanel({ profile, skills, locked, onApply }: {
                 onChange={(next) => updateSection(key, next)}
                 idPrefix="import"
                 warnings={result.entryWarnings}
+                focusRequest={focusRequest}
+                onReviewWarning={(entry, warning) => reviewWarning(key, entry, warning)}
                 defaultOpen
                 headerExtra={existing > 0 ? (
                   <label className="pi-check pi-merge">
