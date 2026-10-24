@@ -15,8 +15,8 @@ Quick and Detailed should be separate visible form experiences, not a quick form
 
 **How to apply:** Show only the selected form experience while retaining the shared draft; keep any required inputs accessible in the selected mode rather than creating hidden validation blockers.
 
-LinkedIn-related onboarding uses pasted profile text with an explicit review step plus an optional profile URL, not an assumed full-profile OAuth import.
+Detailed profile uses manual fields without the “Import from text” panel; retain the optional LinkedIn profile URL.
 
-**Why:** The user explicitly selected paste-to-import with review and a profile link after the limits of LinkedIn API access were explained.
+**Why:** The user subsequently asked to remove text import from Detailed profile, superseding the earlier paste-to-import choice.
 
-**How to apply:** Require confirmation before applying imported fields, distinguish saved links from authenticated connections, and revisit OAuth only if explicitly requested.
+**How to apply:** Do not reintroduce the import panel into Detailed profile. Preserve existing profile data and distinguish saved links from authenticated LinkedIn connections; revisit import or OAuth only if explicitly requested.

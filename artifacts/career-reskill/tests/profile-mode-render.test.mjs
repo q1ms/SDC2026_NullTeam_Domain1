@@ -44,7 +44,7 @@ test("profile modes render exclusively with one complete, mode-appropriate form"
     assert.doesNotMatch(quick, /data-testid="panel-detailed-profile"|data-testid="button-open-import"|Professional identity/);
     assert.match(detailed, /data-testid="panel-detailed-profile"/);
     assert.doesNotMatch(detailed, /data-testid="panel-quick-profile"|>Your experience<\/h2>|What draws your attention/);
-    assert.match(detailed, /data-testid="button-open-import"/);
+    assert.doesNotMatch(detailed, /data-testid="button-open-import"|Import from text|Read text/);
     assert.match(detailed, /Professional identity/);
     assert.match(detailed, /Learning preferences/);
     for (const html of [quick, detailed]) {

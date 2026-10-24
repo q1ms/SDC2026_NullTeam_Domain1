@@ -26,7 +26,6 @@ import {
   type SectionKey,
 } from '../data/professional-profile';
 import { SectionEditor } from '../components/profile/SectionEditor';
-import { ImportPanel } from '../components/profile/ImportPanel';
 import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
 import './profile-intake.css';
 
@@ -204,12 +203,6 @@ export function IntakePage({
   const skillCount = parseSkills(skillsText).length;
   const linkedinValue = background.linkedinUrl?.trim() ?? '';
   const linkedinHref = linkedinValue && isLinkedInProfileUrl(linkedinValue) ? safeExternalUrl(linkedinValue) : null;
-  const applyImported = (next: CareerProfile, nextSkills: string[]) => {
-    if (submissionLock.current) return;
-    isDirty.current = true;
-    setForm(next);
-    setSkillsText(nextSkills.join(', '));
-  };
   const toggleInterest = (interest: string) => editForm((current) => ({
     ...current,
     interests: toggleInterestSelection(current.interests, interest),
@@ -503,11 +496,6 @@ export function IntakePage({
 
         {mode === 'detailed' && (
           <div className="pi-detailed" data-testid="panel-detailed-profile">
-            <section className="section-card form-panel">
-              <h2 className="form-section-title">Import from text</h2>
-              <ImportPanel profile={form} skills={parseSkills(skillsText)} locked={isSubmitting} onApply={applyImported} />
-            </section>
-
             <section className="section-card form-panel">
               <h2 className="form-section-title">Professional identity</h2>
               {roleAndIndustryFields}
