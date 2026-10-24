@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'wouter';
-import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Layers3, Waypoints } from 'lucide-react';
+import { Activity, ArrowUpRight, Check, Compass, GraduationCap, Waypoints } from 'lucide-react';
 import type { CareerProfile } from '../data/catalog';
 import { LightRays } from './effects/LightRays';
 import { useMagicSurfaces } from './effects/useMagicSurfaces';
@@ -18,9 +18,8 @@ export function Shell({ children, profile }: { children: React.ReactNode; profil
     <div className="app-shell">
       <div className="app-backdrop" aria-hidden="true"><LightRays /></div>
       <aside className="sidebar glow-edge" data-testid="navigation-sidebar">
-        <Link href="/" className="brand" data-testid="link-brand-home">
-          <span className="brand-mark"><Layers3 size={19} /></span>
-          <span><span className="brand-name">Northstar</span><span className="brand-caption">Career companion</span></span>
+        <Link href="/" className="brand" aria-label="JAX home" data-testid="link-brand-home">
+          <img className="brand-logo" src="/jax-emerald-orbit-logo.png" alt="JAX" />
         </Link>
         <div className="nav-caption">{t('navigation.chapter')}</div>
         <nav className="nav-list pill-nav" aria-label={t('navigation.chapter')}>
