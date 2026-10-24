@@ -37,6 +37,23 @@ test("validates exactly the requested profile shape and normalizes skill names",
   assert.deepEqual(validateParsedCv("```json\n" + JSON.stringify(expected) + "\n```"), expected);
   assert.deepEqual(validateParsedCv("```json\n" + JSON.stringify([expected]) + "\n```"), expected);
   assert.deepEqual(validateParsedCv("Result:\n" + JSON.stringify([expected]) + "\nDone."), expected);
+  assert.deepEqual(
+    validateParsedCv(`AI result: ${JSON.stringify(expected)}\nExtra metadata: {"note":"ignored"}`),
+    expected,
+  );
+  assert.deepEqual(
+    validateParsedCv(`Result: {"headline":"Role with {braces}","displayName":"Amina","location":"","targetIndustry":"","currentRole":"","industry":"","yearsOfExperience":0,"skills":[]}\nDone.`),
+    {
+      displayName: "Amina",
+      location: "",
+      headline: "Role with {braces}",
+      targetIndustry: "",
+      currentRole: "",
+      industry: "",
+      yearsOfExperience: 0,
+      skills: [],
+    },
+  );
   assert.deepEqual(validateParsedCv(`<json>\n${JSON.stringify(expected)}\n</json>`), expected);
   assert.deepEqual(
     validateParsedCv(`AI result:\n${JSON.stringify(expected)}\nGenerated successfully.\u200B`),

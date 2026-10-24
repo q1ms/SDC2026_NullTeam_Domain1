@@ -79,6 +79,41 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+const CV_PARSE_POLL_INTERVAL_MS = 2_000;
+const CV_PARSE_MAX_WAIT_MS = 330_000;
+const CV_PARSE_REQUEST_TIMEOUT_MS = 15_000;
+
+async function parseResumeWithApi(rawText: string): Promise<Record<string, unknown>> {
+  const startResponse = await fetch('/api/parse-cv', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    credentials: 'same-origin',
+    signal: AbortSignal.timeout(CV_PARSE_REQUEST_TIMEOUT_MS),
+    body: JSON.stringify({ rawText }),
+  });
+  const startData: unknown = await startResponse.json().catch(() => null);
+  if (!startResponse.ok || !isRecord(startData) || typeof startData.jobId !== 'string') {
+    throw new Error('cv-analysis-failed');
+  }
+
+  const deadline = Date.now() + CV_PARSE_MAX_WAIT_MS;
+  while (Date.now() < deadline) {
+    const statusResponse = await fetch(`/api/parse-cv/${encodeURIComponent(startData.jobId)}`, {
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(CV_PARSE_REQUEST_TIMEOUT_MS),
+    });
+    const statusData: unknown = await statusResponse.json().catch(() => null);
+    if (!statusResponse.ok || !isRecord(statusData)) throw new Error('cv-analysis-failed');
+    if (statusData.status === 'completed' && isRecord(statusData.fields)) return statusData.fields;
+    if (statusData.status === 'failed') throw new Error('cv-analysis-failed');
+    if (statusData.status !== 'processing') throw new Error('cv-analysis-failed');
+    await new Promise((resolve) => window.setTimeout(resolve, CV_PARSE_POLL_INTERVAL_MS));
+  }
+
+  throw new Error('cv-analysis-timeout');
+}
+
 function isGeneratedPathway(value: unknown, profileId: string): value is GeneratedPathway {
   if (!isRecord(value) || value.profileId !== profileId || typeof value.generatedAt !== 'string') {
     return false;
@@ -239,18 +274,7 @@ export function IntakePage({
     try {
       const extractedText = await readResumeText(file);
       if (!extractedText.trim()) throw new Error('Could not read text from this file format.');
-      if (import.meta.env.DEV) console.log("Raw CV Text:", extractedText);
-      const response = await fetch('/api/parse-cv', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify({ rawText: extractedText }),
-      });
-      const data: unknown = await response.json().catch(() => null);
-      if (!response.ok || !isRecord(data)) throw new Error('cv-analysis-failed');
+      const data = await parseResumeWithApi(extractedText);
       if (
         typeof data.displayName !== 'string'
         || typeof data.location !== 'string'
@@ -267,7 +291,6 @@ export function IntakePage({
       ) {
         throw new Error('cv-analysis-failed');
       }
-      if (import.meta.env.DEV) console.log("Parsed CV Data:", data);
       const extracted = {
         displayName: data.displayName.trim(),
         location: data.location.trim(),

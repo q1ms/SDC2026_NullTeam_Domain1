@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
 import { parseCvWithRunpod } from "../lib/cv-parser";
 import { runPathwayJob } from "../lib/runpod-pathway";
+import { getCvParseJob, startCvParseJob } from "../lib/cv-jobs";
 
 const router: IRouter = Router();
 
@@ -28,23 +29,34 @@ router.post("/parse-cv", async (req, res): Promise<void> => {
     return;
   }
 
-  try {
-    const fields = await parseCvWithRunpod(rawText, { endpointId, apiKey, runJob: runPathwayJob });
-    res.json(fields);
-  } catch (error) {
-    // Log the concrete failure while keeping résumé text, model output and credentials out of logs.
-    const rawMessage = error instanceof Error ? error.message : String(error);
-    const safeMessage = rawMessage
-      .replaceAll(apiKey, "[REDACTED]")
-      .replaceAll(endpointId, "[REDACTED]")
-      .slice(0, 500);
-    req.log.error({
-      route: "/api/parse-cv",
-      errorName: error instanceof Error ? error.name : "UnknownError",
-      errorMessage: safeMessage,
-    }, "AI résumé parsing failed.");
-    res.status(502).json({ error: "We couldn’t analyze this résumé. Please try again or enter your details manually." });
+  const jobId = startCvParseJob(
+    () => parseCvWithRunpod(rawText, { endpointId, apiKey, runJob: runPathwayJob }),
+    (error) => {
+      // Keep résumé text, model output and credentials out of logs.
+      const rawMessage = error instanceof Error ? error.message : String(error);
+      const safeMessage = rawMessage
+        .replaceAll(apiKey, "[REDACTED]")
+        .replaceAll(endpointId, "[REDACTED]")
+        .slice(0, 500);
+      req.log.error({
+        route: "/api/parse-cv",
+        errorName: error instanceof Error ? error.name : "UnknownError",
+        errorMessage: safeMessage,
+      }, "AI résumé parsing failed.");
+    },
+  );
+  res.status(202).json({ jobId, status: "processing" });
+});
+
+router.get("/parse-cv/:jobId", async (req, res): Promise<void> => {
+  const jobId = String(req.params.jobId ?? "");
+  const job = getCvParseJob(jobId);
+  if (!job) {
+    res.status(404).json({ error: "Resume analysis job not found or expired." });
+    return;
   }
+
+  res.json(job);
 });
 
 export default router;

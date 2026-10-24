@@ -49,20 +49,33 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
   };
   const before = structuredClone(profile);
   const router = memoryLocation({ path: "/intake", record: true });
-  globalThis.fetch = async (url, options) => {
-    requests.push({ url, body: JSON.parse(options.body) });
+  globalThis.fetch = async (url, options = {}) => {
+    const body = typeof options.body === "string" ? JSON.parse(options.body) : undefined;
+    requests.push({ url, method: options.method ?? "GET", body });
     if (url === "/api/parse-cv") {
       return {
         ok: true,
         json: async () => ({
-          displayName: "Amina Example",
-          location: "Kuala Lumpur, Malaysia",
-          headline: "AI Product Manager with healthcare technology experience",
-          targetIndustry: "Healthcare technology",
-          currentRole: "AI Product Manager",
-          industry: "Healthcare technology",
-          yearsOfExperience: 9,
-          skills: ["Product analytics", "Stakeholder management", "SQL"],
+          jobId: "cv-job-test",
+          status: "processing",
+        }),
+      };
+    }
+    if (url === "/api/parse-cv/cv-job-test") {
+      return {
+        ok: true,
+        json: async () => ({
+          status: "completed",
+          fields: {
+            displayName: "Amina Example",
+            location: "Kuala Lumpur, Malaysia",
+            headline: "AI Product Manager with healthcare technology experience",
+            targetIndustry: "Healthcare technology",
+            currentRole: "AI Product Manager",
+            industry: "Healthcare technology",
+            yearsOfExperience: 9,
+            skills: ["Product analytics", "Stakeholder management", "SQL"],
+          },
         }),
       };
     }
@@ -131,17 +144,21 @@ test("CV upload auto-fills profile fields without submitting; saving preserves h
     assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /CV loaded successfully/);
     assert.doesNotMatch(container.querySelector('[data-testid="panel-detailed-profile"]').textContent, /not available yet/);
     assert.equal(saves.length, 0);
-    assert.equal(requests.length, 1);
+    assert.equal(requests.length, 2);
     assert.equal(requests[0].url, "/api/parse-cv");
+    assert.equal(requests[0].method, "POST");
     assert.deepEqual(requests[0].body, { rawText: resumeText });
+    assert.equal(requests[1].url, "/api/parse-cv/cv-job-test");
+    assert.equal(requests[1].method, "GET");
+    assert.equal(requests[1].body, undefined);
     assert.equal(container.querySelectorAll('[data-testid^="button-toggle-profile-"]').length, 4);
     await act(async () => container.querySelector("form").dispatchEvent(
       new window.Event("submit", { bubbles: true, cancelable: true })));
     assert.equal(saves.length, 1);
-    assert.equal(requests.length, 2);
-    assert.equal(requests[1].url, "/api/generate-pathway");
+    assert.equal(requests.length, 3);
+    assert.equal(requests[2].url, "/api/generate-pathway");
     assert.deepEqual(saves[0].interests, profile.interests);
-    assert.deepEqual(requests[1].body.profile, saves[0]);
+    assert.deepEqual(requests[2].body.profile, saves[0]);
     for (const key of Object.keys(profile.professionalBackground)) {
       assert.equal(saves[0].professionalBackground[key][0].title, profile.professionalBackground[key][0].title);
     }

@@ -41,13 +41,55 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function parseJsonText(llmTextResponse: string): unknown {
-  const cleanText = llmTextResponse.replace(/```json/gi, "").replace(/```/g, "").trim();
-  const jsonMatch = cleanText.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-  if (!jsonMatch) {
-    // Raw model text may contain personal résumé details; keep it out of errors and server logs.
-    throw new Error("No JSON object or array could be extracted from the AI response.");
+  const cleanText = llmTextResponse
+    .replace(/```(?:json)?/gi, "")
+    .replace(/```/g, "")
+    .trim();
+
+  try {
+    return JSON.parse(cleanText) as unknown;
+  } catch {
+    // The model can add explanations before or after JSON. Find complete, balanced
+    // candidates instead of greedily capturing everything between the first and last brace.
   }
-  return JSON.parse(jsonMatch[0]) as unknown;
+
+  for (let start = 0; start < cleanText.length; start += 1) {
+    const first = cleanText[start];
+    if (first !== "{" && first !== "[") continue;
+
+    const openings: string[] = [];
+    let inString = false;
+    let escaped = false;
+
+    for (let end = start; end < cleanText.length; end += 1) {
+      const character = cleanText[end];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (character === "\\") escaped = true;
+        else if (character === '"') inString = false;
+        continue;
+      }
+
+      if (character === '"') {
+        inString = true;
+      } else if (character === "{" || character === "[") {
+        openings.push(character);
+      } else if (character === "}" || character === "]") {
+        const expectedOpening = character === "}" ? "{" : "[";
+        if (openings.pop() !== expectedOpening) break;
+        if (openings.length === 0) {
+          try {
+            return JSON.parse(cleanText.slice(start, end + 1)) as unknown;
+          } catch {
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // Never include model output here; it may contain personal résumé details.
+  throw new Error("No JSON object or array could be extracted from the AI response.");
 }
 
 function unwrapModelOutput(output: unknown): unknown {

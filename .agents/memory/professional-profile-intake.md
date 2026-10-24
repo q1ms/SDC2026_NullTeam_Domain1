@@ -31,4 +31,10 @@ Résumé upload should extract text from PDF, DOCX and TXT files locally in the 
 
 **Why:** The user wants AI-assisted extraction because résumé formats vary, while keeping the original file local and making the text-to-AI transfer clear in the interface.
 
-**How to apply:** Keep file decoding client-side and disclose that extracted text is sent for analysis. Treat returned values as editable suggestions, avoid duplicate skills, save only when the user submits, and restrict any requested raw-text browser logging to development mode.
+**How to apply:** Keep file decoding client-side and disclose that extracted text is sent for analysis. Treat returned values as editable suggestions, avoid duplicate skills, save only when the user submits, and never log raw CV text or extracted identity fields in the browser or server.
+
+CV parsing diagnostics must be limited to non-sensitive status, timing, and sanitized error details.
+
+**Why:** Résumés often contain contact details and employment history; logs can persist beyond the upload and are not part of the disclosed analysis flow.
+
+**How to apply:** Never print the extracted text or parsed profile fields. Diagnose with the request stage, elapsed time, and a redacted error category.
