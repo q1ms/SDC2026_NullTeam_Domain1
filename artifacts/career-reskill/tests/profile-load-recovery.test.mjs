@@ -63,27 +63,44 @@ test("a missing saved profile gets a fresh ID and redirects to the intake form",
     });
   };
 
-  const location = memoryLocation({ path: "/radar" });
+  const location = memoryLocation({ path: "/no-match" });
   try {
     const [{ CareerReskillRouter }, { LanguageProvider }] = await Promise.all([
       server.ssrLoadModule("/src/App.tsx"),
       server.ssrLoadModule("/src/i18n/LanguageContext.tsx"),
     ]);
-    await act(async () => {
-      root.render(
+    await act(async () => root.render(
         h(QueryClientProvider, { client },
           h(WouterRouter, { hook: location.hook },
             h(LanguageProvider, null, h(CareerReskillRouter)))),
-      );
-      for (let attempt = 0; attempt < 80 && !container.querySelector('[data-testid="panel-quick-profile"]'); attempt += 1) {
-        await new Promise((resolve) => setTimeout(resolve, 15));
-      }
-    });
+      ));
+    for (let attempt = 0; attempt < 80 && !container.querySelector('[data-testid="panel-quick-profile"]'); attempt += 1) {
+      await act(async () => new Promise((resolve) => setTimeout(resolve, 15)));
+    }
 
     const freshId = window.localStorage.getItem("career-reskill-profile-id-v1");
+    assert.ok(
+      requestedProfileIds.includes("profile-deleted-with-database"),
+      `the saved profile ID should be requested; received ${JSON.stringify(requestedProfileIds)}`,
+    );
     assert.ok(freshId);
-    assert.notEqual(freshId, "profile-deleted-with-database");
-    assert.ok(requestedProfileIds.includes("profile-deleted-with-database"));
+    assert.notEqual(
+      freshId,
+      "profile-deleted-with-database",
+      JSON.stringify({
+        requestIds: requestedProfileIds,
+        queries: client.getQueryCache().getAll().map((query) => ({
+          key: query.queryKey,
+          error: query.state.error && {
+            name: query.state.error.name,
+            status: query.state.error.status,
+            responseStatus: query.state.error.response?.status,
+            message: query.state.error.message,
+          },
+        })),
+        profileError: container.querySelector('[data-testid="status-profile-load-error"]')?.textContent,
+      }),
+    );
     assert.ok(requestedProfileIds.includes(freshId), "the fresh profile ID is used for the empty profile check");
     assert.ok(container.querySelector('[data-testid="panel-quick-profile"]'), "the user lands on the intake form");
     assert.equal(container.querySelector('[data-testid="status-profile-load-error"]'), null);
