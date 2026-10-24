@@ -39,8 +39,10 @@ export function ScenarioCard({
     : pivotInterests.length > 1
       ? t("pathway.pivotMany").replace("{interest}", pivotInterests.join(" and "))
       : t("pathway.pivotFallback");
-  const addAcquiredSkill = (skill: string) => {
-    setAcquiredSkills((current) => current.includes(skill) ? current : [...current, skill]);
+  const toggleAcquiredSkill = (skill: string) => {
+    setAcquiredSkills((current) => current.includes(skill)
+      ? current.filter((currentSkill) => currentSkill !== skill)
+      : [...current, skill]);
   };
   return (
     <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} style={{ order: index }} data-testid={`card-scenario-${index}`}>
@@ -212,8 +214,7 @@ export function ScenarioCard({
                   <button
                     className={`scenario-step-complete${stepComplete ? " is-complete" : ""}`}
                     type="button"
-                    onClick={() => addAcquiredSkill(stepSkill)}
-                    disabled={stepComplete}
+                    onClick={() => toggleAcquiredSkill(stepSkill)}
                     aria-pressed={stepComplete}
                     aria-label={`${stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}: ${stepSkill}`}
                     data-testid={`button-scenario-step-complete-${index}-${stepIndex}`}

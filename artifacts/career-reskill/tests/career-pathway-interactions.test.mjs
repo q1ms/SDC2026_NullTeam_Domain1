@@ -108,10 +108,17 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     await act(async () => markStepComplete.click());
     assert.ok(skillPill.classList.contains("is-checked"), "Completing a learning step marks its mapped skill as acquired.");
     assert.ok(skillPill.querySelector("svg"), "Completed skills display a checkmark.");
-    assert.ok(markStepComplete.disabled);
+    assert.equal(markStepComplete.disabled, false, "Completed steps remain clickable so completion can be undone.");
     const scoreBadge = container.querySelector('[data-testid="status-scenario-match-0"]');
     assert.ok(scoreBadge.textContent.includes("78") && scoreBadge.textContent.includes("83"));
     assert.equal(scoreBadge.querySelector(".projected-score-note").textContent, "+5 pts");
+
+    await act(async () => markStepComplete.click());
+    assert.ok(!skillPill.classList.contains("is-checked"), "Clicking a completed step again removes its skill from acquired skills.");
+    assert.equal(skillPill.querySelector("svg"), null, "The acquired-skill checkmark is removed when completion is undone.");
+    assert.equal(markStepComplete.disabled, false);
+    assert.match(markStepComplete.textContent, /Mark step complete/);
+    assert.ok(!scoreBadge.textContent.includes("83"), "Undoing completion removes the projected score boost.");
 
     assert.ok(!container.textContent.includes(scoreBasis), "The score math should not be visible until the tooltip opens");
     const scoreTrigger = container.querySelector('[data-testid="status-scenario-match-0"]');
