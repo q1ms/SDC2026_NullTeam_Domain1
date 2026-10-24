@@ -617,6 +617,8 @@ body { background:
 .cmp-details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
 .cmp-details-grid p { margin: 4px 0 0; font-size: 11px; line-height: 1.6; color: hsl(var(--muted-foreground)); }
 .cmp-details-grid h4 { margin: 0; font: 500 10px var(--app-font-mono); text-transform: uppercase; letter-spacing: .08em; color: hsl(var(--primary)); }
+.cmp-details-grid ul { list-style: disc; margin: 6px 0 0; padding-left: 18px; }
+.cmp-details-grid li { margin: 0 0 6px; font-size: 11px; line-height: 1.6; color: hsl(var(--muted-foreground)); }
 @media (max-width: 760px) {
   .cmp-choices, .cmp-details-grid { grid-template-columns: 1fr; }
   .cmp-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: 12px; margin-top: 8px; border: 1px solid hsl(var(--border)); border-radius: 10px; }

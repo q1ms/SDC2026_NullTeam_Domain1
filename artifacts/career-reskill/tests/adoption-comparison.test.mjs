@@ -58,9 +58,13 @@ test("comparison explains scores and missing roles, and scenario selection updat
     for (const content of ["Gradual AI adoption", "Faster AI adoption", "1st choice",
       "Fit score", "60", "Outside the top 3", "10 fit-score points lower with faster adoption",
       "13 fit-score points higher with faster adoption", "How this works",
-      "Gradual automation assumption", "Faster automation assumption", "No hiring guarantees"]) {
+      "How We Score (1-100)", "current skills and interests align",
+      "not a probability of getting a job offer", "The Two AI Futures",
+      "Gradual AI:", "Faster AI:", "Things to Keep in Mind (Limitations)",
+      "Exact matches only:", "Unverified data:", "Local context matters:"]) {
       assert.ok(text.includes(content), `Missing explanation: ${content}`);
     }
+    assert.doesNotMatch(text, /Gradual automation assumption|Faster automation assumption|No hiring guarantees/);
     assert.doesNotMatch(text, /#1 ·|Not ranked|n\/a/);
     assert.equal(document.querySelector("table"), null);
     for (const role of ["gradual-only", "faster-only"]) {

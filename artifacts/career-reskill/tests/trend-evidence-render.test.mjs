@@ -66,10 +66,14 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     client.setQueryData(["/api/sdgs/skills"], []);
     const html = render(PathwayPage, { profileId: pathway.profileId, profile: null, profileLoading: false });
     for (const text of ["Read-only sample demo", "personal profile is untouched", "Gradual AI adoption", "Faster AI adoption",
-      "Fixture deterministic model", "not probabilities", "You decide", "Fixture Labor Office",
+      "not probabilities", "Fixture Labor Office",
       "United States", "Aug 27, 2026", "Oct 23, 2026", "Not local vacancies", "SQLBolt", "Free",
       "href=\"https://sqlbolt.com/\"", "href=\"#evidence-fixture-report\"", "5 learning h/week"]) {
       assert.ok(html.includes(text), `Missing ${text}`);
+    }
+    for (const text of ["How We Score (1-100)", "The Two AI Futures", "Gradual AI:",
+      "Faster AI:", "Things to Keep in Mind (Limitations)", "Local context matters:"]) {
+      assert.ok(html.includes(text), `Missing plain-language explanation: ${text}`);
     }
     assert.match(html, /data-testid="button-comparison-moderate"[^>]*>[\s\S]*?Gradual AI adoption/);
     assert.ok(!html.includes("empty-pathway-profile"));
@@ -78,7 +82,7 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
 
     const panel = render(AdoptionComparisonPanel, { analysis: pathway.analysis, selectedId: "fast", onSelect: () => {} });
     assert.match(panel, /aria-pressed="true"[^>]*data-testid="button-comparison-fast"/);
-    assert.ok(panel.includes("Rapid automation"));
+    assert.ok(panel.includes("rapid automation of routine tasks"));
     const card = render(ScenarioCard, {
       scenario: fast[0], index: 0, rank: 1, evidence: new Map(evidence.signals.map((s) => [s.id, s])),
     });

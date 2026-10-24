@@ -95,9 +95,28 @@ export function AdoptionComparisonPanel({ analysis, selectedId, onSelect }: { an
       <details className="cmp-details" data-testid="text-comparison-disclosure">
         <summary data-testid="button-comparison-how">How this works</summary>
         <div className="cmp-details-grid">
-          {comparisons.map((c) => <div key={c.id}><h4>{scenarioLabel(c.id, c.name)} assumptions</h4><p>{c.assumptions}</p></div>)}
-          <div><h4>Model and scoring</h4><p>{analysis.model}. Scores are relative fit estimates on a 1 to 100 scale, not probabilities of getting a job. Tied scores keep the order the model saved.</p></div>
-          <div><h4>Limitations and your control</h4><p>{analysis.limitations} You decide which path to pursue; treat these rankings as one input alongside your own judgment and local advice.</p></div>
+          <div>
+            <h4>How We Score (1-100)</h4>
+            <ul>
+              <li>Your Fit Score measures how well your current skills and interests align with a role's baseline requirements.</li>
+              <li>It is a matching estimate, not a probability of getting a job offer.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>The Two AI Futures</h4>
+            <ul>
+              <li><strong>Gradual AI:</strong> Assumes AI is adopted slowly as a helper tool over the next 2-3 years, keeping traditional skills highly relevant.</li>
+              <li><strong>Faster AI:</strong> Assumes rapid automation of routine tasks, greatly increasing the demand for AI oversight, governance, and risk management roles.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Things to Keep in Mind (Limitations)</h4>
+            <ul>
+              <li><strong>Exact matches only:</strong> We score based on explicitly listed skills, not narratives, GPAs, or prestige.</li>
+              <li><strong>Unverified data:</strong> Your skills are self-reported and taken at your word.</li>
+              <li><strong>Local context matters:</strong> Our trends are global. Always compare these suggestions against live job postings in your specific city before making career decisions.</li>
+            </ul>
+          </div>
         </div>
       </details>
     </section>
