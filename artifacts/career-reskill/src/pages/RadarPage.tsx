@@ -29,8 +29,8 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
           <p className="page-subtitle">{t('radar.subtitle')}</p>
         </div>
         {profile
-          ? <Link href="/pathway" className="button-primary" data-testid="button-view-pathway">See your pathways <ArrowRight size={15} /></Link>
-          : <Link href="/intake" className="button-primary" data-testid="button-build-profile">Build your profile <ArrowRight size={15} /></Link>}
+          ? <Link href="/pathway" className="button-primary" data-testid="button-view-pathway">{t('radar.seePathways')} <ArrowRight size={15} /></Link>
+          : <Link href="/intake" className="button-primary" data-testid="button-build-profile">{t('radar.buildProfile')} <ArrowRight size={15} /></Link>}
       </div>
 
       {profile ? (
@@ -42,31 +42,30 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
       ) : (
         <div className="empty-card fade-in delay-1" data-testid="empty-profile-card">
           <div className="empty-mark"><CompassIcon /></div>
-          <h2>Start with the experience you already have.</h2>
-          <p>Tell us a little about your work, skills, and interests. We’ll connect your strengths to realistic next steps—without asking you to start over.</p>
-          <Link href="/intake" className="button-primary" data-testid="link-empty-intake">Create your career profile <ArrowRight size={15} /></Link>
+          <h2>{t('radar.emptyTitle')}</h2>
+          <p>{t('radar.emptyBody')}</p>
+          <Link href="/intake" className="button-primary" data-testid="link-empty-intake">{t('pathway.createProfile')} <ArrowRight size={15} /></Link>
         </div>
       )}
 
       <div className="sample-banner live-banner fade-in delay-1" data-testid="notice-live-data">
         <Activity size={15} />
         <span>
-          <strong>Live news coverage.</strong> Themes and mention counts come from Google News RSS
-          {fetchedAt ? ` · refreshed at ${fetchedAt}` : ''}. US English-language edition; article geography is not independently verified. Coverage is not a labor-market forecast.
+          <strong>{t('radar.liveCoverage')}</strong> {t('radar.liveFallback').replace('{refreshedAt}', fetchedAt ? ` · refreshed at ${fetchedAt}` : '')}
         </span>
       </div>
 
       <section className="section-card trend-card fade-in delay-2" aria-labelledby="trend-title">
         <div className="card-head">
-          <div><h2 className="card-title" id="trend-title">AI topics in recent coverage</h2><p className="card-description">Ranked by how many recent feed stories mention each topic</p></div>
-          <div className="legend"><span className="legend-item"><i className="legend-dot" />News mentions</span></div>
+          <div><h2 className="card-title" id="trend-title">{t('radar.chartTitle')}</h2><p className="card-description">{t('radar.chartDescription')}</p></div>
+          <div className="legend"><span className="legend-item"><i className="legend-dot" />{t('radar.newsMentions')}</span></div>
         </div>
-        {trendsQuery.isLoading && <div className="trend-state" role="status" data-testid="status-trends-loading">Fetching current AI news topics…</div>}
+        {trendsQuery.isLoading && <div className="trend-state" role="status" data-testid="status-trends-loading">{t('radar.loadingTopics')}</div>}
         {trendsQuery.isError && (
           <div className="trend-error" role="alert" data-testid="status-trends-error">
-            <span>The live news feed could not be loaded. No sample trends are shown.</span>
+            <span>{t('radar.noFeed')}</span>
             <button type="button" className="button-quiet" onClick={() => { void trendsQuery.refetch(); }} data-testid="button-retry-trends">
-              <RefreshCw size={14} /> Try again
+              <RefreshCw size={14} /> {t('radar.retry')}
             </button>
           </div>
         )}
@@ -85,7 +84,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <div className="chart-note">Counts are distinct stories in the feed, not job-demand estimates or forecasts.</div>
+            <div className="chart-note">{t('radar.chartNote')}</div>
           </>
         )}
       </section>
@@ -96,16 +95,16 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
           {trends.length > 0 ? (
             <CoverageList articles={trends} />
           ) : trendsQuery.isLoading ? (
-            <div className="trend-state" role="status">Loading recent source articles…</div>
+            <div className="trend-state" role="status">{t('radar.loadingArticles')}</div>
           ) : (
-            <div className="trend-state">Recent source articles will appear when the feed is available.</div>
+            <div className="trend-state">{t('radar.articlesUnavailable')}</div>
           )}
         </section>
         <section className="section-card signals-card">
-          <div className="card-head"><div><h2 className="card-title">What holds steady</h2><p className="card-description">Skills that travel with you</p></div></div>
-          <Signal icon={<BrainCircuit size={16} />} title="Learning agility" copy="The ability to learn, unlearn, and apply expertise in a new context." />
-          <Signal icon={<ShieldCheck size={16} />} title="Human judgment" copy="Context, trust, and accountability matter more as tools get more capable." />
-          <Signal icon={<ChartNoAxesCombined size={16} />} title="Domain insight" copy="Your knowledge of how work really gets done is a valuable advantage." />
+          <div className="card-head"><div><h2 className="card-title">{t('radar.steady')}</h2><p className="card-description">{t('radar.steadyDescription')}</p></div></div>
+          <Signal icon={<BrainCircuit size={16} />} title={t('radar.learningAgility')} copy={t('radar.learningAgilityBody')} />
+          <Signal icon={<ShieldCheck size={16} />} title={t('radar.humanJudgment')} copy={t('radar.humanJudgmentBody')} />
+          <Signal icon={<ChartNoAxesCombined size={16} />} title={t('radar.domainInsight')} copy={t('radar.domainInsightBody')} />
         </section>
       </div>
       <section className="section-card fade-in delay-2" style={{ padding: 20, marginTop: 17 }} data-testid="card-career-evidence">
@@ -113,24 +112,24 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
           <div>
             <h2 className="card-title">{t('radar.evidence')}</h2>
             <p className="card-description">
-              {evidenceQuery.data ? `Snapshot checked ${new Date(evidenceQuery.data.fetchedAt).toLocaleString()} · ${evidenceQuery.data.newsStatus}` : 'Sources, dates, scope and limitations used to rank roles'}
+              {evidenceQuery.data ? `Snapshot checked ${new Date(evidenceQuery.data.fetchedAt).toLocaleString()} · ${evidenceQuery.data.newsStatus}` : t('radar.evidenceFallback')}
             </p>
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <Link href="/pathway" className="button-quiet" data-testid="link-radar-pathway">{profile ? 'My pathways' : 'Build pathways'}</Link>
-            <Link href="/pathway?demo=1" className="button-quiet" data-testid="link-radar-demo">Sample demo</Link>
+            <Link href="/pathway" className="button-quiet" data-testid="link-radar-pathway">{profile ? t('radar.seePathways') : t('pathway.build')}</Link>
+            <Link href="/pathway?demo=1" className="button-quiet" data-testid="link-radar-demo">{t('pathway.sampleDemo')}</Link>
           </div>
         </div>
-        {evidenceQuery.isLoading && <div className="trend-state" role="status" data-testid="status-evidence-loading">Loading evidence snapshot…</div>}
+        {evidenceQuery.isLoading && <div className="trend-state" role="status" data-testid="status-evidence-loading">{t('radar.loadingEvidence')}</div>}
         {evidenceQuery.isError && (
           <div className="trend-error" role="alert" data-testid="status-evidence-error">
-            <span>The evidence snapshot could not be loaded.</span>
+            <span>{t('radar.evidenceError')}</span>
             <button type="button" className="button-quiet" onClick={() => { void evidenceQuery.refetch(); }} data-testid="button-retry-evidence"><RefreshCw size={14} /> Try again</button>
           </div>
         )}
         {evidenceQuery.data && <EvidenceList signals={evidenceQuery.data.signals} />}
       </section>
-      <div className="footer-note" data-testid="text-radar-footer">News coverage can surface emerging topics, but it does not measure hiring demand. Your experience is the starting point.</div>
+      <div className="footer-note" data-testid="text-radar-footer">{t('radar.footer')}</div>
     </div>
   );
 }

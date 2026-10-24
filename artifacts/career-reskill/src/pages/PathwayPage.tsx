@@ -60,34 +60,34 @@ export function PathwayPage({
   );
 
   if (!isDemo && profileLoading) {
-    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
+    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">{t('pathway.loading')}</div></div>;
   }
 
   if (!isDemo && !profile) {
     return (
       <div className="page-content">
         <div className="eyebrow">{t('navigation.pathways')}</div>
-        <h1 className="page-title">{t('pathway.emptyTitle')}</h1>
+        <h1 className="page-title" data-testid="heading-pathway-title">{t('pathway.emptyTitle')}</h1>
         <div className="empty-card" style={{ marginTop: 28 }} data-testid="empty-pathway-profile">
           <div className="empty-mark"><Compass size={23} /></div>
           <h2>{t('pathway.noProfile')}</h2>
-          <p>Share your experience, existing skills, and interests first. We’ll use them to rank a few adjacent roles and show the skills to build next.</p>
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-intake">Create your profile <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo">View sample demo</Link></div>
+          <p>{t('pathway.noProfileBody')}</p>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-intake">{t('pathway.createProfile')} <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo">{t('pathway.sampleDemo')}</Link></div>
         </div>
       </div>
     );
   }
 
   if (pathwayQuery.isLoading) {
-    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-pathway-loading">Loading your saved career paths…</div></div>;
+    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-pathway-loading">{t('pathway.loading')}</div></div>;
   }
 
   if (pathwayQuery.isError) {
     return (
       <div className="page-content">
         <div className="form-errors" role="alert" data-testid="status-pathway-error">
-          <p>Could not load your saved career paths. Check the API server and try again.</p>
-          <button className="button-quiet" onClick={() => void pathwayQuery.refetch()}>Try again</button>
+          <p>{t('pathway.loadError')}</p>
+          <button className="button-quiet" onClick={() => void pathwayQuery.refetch()}>{t('pathway.retry')}</button>
         </div>
       </div>
     );
@@ -101,8 +101,8 @@ export function PathwayPage({
         <div className="empty-card" style={{ marginTop: 28 }} data-testid="empty-pathway-generated">
           <div className="empty-mark"><Compass size={23} /></div>
           <h2>{t('pathway.noPaths')}</h2>
-          <p>Submit your profile to generate three personalized career scenarios and learning steps.</p>
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-generate">Build your pathways <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo-empty">View sample demo</Link></div>
+          <p>{t('pathway.submitToGenerate')}</p>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-generate">{t('pathway.build')} <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo-empty">{t('pathway.sampleDemo')}</Link></div>
         </div>
       </div>
     );
@@ -124,26 +124,26 @@ export function PathwayPage({
         <div>
           <div className="eyebrow">{t('pathway.eyebrow')}</div>
           <h1 className="page-title">{t('pathway.title')}</h1>
-          <p className="page-subtitle">A starting set of adjacent directions shaped by the skills and interests you shared. These are possibilities to explore—not a verdict.</p>
+          <p className="page-subtitle">{t('pathway.subtitle')}</p>
         </div>
-        <Link href="/intake" className="button-quiet" data-testid="button-edit-profile"><BookmarkCheck size={15} /> Edit your profile</Link>
+        <Link href="/intake" className="button-quiet" data-testid="button-edit-profile"><BookmarkCheck size={15} /> {t('pathway.edit')}</Link>
       </div>
 
       {isDemo && (
         <div className="sample-banner" role="note" data-testid="status-demo-banner">
-          Read-only sample demo. Nothing here is saved and your personal profile is untouched. <Link href="/pathway" data-testid="link-exit-demo">Back to my pathway</Link>
+          {t('pathway.demoBanner')} <Link href="/pathway" data-testid="link-exit-demo">{t('pathway.backToPathway')}</Link>
         </div>
       )}
       {isDemo || !profile ? (
         <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
-          <span className="meta-chip"><Sparkles size={13} /> Sample profile: <strong>{analysis?.profileSummary ?? "Sample learner"}</strong></span>
+          <span className="meta-chip"><Sparkles size={13} /> {t('pathway.sampleProfile')} <strong>{analysis?.profileSummary ?? "Sample learner"}</strong></span>
           {top?.paceEstimate && <span className="meta-chip">{top.paceEstimate}</span>}
         </div>
       ) : (
         <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
-          <span className="meta-chip"><Sparkles size={13} /> Based on <strong>{profile.currentRole}</strong></span>
+          <span className="meta-chip"><Sparkles size={13} /> {t('pathway.basedOn')} <strong>{profile.currentRole}</strong></span>
           <span className="meta-chip">{profile.industry}</span>
-          <span className="meta-chip">{profile.weeklyHours} learning hours / week</span>
+          <span className="meta-chip">{profile.weeklyHours} {t('pathway.learningHours')}</span>
         </div>
       )}
 
@@ -162,7 +162,7 @@ export function PathwayPage({
       {top && (
         <section className="rec-banner fade-in delay-1" data-testid="card-top-recommendation">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 9 }}>Your strongest starting point</div>
+            <div className="eyebrow" style={{ marginBottom: 9 }}>{t('pathway.strongest')}</div>
             <h2>{top.roleTitle}</h2>
             <p>{top.explainableReason}</p>
           </div>
@@ -171,20 +171,20 @@ export function PathwayPage({
       )}
 
       <div className="section-header fade-in delay-2">
-        <div><h2>{t('pathway.scenarios')}{activeComparisonLabel ? ` · ${activeComparisonLabel}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
-        <span className="field-hint" data-testid="text-scenario-count">{scenarios.length} pathways</span>
+        <div><h2>{t('pathway.scenarios')}{activeComparisonLabel ? ` · ${activeComparisonLabel}` : ""}</h2><p>{t('pathway.scenarioDescription')}</p></div>
+        <span className="field-hint" data-testid="text-scenario-count">{t('pathway.pathwayCount').replace('{count}', String(scenarios.length))}</span>
       </div>
       {scenarios.length ? (
         <div className="role-grid">
           {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
         </div>
       ) : (
-        <div className="section-card loading-card" data-testid="empty-role-recommendations">No career scenarios are available yet.</div>
+        <div className="section-card loading-card" data-testid="empty-role-recommendations">{t('pathway.noScenarios')}</div>
       )}
 
       {analysis && (
         <>
-          <div className="section-header"><div><h2>Evidence in this snapshot</h2><p>Sources cited by the scenario cards above. Checked {new Date(analysis.evidence.fetchedAt).toLocaleString()} · {analysis.evidence.newsStatus}</p></div><Link href="/radar" className="button-quiet" data-testid="link-pathway-radar">Open radar</Link></div>
+          <div className="section-header"><div><h2>{t('pathway.evidenceSnapshot')}</h2><p>{t('pathway.evidenceDescription')} Checked {new Date(analysis.evidence.fetchedAt).toLocaleString()} · {analysis.evidence.newsStatus}</p></div><Link href="/radar" className="button-quiet" data-testid="link-pathway-radar">{t('pathway.openRadar')}</Link></div>
           <section className="section-card" style={{ padding: 20 }}>
             <EvidenceList signals={analysis.evidence.signals} highlight={new Set(scenarios.flatMap((x) => x.evidenceIds ?? []))} />
           </section>

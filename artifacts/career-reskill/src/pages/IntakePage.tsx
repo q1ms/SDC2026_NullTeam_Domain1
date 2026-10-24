@@ -34,6 +34,11 @@ import './profile-intake.css';
 
 const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4, profileMode: 'quick', professionalBackground: {} };
 const STATUS_PRESETS = ['Student', 'Recent graduate', 'Career break'];
+const STATUS_PRESET_TRANSLATIONS: Record<string, 'profile.student' | 'profile.recentGraduate' | 'profile.careerBreak'> = {
+  Student: 'profile.student',
+  'Recent graduate': 'profile.recentGraduate',
+  'Career break': 'profile.careerBreak',
+};
 const CORE_BACKGROUND_SECTIONS = SECTIONS.filter((section) =>
   ['experience', 'education', 'certifications', 'projects'].includes(section.key));
 
@@ -329,45 +334,45 @@ export function IntakePage({
   };
 
   if (profileLoading) {
-    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
+    return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">{t('profile.loading')}</div></div>;
   }
 
   const roleAndIndustryFields = (
     <div className="field-grid">
       <div className="field">
-        <label htmlFor="current-role">Current role or status <span className="field-hint">Required</span></label>
-        <input id="current-role" {...errorProps('current-role')} className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
+        <label htmlFor="current-role">{t('profile.role')} <span className="field-hint">{t('profile.required')}</span></label>
+        <input id="current-role" {...errorProps('current-role')} className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder={t('profile.rolePlaceholder')} data-testid="input-current-role" />
         <div className="pi-presets">
           {STATUS_PRESETS.map((preset) => (
-            <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{preset}</button>
+              <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{t(STATUS_PRESET_TRANSLATIONS[preset])}</button>
           ))}
         </div>
       </div>
       <div className="field">
-        <label htmlFor="industry">{mode === 'detailed' ? 'Current industry' : 'Industry'} <span className="field-hint">Required</span></label>
-        <input id="industry" {...errorProps('industry')} className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
+        <label htmlFor="industry">{mode === 'detailed' ? t('profile.currentIndustry') : t('profile.industry')} <span className="field-hint">{t('profile.required')}</span></label>
+        <input id="industry" {...errorProps('industry')} className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder={t('profile.industryPlaceholder')} data-testid="input-industry" />
         <datalist id="industry-options">{['Healthcare', 'Financial services', 'Education', 'Manufacturing', 'Technology', 'Government', 'Retail', 'Energy', 'Professional services'].map((industry) => <option key={industry} value={industry} />)}</datalist>
       </div>
     </div>
   );
   const experienceField = (
     <div className="field">
-      <label htmlFor="years-experience">Years of experience <span className="field-hint">{form.yearsExperience} years{form.yearsExperience === 0 ? ' (fine for students)' : ''}</span></label>
-      <div className="hours-control"><input id="years-experience" aria-label="Years of experience" type="range" min="0" max="40" value={form.yearsExperience} onChange={(event) => update('yearsExperience', Number(event.target.value))} data-testid="input-years-experience" /><span className="hours-number" data-testid="text-years-value">{form.yearsExperience}</span></div>
+      <label htmlFor="years-experience">{t('profile.yearsExperience')} <span className="field-hint">{form.yearsExperience} {t('profile.years')}{form.yearsExperience === 0 ? ` (${t('profile.fineForStudents')})` : ''}</span></label>
+      <div className="hours-control"><input id="years-experience" aria-label={t('profile.yearsExperience')} type="range" min="0" max="40" value={form.yearsExperience} onChange={(event) => update('yearsExperience', Number(event.target.value))} data-testid="input-years-experience" /><span className="hours-number" data-testid="text-years-value">{form.yearsExperience}</span></div>
     </div>
   );
   const skillsField = (
     <div className="field">
-      <label htmlFor="existing-skills">Skills, strengths, and tools <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">Required · {skillCount} / {MAX_SKILLS}, separate with commas</span></label>
-      <textarea id="existing-skills" {...errorProps('existing-skills')} className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
+      <label htmlFor="existing-skills">{t('profile.skills')} <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">{t('profile.requiredSkillCount').replace('{count}', String(skillCount)).replace('{max}', String(MAX_SKILLS))}</span></label>
+      <textarea id="existing-skills" {...errorProps('existing-skills')} className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder={t('profile.skillsPlaceholder')} data-testid="input-existing-skills" />
       {skillCount > MAX_SKILLS && <p className="pi-field-error" role="alert" data-testid="status-skill-limit">You have {skillCount} skills. Remove {skillCount - MAX_SKILLS} to save; nothing is trimmed automatically.</p>}
     </div>
   );
   const learningPreferences = (
     <>
       <div className="field" data-testid="group-interest-options">
-        <label htmlFor="interest-search">Areas you’re curious about <span className="field-hint">Choose all that fit</span></label>
-        <p className="field-hint" id="interest-help">Choose a suggestion or add your own interest.</p>
+        <label htmlFor="interest-search">{t('profile.interests')} <span className="field-hint">{t('profile.chooseAll')}</span></label>
+        <p className="field-hint" id="interest-help">{t('profile.interestHelper')}</p>
         <div
           className="interest-search"
           style={isInterestDropdownOpen ? { paddingBottom: `${interestDropdownHeight + 8}px` } : undefined}
@@ -385,8 +390,8 @@ export function IntakePage({
                 setActiveInterestIndex(0);
               }}
               onKeyDown={handleInterestSearchKeyDown}
-              placeholder="Search areas of interest (e.g., tech, health, AI)..."
-              aria-label="Search areas of interest"
+              placeholder={t('profile.interestSearch')}
+              aria-label={t('profile.interests')}
               aria-describedby="interest-help"
               role="combobox"
               aria-autocomplete="list"
@@ -439,8 +444,8 @@ export function IntakePage({
         </div>
       </div>
       <div className="field" style={{ marginTop: 22 }}>
-        <label htmlFor="weekly-hours">Weekly hours available for learning <span className="field-hint">{form.weeklyHours} hours</span></label>
-        <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">How much time can you realistically dedicate to upskilling courses?</p>
+        <label htmlFor="weekly-hours">{t('profile.weeklyHours')} <span className="field-hint">{form.weeklyHours} {t('profile.timeHours')}</span></label>
+        <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">{t('profile.timeHelper')}</p>
         <div className="hours-control"><input id="weekly-hours" type="range" min="1" max="15" value={form.weeklyHours} onChange={(event) => update('weeklyHours', Number(event.target.value))} data-testid="input-weekly-hours" /><span className="hours-number" data-testid="text-weekly-hours-value">{form.weeklyHours}h</span></div>
       </div>
     </>
@@ -460,15 +465,15 @@ export function IntakePage({
         </div>
       )}
       {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">{saveFailed}</div>}
-      {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{SUBMISSION_MESSAGES[loadingMessageIndex]}</div>}
+      {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{t(`profile.loadingStage${loadingMessageIndex + 1}` as 'profile.loadingStage1' | 'profile.loadingStage2' | 'profile.loadingStage3')}</div>}
       {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
       {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
       <div className="form-footer">
-        <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
+        <span className="form-footnote">{t('profile.footnote')}</span>
         <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
           {isSubmitting
-            ? <><LoaderCircle size={15} className="animate-spin" /> Please wait…</>
-            : <>{profile ? 'Save changes' : 'Build my pathway'}<ArrowRight size={15} /></>}
+            ? <><LoaderCircle size={15} className="animate-spin" /> {t('profile.pleaseWait')}</>
+            : <>{profile ? t('profile.save') : t('profile.submit')}<ArrowRight size={15} /></>}
         </button>
       </div>
     </>
@@ -496,10 +501,10 @@ export function IntakePage({
         data-testid="form-career-profile"
       >
         <fieldset className="pi-fieldset" disabled={isSubmitting} data-testid="fieldset-career-profile">
-        <div className="pi-mode" role="radiogroup" aria-label="Profile detail level" data-testid="group-profile-mode">
+      <div className="pi-mode" role="radiogroup" aria-label={t('profile.mode')} data-testid="group-profile-mode">
           {([
-            ['quick', t('profile.quick'), 'Six essentials, about two minutes', Zap],
-            ['detailed', t('profile.detailed'), 'Experience, education, projects and more', Layers],
+            ['quick', t('profile.quick'), t('profile.quickDescription'), Zap],
+            ['detailed', t('profile.detailed'), t('profile.detailedDescription'), Layers],
           ] as const).map(([value, label, caption, Icon]) => (
             <label key={value} className={`pi-mode-option ${mode === value ? 'is-active' : ''}`} data-testid={`option-mode-${value}`}>
               <input type="radio" name="profile-mode" value={value} checked={mode === value} onChange={() => { setFocusRequest(null); update('profileMode', value); }} data-testid={`radio-mode-${value}`} />
@@ -525,10 +530,10 @@ export function IntakePage({
           <div className="pi-detailed" data-testid="panel-detailed-profile">
             <div className="section-card pi-cv-upload">
               <button type="button" className="button-primary" onClick={() => setCvUploadNotice(true)} aria-describedby="cv-upload-help" data-testid="button-upload-cv">
-                <Upload size={18} aria-hidden="true" /> Upload CV / Resume to Auto-Fill
+                <Upload size={18} aria-hidden="true" /> {t('profile.resumeUpload')}
               </button>
-              <p id="cv-upload-help" className="pi-helper">Coming soon — you can fill in your details below for now.</p>
-              {cvUploadNotice && <p className="pi-helper" role="status" data-testid="status-cv-upload">CV auto-fill is not available yet. No file has been uploaded or profile information changed.</p>}
+              <p id="cv-upload-help" className="pi-helper">{t('profile.uploadHint')}</p>
+              {cvUploadNotice && <p className="pi-helper" role="status" data-testid="status-cv-upload">{t('profile.resumeUnavailable')}</p>}
             </div>
             <section className="section-card form-panel">
               <h2 className="form-section-title">{t('profile.identity')}</h2>
@@ -597,11 +602,11 @@ export function IntakePage({
         </fieldset>
       </form>
         <aside className="aside-panel">
-          <h3>Built around the work you’ve done</h3>
-          <p>{mode === 'quick' ? 'Career shifts often start with strengths you already use, not a blank slate.' : 'Students and career switchers alike: no job history is required. Add projects, coursework or certifications instead.'}</p>
-          <div className="aside-step"><span className="step-number"><UserRound size={12} /></span><span>We’ll look for roles that build on your experience, not replace it.</span></div>
-          <div className="aside-step"><span className="step-number">02</span><span>Your interests help us rank possible directions more thoughtfully.</span></div>
-          <div className="aside-step"><span className="step-number"><Clock3 size={12} /></span><span>Your weekly time shapes a learning pace that feels doable.</span></div>
+          <h3>{t('profile.asideTitle')}</h3>
+          <p>{mode === 'quick' ? t('profile.asideQuick') : t('profile.asideDetailed')}</p>
+          <div className="aside-step"><span className="step-number"><UserRound size={12} /></span><span>{t('profile.asideRoles')}</span></div>
+          <div className="aside-step"><span className="step-number">02</span><span>{t('profile.asideInterests')}</span></div>
+          <div className="aside-step"><span className="step-number"><Clock3 size={12} /></span><span>{t('profile.asideTime')}</span></div>
         </aside>
       </div>
     </div>
