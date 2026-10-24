@@ -5,6 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CareerProfileInputProfileMode } from './careerProfileInputProfileMode';
+import type { ProfessionalBackground } from './professionalBackground';
 
 export interface CareerProfileInput {
   /** @minLength 1 */
@@ -16,7 +18,10 @@ export interface CareerProfileInput {
   yearsExperience: number;
   /** @minLength 1 */
   industry: string;
-  /** @minItems 1 */
+  /**
+     * @minItems 1
+     * @maxItems 50
+     */
   skills: string[];
   /** @minItems 1 */
   interests: string[];
@@ -25,4 +30,6 @@ export interface CareerProfileInput {
      * @maximum 80
      */
   weeklyHours: number;
+  profileMode?: CareerProfileInputProfileMode;
+  professionalBackground?: ProfessionalBackground;
 }

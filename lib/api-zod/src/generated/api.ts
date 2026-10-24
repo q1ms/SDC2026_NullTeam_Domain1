@@ -157,6 +157,504 @@ export const GetCareerProfileParams = zod.object({
   "profileId": zod.coerce.string().uuid()
 })
 
+export const getCareerProfileResponseOneProfessionalBackgroundDisplayNameMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundHeadlineMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAboutMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLocationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTargetIndustryMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLinkedinUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundExperienceMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundVolunteeringMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundOrganizationsMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundEducationMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCertificationsMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundCoursesMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundProjectsMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundAwardsMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundPublicationsMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundLanguagesMax = 30;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemIdMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTitleMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemOrganizationMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemStartDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemEndDateMax = 10;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemDescriptionMax = 5000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemAchievementsItemMax = 1000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemAchievementsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemDegreeMax = 300;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemGpaMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemCourseworkItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemCourseworkMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTechnologiesItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTechnologiesMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSkillsItemMax = 200;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSkillsMax = 50;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemContributionMax = 3000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSecondaryUrlMax = 2000;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemProficiencyMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresItemScoreMax = 100;
+
+export const getCareerProfileResponseOneProfessionalBackgroundTestScoresMax = 30;
+
+
+
 export const GetCareerProfileResponse = zod.union([zod.object({
   "id": zod.string().uuid(),
   "currentRole": zod.string(),
@@ -165,7 +663,236 @@ export const GetCareerProfileResponse = zod.union([zod.object({
   "skills": zod.array(zod.string()),
   "interests": zod.array(zod.string()),
   "weeklyHours": zod.number().int(),
-  "updatedAt": zod.coerce.date()
+  "updatedAt": zod.coerce.date(),
+  "profileMode": zod.enum(['quick', 'detailed']).optional(),
+  "professionalBackground": zod.object({
+  "displayName": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundDisplayNameMax).optional(),
+  "headline": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundHeadlineMax).optional(),
+  "about": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAboutMax).optional(),
+  "location": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLocationMax).optional(),
+  "targetIndustry": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTargetIndustryMax).optional(),
+  "linkedinUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLinkedinUrlMax).optional(),
+  "experience": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundExperienceItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundExperienceMax).optional(),
+  "volunteering": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundVolunteeringMax).optional(),
+  "organizations": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundOrganizationsMax).optional(),
+  "education": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundEducationItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundEducationItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundEducationMax).optional(),
+  "certifications": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCertificationsItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundCertificationsMax).optional(),
+  "courses": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundCoursesItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundCoursesMax).optional(),
+  "projects": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundProjectsItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundProjectsMax).optional(),
+  "awards": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundAwardsItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundAwardsMax).optional(),
+  "publications": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundPublicationsItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundPublicationsMax).optional(),
+  "languages": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundLanguagesItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundLanguagesMax).optional(),
+  "testScores": zod.array(zod.object({
+  "id": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemIdMax),
+  "title": zod.string().min(1).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTitleMax),
+  "organization": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemOrganizationMax).optional(),
+  "startDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemStartDateMax).optional(),
+  "endDate": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemAchievementsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemAchievementsMax).optional(),
+  "degree": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemDegreeMax).optional(),
+  "gpa": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemCourseworkItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTechnologiesItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSkillsItemMax)).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSkillsMax).optional(),
+  "contribution": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemContributionMax).optional(),
+  "url": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemProficiencyMax).optional(),
+  "score": zod.string().max(getCareerProfileResponseOneProfessionalBackgroundTestScoresItemScoreMax).optional()
+})).max(getCareerProfileResponseOneProfessionalBackgroundTestScoresMax).optional()
+}).optional()
 }),zod.null()])
 
 
@@ -181,9 +908,506 @@ export const saveCareerProfileBodyYearsExperienceMin = 0;
 export const saveCareerProfileBodyYearsExperienceMax = 60;
 
 
+export const saveCareerProfileBodySkillsMax = 50;
 
 
 export const saveCareerProfileBodyWeeklyHoursMax = 80;
+
+export const saveCareerProfileBodyProfessionalBackgroundDisplayNameMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundHeadlineMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundAboutMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLocationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundTargetIndustryMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundLinkedinUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundExperienceMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundVolunteeringMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundOrganizationsMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundEducationMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCertificationsMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundCoursesMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundProjectsMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundAwardsMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundPublicationsMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundLanguagesMax = 30;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemIdMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemTitleMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemOrganizationMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemStartDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemEndDateMax = 10;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemDescriptionMax = 5000;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemAchievementsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemDegreeMax = 300;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemGpaMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemCourseworkItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemCourseworkMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemTechnologiesMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemSkillsItemMax = 200;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemSkillsMax = 50;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemContributionMax = 3000;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemProficiencyMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresItemScoreMax = 100;
+
+export const saveCareerProfileBodyProfessionalBackgroundTestScoresMax = 30;
 
 
 
@@ -191,10 +1415,737 @@ export const SaveCareerProfileBody = zod.object({
   "currentRole": zod.string().min(1),
   "yearsExperience": zod.number().int().min(saveCareerProfileBodyYearsExperienceMin).max(saveCareerProfileBodyYearsExperienceMax),
   "industry": zod.string().min(1),
-  "skills": zod.array(zod.string()).min(1),
+  "skills": zod.array(zod.string()).min(1).max(saveCareerProfileBodySkillsMax),
   "interests": zod.array(zod.string()).min(1),
-  "weeklyHours": zod.number().int().min(1).max(saveCareerProfileBodyWeeklyHoursMax)
+  "weeklyHours": zod.number().int().min(1).max(saveCareerProfileBodyWeeklyHoursMax),
+  "profileMode": zod.enum(['quick', 'detailed']).optional(),
+  "professionalBackground": zod.object({
+  "displayName": zod.string().max(saveCareerProfileBodyProfessionalBackgroundDisplayNameMax).optional(),
+  "headline": zod.string().max(saveCareerProfileBodyProfessionalBackgroundHeadlineMax).optional(),
+  "about": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAboutMax).optional(),
+  "location": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLocationMax).optional(),
+  "targetIndustry": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTargetIndustryMax).optional(),
+  "linkedinUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLinkedinUrlMax).optional(),
+  "experience": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundExperienceItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundExperienceItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundExperienceMax).optional(),
+  "volunteering": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundVolunteeringItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundVolunteeringMax).optional(),
+  "organizations": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundOrganizationsItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundOrganizationsMax).optional(),
+  "education": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundEducationItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundEducationItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundEducationItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundEducationItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundEducationItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundEducationItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundEducationItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundEducationMax).optional(),
+  "certifications": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCertificationsItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundCertificationsMax).optional(),
+  "courses": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundCoursesItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundCoursesItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundCoursesMax).optional(),
+  "projects": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundProjectsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundProjectsItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundProjectsMax).optional(),
+  "awards": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundAwardsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundAwardsItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundAwardsMax).optional(),
+  "publications": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundPublicationsItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundPublicationsMax).optional(),
+  "languages": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundLanguagesItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundLanguagesMax).optional(),
+  "testScores": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemAchievementsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemCourseworkItemMax)).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemTechnologiesItemMax)).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemSkillsItemMax)).max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileBodyProfessionalBackgroundTestScoresItemScoreMax).optional()
+})).max(saveCareerProfileBodyProfessionalBackgroundTestScoresMax).optional()
+}).optional()
 })
+
+export const saveCareerProfileResponseProfessionalBackgroundDisplayNameMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundHeadlineMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundAboutMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLocationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundTargetIndustryMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundLinkedinUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundExperienceMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundVolunteeringMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundOrganizationsMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundEducationMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCertificationsMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundCoursesMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundProjectsMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundAwardsMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundPublicationsMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundLanguagesMax = 30;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemIdMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemTitleMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemOrganizationMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemStartDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemEndDateMax = 10;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemDescriptionMax = 5000;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemAchievementsItemMax = 1000;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemAchievementsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemDegreeMax = 300;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemGpaMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemCourseworkItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemCourseworkMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemTechnologiesItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemTechnologiesMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemSkillsItemMax = 200;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemSkillsMax = 50;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemContributionMax = 3000;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemSecondaryUrlMax = 2000;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemProficiencyMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresItemScoreMax = 100;
+
+export const saveCareerProfileResponseProfessionalBackgroundTestScoresMax = 30;
+
+
 
 export const SaveCareerProfileResponse = zod.object({
   "id": zod.string().uuid(),
@@ -204,7 +2155,236 @@ export const SaveCareerProfileResponse = zod.object({
   "skills": zod.array(zod.string()),
   "interests": zod.array(zod.string()),
   "weeklyHours": zod.number().int(),
-  "updatedAt": zod.coerce.date()
+  "updatedAt": zod.coerce.date(),
+  "profileMode": zod.enum(['quick', 'detailed']).optional(),
+  "professionalBackground": zod.object({
+  "displayName": zod.string().max(saveCareerProfileResponseProfessionalBackgroundDisplayNameMax).optional(),
+  "headline": zod.string().max(saveCareerProfileResponseProfessionalBackgroundHeadlineMax).optional(),
+  "about": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAboutMax).optional(),
+  "location": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLocationMax).optional(),
+  "targetIndustry": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTargetIndustryMax).optional(),
+  "linkedinUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLinkedinUrlMax).optional(),
+  "experience": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundExperienceItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundExperienceItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundExperienceMax).optional(),
+  "volunteering": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundVolunteeringItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundVolunteeringMax).optional(),
+  "organizations": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundOrganizationsItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundOrganizationsMax).optional(),
+  "education": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundEducationItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundEducationItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundEducationItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundEducationItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundEducationItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundEducationItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundEducationItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundEducationMax).optional(),
+  "certifications": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCertificationsItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundCertificationsMax).optional(),
+  "courses": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundCoursesItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundCoursesItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundCoursesMax).optional(),
+  "projects": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundProjectsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundProjectsItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundProjectsMax).optional(),
+  "awards": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundAwardsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundAwardsItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundAwardsMax).optional(),
+  "publications": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundPublicationsItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundPublicationsMax).optional(),
+  "languages": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundLanguagesItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundLanguagesMax).optional(),
+  "testScores": zod.array(zod.object({
+  "id": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemIdMax),
+  "title": zod.string().min(1).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemTitleMax),
+  "organization": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemOrganizationMax).optional(),
+  "startDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemStartDateMax).optional(),
+  "endDate": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemAchievementsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemAchievementsMax).optional(),
+  "degree": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemDegreeMax).optional(),
+  "gpa": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemCourseworkItemMax)).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemTechnologiesItemMax)).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemSkillsItemMax)).max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemSkillsMax).optional(),
+  "contribution": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemContributionMax).optional(),
+  "url": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemProficiencyMax).optional(),
+  "score": zod.string().max(saveCareerProfileResponseProfessionalBackgroundTestScoresItemScoreMax).optional()
+})).max(saveCareerProfileResponseProfessionalBackgroundTestScoresMax).optional()
+}).optional()
 })
 
 
@@ -346,9 +2526,506 @@ export const generatePathwayBodyProfileYearsExperienceMin = 0;
 export const generatePathwayBodyProfileYearsExperienceMax = 60;
 
 
+export const generatePathwayBodyProfileSkillsMax = 50;
 
 
 export const generatePathwayBodyProfileWeeklyHoursMax = 80;
+
+export const generatePathwayBodyProfileProfessionalBackgroundDisplayNameMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundHeadlineMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAboutMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLocationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTargetIndustryMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLinkedinUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundExperienceMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundVolunteeringMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundOrganizationsMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundEducationMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCertificationsMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundCoursesMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundProjectsMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundAwardsMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundPublicationsMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundLanguagesMax = 30;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemIdMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTitleMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemOrganizationMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemStartDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemEndDateMax = 10;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemDescriptionMax = 5000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemAchievementsItemMax = 1000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemAchievementsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemDegreeMax = 300;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemGpaMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemCourseworkItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemCourseworkMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTechnologiesItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTechnologiesMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSkillsItemMax = 200;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSkillsMax = 50;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemContributionMax = 3000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSecondaryUrlMax = 2000;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemProficiencyMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresItemScoreMax = 100;
+
+export const generatePathwayBodyProfileProfessionalBackgroundTestScoresMax = 30;
 
 
 
@@ -358,9 +3035,238 @@ export const GeneratePathwayBody = zod.object({
   "currentRole": zod.string().min(1),
   "yearsExperience": zod.number().int().min(generatePathwayBodyProfileYearsExperienceMin).max(generatePathwayBodyProfileYearsExperienceMax),
   "industry": zod.string().min(1),
-  "skills": zod.array(zod.string()).min(1),
+  "skills": zod.array(zod.string()).min(1).max(generatePathwayBodyProfileSkillsMax),
   "interests": zod.array(zod.string()).min(1),
-  "weeklyHours": zod.number().int().min(1).max(generatePathwayBodyProfileWeeklyHoursMax)
+  "weeklyHours": zod.number().int().min(1).max(generatePathwayBodyProfileWeeklyHoursMax),
+  "profileMode": zod.enum(['quick', 'detailed']).optional(),
+  "professionalBackground": zod.object({
+  "displayName": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundDisplayNameMax).optional(),
+  "headline": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundHeadlineMax).optional(),
+  "about": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAboutMax).optional(),
+  "location": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLocationMax).optional(),
+  "targetIndustry": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTargetIndustryMax).optional(),
+  "linkedinUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLinkedinUrlMax).optional(),
+  "experience": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundExperienceItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundExperienceMax).optional(),
+  "volunteering": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundVolunteeringMax).optional(),
+  "organizations": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundOrganizationsMax).optional(),
+  "education": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundEducationItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundEducationItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundEducationMax).optional(),
+  "certifications": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCertificationsItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundCertificationsMax).optional(),
+  "courses": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundCoursesItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundCoursesMax).optional(),
+  "projects": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundProjectsItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundProjectsMax).optional(),
+  "awards": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundAwardsItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundAwardsMax).optional(),
+  "publications": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundPublicationsItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundPublicationsMax).optional(),
+  "languages": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundLanguagesItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundLanguagesMax).optional(),
+  "testScores": zod.array(zod.object({
+  "id": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemIdMax),
+  "title": zod.string().min(1).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTitleMax),
+  "organization": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemOrganizationMax).optional(),
+  "startDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemStartDateMax).optional(),
+  "endDate": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemEndDateMax).optional(),
+  "current": zod.boolean().optional(),
+  "description": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemDescriptionMax).optional(),
+  "achievements": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemAchievementsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemAchievementsMax).optional(),
+  "degree": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemDegreeMax).optional(),
+  "gpa": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemGpaMax).optional(),
+  "coursework": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemCourseworkItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemCourseworkMax).optional(),
+  "technologies": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTechnologiesItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemTechnologiesMax).optional(),
+  "skills": zod.array(zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSkillsItemMax)).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSkillsMax).optional(),
+  "contribution": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemContributionMax).optional(),
+  "url": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemUrlMax).optional(),
+  "secondaryUrl": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemSecondaryUrlMax).optional(),
+  "proficiency": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemProficiencyMax).optional(),
+  "score": zod.string().max(generatePathwayBodyProfileProfessionalBackgroundTestScoresItemScoreMax).optional()
+})).max(generatePathwayBodyProfileProfessionalBackgroundTestScoresMax).optional()
+}).optional()
 })
 })
 

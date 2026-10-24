@@ -1,9 +1,10 @@
 import type { AdoptionComparison, EvidenceSnapshot, GeneratedPathway, PathwayScenario } from "@workspace/api-zod";
 import type { CareerProfileInput, JobRole } from "./career-db";
 import { learningPlan } from "./career-learning";
+import { professionalSkillContext, professionalSummary } from "./professional-profile";
 
 export const MATCHING_MODEL = "Career Signal Model 1.0 · deterministic editorial rules; no generative AI/LLM used for rankings or explanations";
-export const MODEL_LIMITATIONS = "Scores are heuristic estimates out of 100, not measured probabilities, objective forecasts or hiring outcomes. Five catalog roles are not the whole labor market. Skills are self-reported and only exact names/declared aliases match; experience and industry are context, not verified qualifications. Scenario adjustments and source-to-role mappings are editorial assumptions, not source forecasts. Evidence may be old or outside your geography. Confirm local vacancies, prerequisites and costs; you decide whether to pursue any option.";
+export const MODEL_LIMITATIONS = "Scores are heuristic estimates out of 100, not measured probabilities, objective forecasts or hiring outcomes. Five catalog roles are not the whole labor market. Skills are self-reported and only exact names/declared aliases match, including explicit skills, project technologies, coursework and exact course/certificate titles in professional sections; these are not verified qualifications. Narrative, GPA, test scores, names, links and institution prestige add no points. Experience, industry and location are context only, not local hiring evidence. Scenario adjustments and source-to-role mappings are editorial assumptions, not source forecasts. Evidence may be old or outside your geography. Confirm local vacancies, prerequisites and costs; you decide whether to pursue any option.";
 
 const RULES: Record<string, { interests: string[]; moderate: number; fast: number; extra: string; sdg: string }> = {
   "ai-operations-specialist": { interests: ["AI & automation", "Operations & systems"], moderate: 0, fast: 20, extra: "AI output evaluation", sdg: "SDG 9: Industry, Innovation and Infrastructure" },
@@ -33,12 +34,16 @@ export function buildPathway(
   generatedAt = new Date().toISOString(),
 ): GeneratedPathway {
   if (!Number.isFinite(profile.weeklyHours) || profile.weeklyHours < 1) throw new Error("Weekly learning hours must be positive.");
+  const skillContext = professionalSkillContext(profile);
+  const explicitSkills = skillContext.map((candidate) => candidate.skill);
   const comparisons: AdoptionComparison[] = (["moderate", "fast"] as const).map((id) => {
     const fast = id === "fast";
     const scenarios: PathwayScenario[] = roles.map((role) => {
       const rule = RULES[role.id];
       if (!rule) throw new Error(`Unmapped catalog role: ${role.id}`);
-      const matchedSkills = role.skills.filter((skill) => hasSkill(profile.skills, skill));
+      const matchedSkills = role.skills.filter((skill) => hasSkill(explicitSkills, skill));
+      const backgroundMatches = matchedSkills.filter((skill) => !hasSkill(profile.skills, skill))
+        .map((skill) => `${skill} from ${skillContext.find((candidate) => hasSkill([candidate.skill], skill))!.source}`);
       const interestMatches = profile.interests.filter((interest) => rule.interests.some((candidate) => normalized(candidate) === normalized(interest)));
       const relevant = evidence.signals.filter((signal) => signal.roleIds.includes(role.id));
       const sourcePoints = relevant.filter((signal) => signal.kind !== "news").reduce((total, signal) => total + signal.weight, 0);
@@ -47,17 +52,17 @@ export function buildPathway(
       const interestPoints = Math.min(16, interestMatches.length * 8);
       const adjustment = rule[id];
       const rawScore = 30 + skillsPoints + interestPoints + sourcePoints + newsPoints + adjustment;
-      const skillsGap = role.skills.filter((skill) => !hasSkill(profile.skills, skill));
-      if (fast && !hasSkill(profile.skills, rule.extra)) skillsGap.push(rule.extra);
+      const skillsGap = role.skills.filter((skill) => !hasSkill(explicitSkills, skill));
+      if (fast && !hasSkill(explicitSkills, rule.extra)) skillsGap.push(rule.extra);
       const reskillingPathway = learningPlan(role.id, fast);
       const hours = reskillingPathway.reduce((total, step) => total + step.estimatedHours, 0);
       const weeks = Math.ceil(hours / profile.weeklyHours);
       return {
         roleTitle: role.title, matchScore: Math.max(1, Math.min(95, rawScore)),
-        explainableReason: `From ${profile.currentRole.slice(0, 100)}: ${matchedSkills.length ? matchedSkills.join(", ") : "no exact listed skill matches yet"} covers ${matchedSkills.length}/${role.skills.length} catalog skills; ${interestMatches.length ? `interests in ${interestMatches.join(", ")}` : "no direct interest match"} informs this option.`,
+        explainableReason: `From ${profile.currentRole.slice(0, 100)}: ${matchedSkills.length ? matchedSkills.join(", ") : "no exact listed skill matches yet"} covers ${matchedSkills.length}/${role.skills.length} catalog skills; ${interestMatches.length ? `interests in ${interestMatches.join(", ")}` : "no direct interest match"} informs this option.`.slice(0, 500),
         matchedSkills, skillsGap, reskillingPathway, unSdgTag: rule.sdg as PathwayScenario["unSdgTag"],
         evidenceIds: relevant.map((signal) => signal.id),
-        scoreBasis: `30 starting points + ${skillsPoints} skills (40 × matched/required) + ${interestPoints} interests (8 each, max 16) + ${sourcePoints} reviewed evidence + ${newsPoints} news context (max 2) ${adjustment >= 0 ? "+" : "−"} ${Math.abs(adjustment)} ${id}-adoption assumption = ${rawScore}; bounded to 1–95. Editorial index, not probability. ${fast ? `Additional skill assumed: ${rule.extra}.` : "Existing catalog skill requirements assumed."}`,
+        scoreBasis: `30 starting points + ${skillsPoints} skills (40 × matched/required) + ${interestPoints} interests (8 each, max 16) + ${sourcePoints} reviewed evidence + ${newsPoints} news context (max 2) ${adjustment >= 0 ? "+" : "−"} ${Math.abs(adjustment)} ${id}-adoption assumption = ${rawScore}; bounded to 1–95. Editorial index, not probability. ${fast ? `Additional skill assumed: ${rule.extra}.` : "Existing catalog skill requirements assumed."}${backgroundMatches.length ? ` Self-reported background matches: ${backgroundMatches.join("; ")}; exact label/declared alias only, not verified qualifications.` : ""}`,
         paceEstimate: `${hours}–${Math.ceil(hours * 1.5)} practice hours including portfolio work; about ${weeks}–${Math.ceil(hours * 1.5 / profile.weeklyHours)} weeks at ${profile.weeklyHours} h/week. Exploration pace only, not job readiness or a guaranteed completion date.`,
       };
     }).sort((a, b) => b.matchScore - a.matchScore || a.roleTitle.localeCompare(b.roleTitle)).slice(0, 3);
@@ -73,7 +78,7 @@ export function buildPathway(
     profileId, generatedAt: new Date(generatedAt), scenarios: comparisons[0].scenarios,
     analysis: {
       model: MATCHING_MODEL, limitations: MODEL_LIMITATIONS, evidence, comparisons,
-      profileSummary: `${profile.currentRole} · ${profile.yearsExperience} years · ${profile.industry} · ${profile.weeklyHours} learning h/week. Skills: ${profile.skills.join(", ")}. Interests: ${profile.interests.join(", ")}.`,
+      profileSummary: `${profile.currentRole} · ${profile.yearsExperience} years · ${profile.industry} · ${profile.weeklyHours} learning h/week. Skills: ${profile.skills.join(", ")}. Interests: ${profile.interests.join(", ")}.${professionalSummary(profile.professionalBackground)}`,
     },
   };
 }

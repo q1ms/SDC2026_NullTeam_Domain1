@@ -13,6 +13,7 @@ import {
 } from "../lib/career-db";
 import { buildPathway, DEMO_PROFILE } from "../lib/career-matching";
 import { curatedEvidence, getCareerEvidence } from "../lib/career-signals";
+import { validateProfessionalProfile } from "../lib/professional-profile";
 
 const router: IRouter = Router();
 
@@ -42,7 +43,12 @@ router.put("/profiles/:profileId", (req, res): void => {
   const params = SaveCareerProfileParams.safeParse(req.params);
   const body = SaveCareerProfileBody.safeParse(req.body);
   if (!params.success || !body.success) {
-    res.status(400).json({ error: "Invalid profile identifier or profile." });
+    res.status(400).json({ error: "Check the profile fields, section limits, and maximum of 50 skills." });
+    return;
+  }
+  const issues = validateProfessionalProfile(body.data);
+  if (issues.length) {
+    res.status(400).json({ error: issues.join(" ") });
     return;
   }
   res.json(SaveCareerProfileResponse.parse(saveCareerProfile(params.data.profileId, body.data)));

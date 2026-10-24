@@ -5,6 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { CareerProfileProfileMode } from './careerProfileProfileMode';
+import type { ProfessionalBackground } from './professionalBackground';
 
 export interface CareerProfile {
   id: string;
@@ -15,4 +17,6 @@ export interface CareerProfile {
   interests: string[];
   weeklyHours: number;
   updatedAt: Date;
+  profileMode?: CareerProfileProfileMode;
+  professionalBackground?: ProfessionalBackground;
 }

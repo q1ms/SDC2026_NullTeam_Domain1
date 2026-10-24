@@ -5,15 +5,51 @@ import {
   getGetGeneratedPathwayQueryKey,
   type GeneratedPathway,
 } from '@workspace/api-client-react';
-import { ArrowRight, Clock3, LoaderCircle, Search, UserRound, X } from 'lucide-react';
+import { ArrowRight, Clock3, ExternalLink, Layers, LoaderCircle, Search, ShieldCheck, UserRound, X, Zap } from 'lucide-react';
 import {
   addInterestSelection,
   getInterestSuggestions,
   toggleInterestSelection,
   type CareerProfile,
 } from '../data/catalog';
+import {
+  MAX_SKILLS,
+  SECTIONS,
+  cleanBackground,
+  isLinkedInProfileUrl,
+  parseSkills,
+  safeExternalUrl,
+  validateProfileDraft,
+  type SectionKey,
+} from '../data/professional-profile';
+import { SectionEditor } from '../components/profile/SectionEditor';
+import { ImportPanel } from '../components/profile/ImportPanel';
+import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
+import './profile-intake.css';
 
-const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4 };
+const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, industry: '', skills: [], interests: [], weeklyHours: 4, profileMode: 'quick', professionalBackground: {} };
+const STATUS_PRESETS = ['Student', 'Recent graduate', 'Career break'];
+
+function toDraft(profile: CareerProfile | null): CareerProfile {
+  if (!profile) return EMPTY_PROFILE;
+  return {
+    currentRole: profile.currentRole ?? '',
+    yearsExperience: profile.yearsExperience ?? 0,
+    industry: profile.industry ?? '',
+    skills: profile.skills ?? [],
+    interests: profile.interests ?? [],
+    weeklyHours: profile.weeklyHours ?? 4,
+    profileMode: profile.profileMode === 'detailed' ? 'detailed' : 'quick',
+    professionalBackground: profile.professionalBackground ?? {},
+  };
+}
+
+function saveErrorMessage(error: unknown): string | null {
+  if (typeof error !== 'object' || error === null) return null;
+  const data = (error as { data?: unknown }).data;
+  if (isRecord(data) && typeof data.error === 'string' && data.error.trim()) return data.error;
+  return null;
+}
 const SUBMISSION_MESSAGES = [
   'Saving profile…',
   'Analyzing your skills…',
@@ -66,18 +102,20 @@ export function IntakePage({
 }) {
   const [, navigate] = useLocation();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState<CareerProfile>(profile ?? EMPTY_PROFILE);
+  const [form, setForm] = useState<CareerProfile>(() => toDraft(profile));
   const [skillsText, setSkillsText] = useState((profile?.skills ?? []).join(', '));
   const [errors, setErrors] = useState<string[]>([]);
   const [interestSearch, setInterestSearch] = useState('');
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
   const [saved, setSaved] = useState(false);
-  const [saveFailed, setSaveFailed] = useState(false);
+  const [saveFailed, setSaveFailed] = useState<string | false>(false);
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [pathwayError, setPathwayError] = useState<string | null>(null);
   const submissionLock = useRef(false);
+  const initializedFor = useRef<string | null>(profile ? profileId : null);
+  const isDirty = useRef(false);
   const interestSuggestionsRef = useRef<HTMLDivElement>(null);
   const isSubmitting = isSaving || isFormSubmitting;
   const interestSuggestions = getInterestSuggestions(interestSearch, form.interests);
@@ -107,12 +145,14 @@ export function IntakePage({
     return () => observer?.disconnect();
   }, [isInterestDropdownOpen, interestSuggestionsKey]);
 
+  // Initialise once per profile id; later cache updates/refetches never clobber the draft.
   useEffect(() => {
-    if (profile) {
-      setForm(profile);
-      setSkillsText(profile.skills.join(', '));
-    }
-  }, [profile]);
+    if (!profile || initializedFor.current === profileId) return;
+    initializedFor.current = profileId;
+    if (isDirty.current) return;
+    setForm(toDraft(profile));
+    setSkillsText(profile.skills.join(', '));
+  }, [profile, profileId]);
 
   useEffect(() => {
     if (!isFormSubmitting) return;
@@ -122,13 +162,33 @@ export function IntakePage({
     return () => window.clearInterval(timer);
   }, [isFormSubmitting]);
 
-  const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => setForm((current) => ({ ...current, [key]: value }));
-  const toggleInterest = (interest: string) => setForm((current) => ({
+  const editForm = (fn: (current: CareerProfile) => CareerProfile) => {
+    if (submissionLock.current) return;
+    isDirty.current = true;
+    setForm(fn);
+  };
+  const update = <K extends keyof CareerProfile>(key: K, value: CareerProfile[K]) => editForm((current) => ({ ...current, [key]: value }));
+  const background: ProfessionalBackground = form.professionalBackground ?? {};
+  const updateBackground = <K extends keyof ProfessionalBackground>(key: K, value: ProfessionalBackground[K]) =>
+    editForm((current) => ({ ...current, professionalBackground: { ...(current.professionalBackground ?? {}), [key]: value } }));
+  const updateSection = (key: SectionKey, entries: ProfessionalEntry[]) => updateBackground(key, entries);
+  const editSkills = (text: string) => { if (submissionLock.current) return; isDirty.current = true; setSkillsText(text); };
+  const mode = form.profileMode === 'detailed' ? 'detailed' : 'quick';
+  const skillCount = parseSkills(skillsText).length;
+  const linkedinValue = background.linkedinUrl?.trim() ?? '';
+  const linkedinHref = linkedinValue && isLinkedInProfileUrl(linkedinValue) ? safeExternalUrl(linkedinValue) : null;
+  const applyImported = (next: CareerProfile, nextSkills: string[]) => {
+    if (submissionLock.current) return;
+    isDirty.current = true;
+    setForm(next);
+    setSkillsText(nextSkills.join(', '));
+  };
+  const toggleInterest = (interest: string) => editForm((current) => ({
     ...current,
     interests: toggleInterestSelection(current.interests, interest),
   }));
   const addInterest = (interest: string) => {
-    setForm((current) => current.interests.includes(interest)
+    editForm((current) => current.interests.includes(interest)
       ? current
       : { ...current, interests: addInterestSelection(current.interests, interest) });
     setInterestSearch('');
@@ -154,13 +214,17 @@ export function IntakePage({
   };
   const submit = async () => {
     if (submissionLock.current || isSubmitting) return;
-    const issues = [];
-    if (!form.currentRole.trim()) issues.push('Add your current role.');
-    if (!form.industry.trim()) issues.push('Choose or enter your industry.');
-    if (!skillsText.trim()) issues.push('Add at least one skill or strength.');
-    if (!form.interests.length) issues.push('Choose at least one area of interest.');
+    const skills = parseSkills(skillsText);
+    const issues = validateProfileDraft(form, skills);
     if (issues.length) { setErrors(issues); setSaved(false); return; }
-    const cleaned = { ...form, currentRole: form.currentRole.trim(), industry: form.industry.trim(), skills: skillsText.split(',').map((skill) => skill.trim()).filter(Boolean) };
+    const cleaned: CareerProfile = {
+      ...form,
+      currentRole: form.currentRole.trim(),
+      industry: form.industry.trim(),
+      skills,
+      profileMode: mode,
+      professionalBackground: cleanBackground(form.professionalBackground),
+    };
     setErrors([]);
     setSaved(false);
     setSaveFailed(false);
@@ -173,8 +237,10 @@ export function IntakePage({
       try {
         await onSave(cleaned);
         setForm(cleaned);
-      } catch {
-        setSaveFailed(true);
+        setSkillsText(cleaned.skills.join(', '));
+        isDirty.current = false;
+      } catch (error) {
+        setSaveFailed(saveErrorMessage(error) ?? 'Your profile could not be saved. Check the API server and try again.');
         return;
       }
 
@@ -216,38 +282,84 @@ export function IntakePage({
     return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
   }
 
+  const statusAndFooter = (
+    <>
+      {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors"><strong className="pi-errors-title">Fix {errors.length === 1 ? 'this' : `these ${errors.length} items`} before saving:</strong><ul className="pi-error-list">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div>}
+      {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">{saveFailed}</div>}
+      {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{SUBMISSION_MESSAGES[loadingMessageIndex]}</div>}
+      {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
+      {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
+      <div className="form-footer">
+        <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
+        <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
+          {isSubmitting
+            ? <><LoaderCircle size={15} className="animate-spin" /> Please wait…</>
+            : <>{profile ? 'Save changes' : 'Build my pathway'}<ArrowRight size={15} /></>}
+        </button>
+      </div>
+    </>
+  );
+
   return (
     <div className="page-content">
       <div className="fade-in">
         <div className="eyebrow">A little about you</div>
         <h1 className="page-title">Your experience is<br />a strong starting point.</h1>
-        <p className="page-subtitle">A few details help us suggest adjacent roles and realistic learning steps. Your profile is saved on this device.</p>
+        <p className="page-subtitle">Start quick, or add the detail that tells your story. Both views edit the same profile, saved on this device.</p>
       </div>
       <div className="form-layout fade-in delay-1">
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        void submit();
-      }} data-testid="form-career-profile">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void submit();
+        }}
+        onKeyDown={(e) => {
+          const target = e.target as HTMLElement;
+          if (e.key === 'Enter' && target.tagName === 'INPUT' && target.closest('.pi-detailed')) e.preventDefault();
+        }}
+        aria-busy={isSubmitting}
+        data-testid="form-career-profile"
+      >
+        <fieldset className="pi-fieldset" disabled={isSubmitting} data-testid="fieldset-career-profile">
+        <div className="pi-mode" role="radiogroup" aria-label="Profile detail level" data-testid="group-profile-mode">
+          {([
+            ['quick', 'Quick profile', 'Six essentials, about two minutes', Zap],
+            ['detailed', 'Detailed profile', 'Experience, education, projects and more', Layers],
+          ] as const).map(([value, label, caption, Icon]) => (
+            <label key={value} className={`pi-mode-option ${mode === value ? 'is-active' : ''}`} data-testid={`option-mode-${value}`}>
+              <input type="radio" name="profile-mode" value={value} checked={mode === value} onChange={() => update('profileMode', value)} data-testid={`radio-mode-${value}`} />
+              <Icon size={15} aria-hidden="true" />
+              <span><strong>{label}</strong><small>{caption}</small></span>
+            </label>
+          ))}
+          <span className={`pi-mode-thumb ${mode}`} aria-hidden="true" />
+        </div>
         <section className="section-card form-panel">
           <h2 className="form-section-title">Your experience</h2>
           <div className="field-grid">
             <div className="field">
-              <label htmlFor="current-role">Current role <span className="field-hint">Required</span></label>
-              <input id="current-role" className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager" data-testid="input-current-role" />
+              <label htmlFor="current-role">Current role or status <span className="field-hint">Required</span></label>
+              <input id="current-role" className="input-control" value={form.currentRole} onChange={(event) => update('currentRole', event.target.value)} placeholder="e.g. Project manager or Student" data-testid="input-current-role" />
+              <div className="pi-presets">
+                {STATUS_PRESETS.map((preset) => (
+                  <button type="button" key={preset} className={`pi-preset ${form.currentRole === preset ? 'is-active' : ''}`} onClick={() => update('currentRole', preset)} data-testid={`button-status-${preset.toLowerCase().replaceAll(' ', '-')}`}>{preset}</button>
+                ))}
+              </div>
             </div>
             <div className="field">
               <label htmlFor="industry">Industry <span className="field-hint">Required</span></label>
-              <input id="industry" className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare" data-testid="input-industry" />
+              <input id="industry" className="input-control" list="industry-options" value={form.industry} onChange={(event) => update('industry', event.target.value)} placeholder="e.g. Healthcare or Education" data-testid="input-industry" />
               <datalist id="industry-options">{['Healthcare', 'Financial services', 'Education', 'Manufacturing', 'Technology', 'Government', 'Retail', 'Energy', 'Professional services'].map((industry) => <option key={industry} value={industry} />)}</datalist>
             </div>
           </div>
           <div className="field">
-            <label htmlFor="years-experience">Years of experience <span className="field-hint">{form.yearsExperience} years</span></label>
+            <label htmlFor="years-experience">Years of experience <span className="field-hint">{form.yearsExperience} years{form.yearsExperience === 0 ? ' (fine for students)' : ''}</span></label>
             <div className="hours-control"><input id="years-experience" aria-label="Years of experience" type="range" min="0" max="40" value={form.yearsExperience} onChange={(event) => update('yearsExperience', Number(event.target.value))} data-testid="input-years-experience" /><span className="hours-number" data-testid="text-years-value">{form.yearsExperience}</span></div>
           </div>
           <div className="field">
-            <label htmlFor="existing-skills">Skills, strengths, and tools <span className="field-hint">Separate with commas</span></label>
-            <textarea id="existing-skills" className="textarea-control" value={skillsText} onChange={(event) => setSkillsText(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
+            <label htmlFor="existing-skills">Skills, strengths, and tools <span className={`field-hint ${skillCount > MAX_SKILLS ? 'pi-over' : ''}`} data-testid="text-skill-count">{skillCount} / {MAX_SKILLS}, separate with commas</span></label>
+            <textarea id="existing-skills" className="textarea-control" value={skillsText} onChange={(event) => editSkills(event.target.value)} placeholder="e.g. client relationships, project planning, Excel, team coaching" data-testid="input-existing-skills" />
+            {skillCount > MAX_SKILLS && <p className="pi-field-error" role="alert" data-testid="status-skill-limit">You have {skillCount} skills. Remove {skillCount - MAX_SKILLS} to save; nothing is trimmed automatically.</p>}
           </div>
           <h2 className="form-section-title" style={{ marginTop: 23 }}>What draws your attention?</h2>
           <div className="field" data-testid="group-interest-options">
@@ -342,24 +454,75 @@ export function IntakePage({
             <p className="field-hint" style={{ marginTop: -3, marginBottom: 8 }} data-testid="text-weekly-hours-helper">How much time can you realistically dedicate to upskilling courses?</p>
             <div className="hours-control"><input id="weekly-hours" type="range" min="1" max="15" value={form.weeklyHours} onChange={(event) => update('weeklyHours', Number(event.target.value))} data-testid="input-weekly-hours" /><span className="hours-number" data-testid="text-weekly-hours-value">{form.weeklyHours}h</span></div>
           </div>
-          {errors.length > 0 && <div className="form-errors" role="alert" data-testid="status-form-errors">{errors.map((error) => <div key={error}>{error}</div>)}</div>}
-          {saveFailed && <div className="form-errors" role="alert" data-testid="status-profile-save-error">Your profile could not be saved. Check the API server and try again.</div>}
-          {isFormSubmitting && <div className="form-success flex items-center gap-2" role="status" aria-live="polite" data-testid="status-pathway-generating"><LoaderCircle size={14} className="animate-spin" />{SUBMISSION_MESSAGES[loadingMessageIndex]}</div>}
-          {pathwayError && <div className="form-errors" role="alert" data-testid="status-pathway-generation-error">Your profile is saved, but pathway generation failed: {pathwayError} Submit again to retry.</div>}
-          {saved && <div className="form-success" role="status" data-testid="status-profile-saved">Profile saved. Your pathway is ready.</div>}
-          <div className="form-footer">
-            <span className="form-footnote">No perfect answers. This is a working profile you can revisit anytime.</span>
-            <button type="submit" className="button-primary" disabled={isSubmitting} data-testid="button-save-profile">
-              {isSubmitting
-                ? <><LoaderCircle size={15} className="animate-spin" /> Please wait…</>
-                : <>{profile ? 'Save changes' : 'Build my pathway'}<ArrowRight size={15} /></>}
-            </button>
-          </div>
+          {mode === 'quick' && statusAndFooter}
         </section>
+
+        {mode === 'detailed' && (
+          <div className="pi-detailed" data-testid="panel-detailed-profile">
+            <section className="section-card form-panel">
+              <h2 className="form-section-title">Import from text</h2>
+              <ImportPanel profile={form} skills={parseSkills(skillsText)} locked={isSubmitting} onApply={applyImported} />
+            </section>
+
+            <section className="section-card form-panel">
+              <h2 className="form-section-title">Professional identity <span className="pi-optional">All optional</span></h2>
+              <div className="field-grid">
+                <div className="field">
+                  <label htmlFor="bg-display-name">Display name</label>
+                  <input id="bg-display-name" className="input-control" value={background.displayName ?? ''} onChange={(e) => updateBackground('displayName', e.target.value)} data-testid="input-display-name" />
+                </div>
+                <div className="field">
+                  <label htmlFor="bg-location">Location <span className="field-hint">Context only</span></label>
+                  <input id="bg-location" className="input-control" value={background.location ?? ''} onChange={(e) => updateBackground('location', e.target.value)} placeholder="e.g. Kuala Lumpur, Malaysia" data-testid="input-location" />
+                </div>
+              </div>
+              <div className="field">
+                <label htmlFor="bg-headline">Professional headline</label>
+                <input id="bg-headline" className="input-control" value={background.headline ?? ''} onChange={(e) => updateBackground('headline', e.target.value)} placeholder="e.g. Final-year CS student building data tools" data-testid="input-headline" />
+              </div>
+              <div className="field">
+                <label htmlFor="bg-target-industry">Target industry</label>
+                <input id="bg-target-industry" className="input-control" list="industry-options" value={background.targetIndustry ?? ''} onChange={(e) => updateBackground('targetIndustry', e.target.value)} placeholder="e.g. Software development" data-testid="input-target-industry" />
+              </div>
+              <div className="field">
+                <label htmlFor="bg-about">About <span className="field-hint">{(background.about ?? '').length} / 5000</span></label>
+                <textarea id="bg-about" className="textarea-control" value={background.about ?? ''} onChange={(e) => updateBackground('about', e.target.value)} placeholder="A short summary in your own words" data-testid="input-about" />
+              </div>
+              <div className="field">
+                <label htmlFor="bg-linkedin">LinkedIn profile URL</label>
+                <input id="bg-linkedin" className="input-control" type="url" inputMode="url" value={background.linkedinUrl ?? ''} onChange={(e) => updateBackground('linkedinUrl', e.target.value)} placeholder="https://www.linkedin.com/in/your-name" data-testid="input-linkedin-url" />
+                {linkedinValue && !linkedinHref && <p className="pi-field-error" role="alert">Use a profile link like https://www.linkedin.com/in/your-name.</p>}
+                <p className="pi-helper">Saved as a link for your reference only. It does not connect your LinkedIn account or retrieve your profile.
+                  {linkedinHref && <> <a className="pi-link" href={linkedinHref} target="_blank" rel="noopener noreferrer" data-testid="link-linkedin-profile">Open link<ExternalLink size={11} aria-hidden="true" /></a></>}
+                </p>
+              </div>
+              <div className="pi-honest" data-testid="text-matching-disclosure">
+                <ShieldCheck size={15} aria-hidden="true" />
+                <p><strong>What informs your matches.</strong> Only explicitly tagged skills on entries, education coursework, project technologies and exact course or certification titles feed the analysis. Descriptions, achievements, GPA, test scores, names, location and links are kept for your record but never treated as proof of qualification or boost ranking.</p>
+              </div>
+            </section>
+
+            <section className="section-card form-panel pi-sections">
+              <h2 className="form-section-title">Background <span className="pi-optional">Add what applies, skip the rest</span></h2>
+              {SECTIONS.map((section) => (
+                <SectionEditor
+                  key={section.key}
+                  section={section}
+                  entries={background[section.key] ?? []}
+                  onChange={(entries) => updateSection(section.key, entries)}
+                  idPrefix="profile"
+                />
+              ))}
+            </section>
+
+            <section className="section-card form-panel">{statusAndFooter}</section>
+          </div>
+        )}
+        </fieldset>
       </form>
         <aside className="aside-panel">
           <h3>Built around the work you’ve done</h3>
-          <p>Career shifts often start with strengths you already use—not a blank slate.</p>
+          <p>{mode === 'quick' ? 'Career shifts often start with strengths you already use, not a blank slate.' : 'Students and career switchers alike: no job history is required. Add projects, coursework or volunteering instead.'}</p>
           <div className="aside-step"><span className="step-number"><UserRound size={12} /></span><span>We’ll look for roles that build on your experience, not replace it.</span></div>
           <div className="aside-step"><span className="step-number">02</span><span>Your interests help us rank possible directions more thoughtfully.</span></div>
           <div className="aside-step"><span className="step-number"><Clock3 size={12} /></span><span>Your weekly time shapes a learning pace that feels doable.</span></div>

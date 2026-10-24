@@ -1,17 +1,10 @@
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import type { PathwayAnalysis, PathwayScenario } from "@workspace/api-zod";
+import type { CareerProfileInput as ApiCareerProfileInput, PathwayAnalysis, PathwayScenario } from "@workspace/api-zod";
 import { JOB_ROLES, SDGS } from "./career-seed";
 
-export type CareerProfileInput = {
-  currentRole: string;
-  yearsExperience: number;
-  industry: string;
-  skills: string[];
-  interests: string[];
-  weeklyHours: number;
-};
+export type CareerProfileInput = ApiCareerProfileInput;
 
 export type CareerProfile = CareerProfileInput & {
   id: string;
@@ -128,6 +121,13 @@ const pathwayColumns = database.prepare("PRAGMA table_info(generated_pathways)")
 if (!pathwayColumns.some((column) => column.name === "analysis_json")) {
   database.exec("ALTER TABLE generated_pathways ADD COLUMN analysis_json TEXT");
 }
+const profileColumns = database.prepare("PRAGMA table_info(career_profiles)").all() as { name: string }[];
+if (!profileColumns.some((column) => column.name === "profile_mode")) {
+  database.exec("ALTER TABLE career_profiles ADD COLUMN profile_mode TEXT NOT NULL DEFAULT 'quick'");
+}
+if (!profileColumns.some((column) => column.name === "professional_json")) {
+  database.exec("ALTER TABLE career_profiles ADD COLUMN professional_json TEXT");
+}
 
 function seedCatalog(): void {
   database.exec("BEGIN IMMEDIATE");
@@ -176,7 +176,7 @@ seedCatalog();
 export function getCareerProfile(profileId: string): CareerProfile | null {
   const row = database
     .prepare(`
-      SELECT id, current_role, years_experience, industry, weekly_hours, updated_at
+      SELECT id, current_role, years_experience, industry, weekly_hours, updated_at, profile_mode, professional_json
       FROM career_profiles
       WHERE id = ?
     `)
@@ -188,6 +188,8 @@ export function getCareerProfile(profileId: string): CareerProfile | null {
         industry: string;
         weekly_hours: number;
         updated_at: string;
+        profile_mode: "quick" | "detailed";
+        professional_json: string | null;
       }
     | undefined;
 
@@ -209,6 +211,8 @@ export function getCareerProfile(profileId: string): CareerProfile | null {
     skills: skills.map((item) => item.skill_name),
     interests: interests.map((item) => item.interest),
     updatedAt: row.updated_at,
+    profileMode: row.profile_mode,
+    ...(row.professional_json ? { professionalBackground: JSON.parse(row.professional_json) } : {}),
   };
 }
 
@@ -219,18 +223,25 @@ export function saveCareerProfile(
   const now = new Date().toISOString();
   database.exec("BEGIN IMMEDIATE");
   try {
+    // Older quick clients omit these fields. Omission preserves them; an explicit
+    // empty background or empty section array intentionally clears saved details.
+    const previous = getCareerProfile(profileId);
+    const profileMode = profile.profileMode ?? previous?.profileMode ?? "quick";
+    const background = profile.professionalBackground ?? previous?.professionalBackground;
     database
       .prepare(`
         INSERT INTO career_profiles (
-          id, current_role, years_experience, industry, weekly_hours, created_at, updated_at
+          id, current_role, years_experience, industry, weekly_hours, created_at, updated_at, profile_mode, professional_json
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           current_role = excluded.current_role,
           years_experience = excluded.years_experience,
           industry = excluded.industry,
           weekly_hours = excluded.weekly_hours,
-          updated_at = excluded.updated_at
+          updated_at = excluded.updated_at,
+          profile_mode = excluded.profile_mode,
+          professional_json = excluded.professional_json
       `)
       .run(
         profileId,
@@ -240,6 +251,8 @@ export function saveCareerProfile(
         profile.weeklyHours,
         now,
         now,
+        profileMode,
+        background === undefined ? null : JSON.stringify(background),
       );
 
     database.prepare("DELETE FROM profile_skills WHERE profile_id = ?").run(profileId);

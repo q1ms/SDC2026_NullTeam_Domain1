@@ -13,6 +13,101 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface ProfessionalEntry {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  id: string;
+  /**
+     * @minLength 1
+     * @maxLength 300
+     */
+  title: string;
+  /** @maxLength 300 */
+  organization?: string;
+  /** @maxLength 10 */
+  startDate?: string;
+  /** @maxLength 10 */
+  endDate?: string;
+  current?: boolean;
+  /** @maxLength 5000 */
+  description?: string;
+  /**
+     * @maxItems 50
+     * @items.maxLength 1000
+     */
+  achievements?: string[];
+  /** @maxLength 300 */
+  degree?: string;
+  /** @maxLength 50 */
+  gpa?: string;
+  /**
+     * @maxItems 50
+     * @items.maxLength 200
+     */
+  coursework?: string[];
+  /**
+     * @maxItems 50
+     * @items.maxLength 200
+     */
+  technologies?: string[];
+  /**
+     * @maxItems 50
+     * @items.maxLength 200
+     */
+  skills?: string[];
+  /** @maxLength 3000 */
+  contribution?: string;
+  /** @maxLength 2000 */
+  url?: string;
+  /** @maxLength 2000 */
+  secondaryUrl?: string;
+  /** @maxLength 100 */
+  proficiency?: string;
+  /** @maxLength 100 */
+  score?: string;
+}
+
+/**
+ * @maxItems 30
+ */
+export type ProfessionalEntries = ProfessionalEntry[];
+
+export interface ProfessionalBackground {
+  /** @maxLength 200 */
+  displayName?: string;
+  /** @maxLength 300 */
+  headline?: string;
+  /** @maxLength 5000 */
+  about?: string;
+  /** @maxLength 300 */
+  location?: string;
+  /** @maxLength 300 */
+  targetIndustry?: string;
+  /** @maxLength 2000 */
+  linkedinUrl?: string;
+  experience?: ProfessionalEntries;
+  volunteering?: ProfessionalEntries;
+  organizations?: ProfessionalEntries;
+  education?: ProfessionalEntries;
+  certifications?: ProfessionalEntries;
+  courses?: ProfessionalEntries;
+  projects?: ProfessionalEntries;
+  awards?: ProfessionalEntries;
+  publications?: ProfessionalEntries;
+  languages?: ProfessionalEntries;
+  testScores?: ProfessionalEntries;
+}
+
+export type CareerProfileProfileMode = typeof CareerProfileProfileMode[keyof typeof CareerProfileProfileMode];
+
+
+export const CareerProfileProfileMode = {
+  quick: 'quick',
+  detailed: 'detailed',
+} as const;
+
 export interface CareerProfile {
   id: string;
   currentRole: string;
@@ -22,7 +117,17 @@ export interface CareerProfile {
   interests: string[];
   weeklyHours: number;
   updatedAt: string;
+  profileMode?: CareerProfileProfileMode;
+  professionalBackground?: ProfessionalBackground;
 }
+
+export type CareerProfileInputProfileMode = typeof CareerProfileInputProfileMode[keyof typeof CareerProfileInputProfileMode];
+
+
+export const CareerProfileInputProfileMode = {
+  quick: 'quick',
+  detailed: 'detailed',
+} as const;
 
 export interface CareerProfileInput {
   /** @minLength 1 */
@@ -34,7 +139,10 @@ export interface CareerProfileInput {
   yearsExperience: number;
   /** @minLength 1 */
   industry: string;
-  /** @minItems 1 */
+  /**
+     * @minItems 1
+     * @maxItems 50
+     */
   skills: string[];
   /** @minItems 1 */
   interests: string[];
@@ -43,6 +151,8 @@ export interface CareerProfileInput {
      * @maximum 80
      */
   weeklyHours: number;
+  profileMode?: CareerProfileInputProfileMode;
+  professionalBackground?: ProfessionalBackground;
 }
 
 export interface PathwayGenerationInput {
