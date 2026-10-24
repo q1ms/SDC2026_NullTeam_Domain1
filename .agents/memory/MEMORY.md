@@ -1,3 +1,4 @@
 - [Stateful route identity](stateful-route-identity.md) — inline Wouter component callbacks can remount forms on mutation updates and erase in-flight submission locks.
 - [WebGL preview verification](webgl-preview-verification.md) — screenshot capture may lack WebGL; verify the static fallback without claiming animated shader verification.
 - [Career evidence boundaries](career-evidence-boundaries.md) — distinguish source facts from editorial role mappings; news volume must never be presented as hiring demand.
+- [Professional profile intake](professional-profile-intake.md) — quick/detailed modes share data; LinkedIn onboarding uses reviewed pasted text and an optional profile link.
