@@ -97,7 +97,13 @@ test("pathway cards expose collapsed evidence and steps, interactive skill check
     assert.ok(pace.textContent.includes("not a guaranteed job timeline"));
 
     const markStepComplete = container.querySelector('[data-testid="button-scenario-step-complete-0-0"]');
-    assert.ok(container.querySelector('[data-testid="text-scenario-step-0-0"]').textContent.includes("Teaches: SQL"));
+    const firstStep = container.querySelector('[data-testid="text-scenario-step-0-0"]');
+    assert.ok(firstStep.textContent.includes("Teaches: SQL"));
+    assert.equal(firstStep.querySelector(".scenario-step-number").textContent, "01");
+    assert.ok(firstStep.querySelector(".scenario-step-heading"));
+    assert.ok(firstStep.querySelector(".scenario-step-description"));
+    assert.ok(firstStep.querySelector(".scenario-step-actions"));
+    assert.ok(firstStep.querySelector(".scenario-step-hours"));
     stepsAccordion.open = true;
     await act(async () => markStepComplete.click());
     assert.ok(skillPill.classList.contains("is-checked"), "Completing a learning step marks its mapped skill as acquired.");

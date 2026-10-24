@@ -187,36 +187,49 @@ export function ScenarioCard({
             const stepSkill = step.teachesSkill ?? getStepSkill(step.step, scenario.skillsGap, stepIndex);
             const stepComplete = stepSkill ? acquiredSkills.includes(stepSkill) : false;
             return (
-              <li className="scenario-step" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
-                <span className="scenario-step-copy">
-                  <span>{step.step}</span>
-                  {stepSkill && <span className="scenario-step-teaches">{t("pathway.teachesSkill")}: <strong>{stepSkill}</strong></span>}
-                  {resource.available ? (
-                    <a className="scenario-step-resource" href={resource.href} target="_blank" rel="noopener noreferrer" aria-label={`${resource.label} for ${step.step}`} data-testid={`link-scenario-step-resource-${index}-${stepIndex}`}>
-                      {resource.label}<ExternalLink size={11} aria-hidden="true" />
-                    </a>
-                  ) : (
-                    <span className="scenario-step-unavailable" data-testid={`status-scenario-step-resource-${index}-${stepIndex}`}><Link2Off size={11} /> {resource.reason}</span>
-                  )}
-                  {step.cost && <span className="field-hint">{step.cost}</span>}
-                  {step.checkedAt && <span className="field-hint">checked {formatDate(step.checkedAt)}</span>}
-                  {stepSkill && (
-                    <button
-                      className={`scenario-step-complete${stepComplete ? " is-complete" : ""}`}
-                      type="button"
-                      onClick={() => addAcquiredSkill(stepSkill)}
-                      disabled={stepComplete}
-                      aria-pressed={stepComplete}
-                      aria-label={`${stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}: ${stepSkill}`}
-                      data-testid={`button-scenario-step-complete-${index}-${stepIndex}`}
-                    >
-                      <Check size={11} aria-hidden="true" />
-                      {stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}
-                    </button>
-                  )}
+            <li className="scenario-step-card" key={`${step.step}-${stepIndex}`} data-testid={`text-scenario-step-${index}-${stepIndex}`}>
+              <div className="scenario-step-heading">
+                <span className="scenario-step-number">{String(stepIndex + 1).padStart(2, "0")}</span>
+                <span className="scenario-step-label">{t("pathway.learningStep")}</span>
+                <span className="scenario-step-hours"><Clock3 size={12} aria-hidden="true" /> {step.estimatedHours} hours</span>
+              </div>
+              {stepSkill && (
+                <span className="scenario-step-teaches">
+                  {t("pathway.teachesSkill")}: <strong>{stepSkill}</strong>
+                  {stepComplete && <Check size={12} aria-label={t("pathway.stepComplete")} />}
                 </span>
-                <span className="scenario-step-hours"><Clock3 size={11} /> {step.estimatedHours} hours</span>
-              </li>
+              )}
+              <p className="scenario-step-description">{step.step}</p>
+              <div className="scenario-step-actions">
+                {resource.available ? (
+                  <a className="scenario-step-resource" href={resource.href} target="_blank" rel="noopener noreferrer" aria-label={`${resource.label} for ${step.step}`} data-testid={`link-scenario-step-resource-${index}-${stepIndex}`}>
+                    {resource.label}<ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span className="scenario-step-unavailable" data-testid={`status-scenario-step-resource-${index}-${stepIndex}`}><Link2Off size={12} aria-hidden="true" /> {resource.reason}</span>
+                )}
+                {stepSkill && (
+                  <button
+                    className={`scenario-step-complete${stepComplete ? " is-complete" : ""}`}
+                    type="button"
+                    onClick={() => addAcquiredSkill(stepSkill)}
+                    disabled={stepComplete}
+                    aria-pressed={stepComplete}
+                    aria-label={`${stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}: ${stepSkill}`}
+                    data-testid={`button-scenario-step-complete-${index}-${stepIndex}`}
+                  >
+                    <Check size={12} aria-hidden="true" />
+                    {stepComplete ? t("pathway.stepComplete") : t("pathway.markStepComplete")}
+                  </button>
+                )}
+              </div>
+              {(step.cost || step.checkedAt) && (
+                <div className="scenario-step-meta">
+                  {step.cost && <span>{step.cost}</span>}
+                  {step.checkedAt && <span>Checked {formatDate(step.checkedAt)}</span>}
+                </div>
+              )}
+            </li>
             );
           })}
         </ol>

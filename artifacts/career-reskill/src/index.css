@@ -283,13 +283,17 @@ html { @apply scroll-smooth; }
 .scenario-accordion-meta { margin-left: auto; color: hsl(var(--muted-foreground)); font-size: 10px; font-weight: 400; }
 .scenario-accordion-chevron { flex: 0 0 auto; transition: transform .18s ease; }
 .learning-path[open] .scenario-accordion-chevron { transform: rotate(180deg); }
-.learning-path ol { @apply mt-[14px] grid gap-[10px] pl-[18px]; }
-.learning-path li { @apply pl-1 text-[10px] leading-relaxed text-[#64716b]; }
-.learning-path li::marker { @apply font-mono text-[#3d8376]; }
-.scenario-step { @apply flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between; }
-.scenario-step-copy { @apply flex flex-wrap items-center gap-x-2 gap-y-1; }
-.scenario-step-teaches { display: inline-flex; gap: 4px; align-items: baseline; border-radius: 5px; padding: 2px 6px; background: hsl(var(--primary) / .08); color: hsl(var(--muted-foreground)); font-size: 9px; }
+.learning-path ol { @apply mt-[14px] grid list-none gap-[10px] p-0; }
+.learning-path li.scenario-step-card { display: grid; gap: 9px; border: 1px solid hsl(var(--border)); border-radius: 12px; padding: 12px; background: hsl(var(--secondary) / .38); color: hsl(var(--foreground)); font-size: 11px; line-height: 1.5; }
+.scenario-step-heading { display: flex; min-width: 0; align-items: center; gap: 8px; }
+.scenario-step-number { display: inline-grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border: 1px solid hsl(var(--primary) / .25); border-radius: 8px; background: hsl(var(--primary) / .1); color: hsl(var(--primary)); font-family: var(--app-font-mono); font-size: 10px; font-weight: 800; }
+.scenario-step-label { color: hsl(var(--muted-foreground)); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.scenario-step-teaches { display: inline-flex; width: fit-content; max-width: 100%; flex-wrap: wrap; align-items: baseline; gap: 4px; border: 1px solid hsl(var(--primary) / .18); border-radius: 7px; padding: 4px 7px; background: hsl(var(--primary) / .09); color: hsl(var(--muted-foreground)); font-size: 10px; }
 .scenario-step-teaches strong { color: hsl(var(--primary)); font-weight: 700; }
+.scenario-step-description { margin: 0; color: hsl(var(--foreground) / .84); font-size: 11px; line-height: 1.55; }
+.scenario-step-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.scenario-step-unavailable { display: inline-flex; align-items: center; gap: 5px; color: hsl(var(--muted-foreground)); font-size: 10px; }
+.scenario-step-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; border-top: 1px solid hsl(var(--border) / .75); padding-top: 7px; color: hsl(var(--muted-foreground)); font-size: 9px; line-height: 1.45; }
 .scenario-step-complete { display: inline-flex; align-items: center; gap: 4px; border: 1px solid hsl(var(--primary) / .4); border-radius: 999px; padding: 4px 8px; background: transparent; color: hsl(var(--primary)); font-size: 9px; font-weight: 700; cursor: pointer; transition: background-color .16s ease, border-color .16s ease, color .16s ease; }
 .scenario-step-complete:hover:not(:disabled) { background: hsl(var(--primary) / .1); }
 .scenario-step-complete:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
@@ -298,7 +302,7 @@ html { @apply scroll-smooth; }
 .projected-score-note { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 6px; background: hsl(164 57% 34%); color: #f5fffb; font-family: var(--app-font-sans); font-size: 9px; font-weight: 800; animation: projected-score-pop .35s ease-out both; }
 @keyframes projected-score-pop { 0% { opacity: 0; transform: translateY(5px) scale(.92); } 70% { opacity: 1; transform: translateY(-2px) scale(1.04); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 .scenario-step-resource { @apply inline-flex items-center gap-1 rounded-full border border-[#dce5d9] bg-[#edf2e9] px-2 py-1 text-[9px] font-semibold text-[#34796d] no-underline transition-colors hover:bg-[#dfeae0] hover:underline; }
-.scenario-step-hours { @apply inline-flex shrink-0 items-center gap-1 font-mono text-[9px] text-[#34796d]; }
+.scenario-step-hours { @apply ml-auto inline-flex shrink-0 items-center gap-1 rounded-full border border-border bg-background/60 px-2 py-1 font-mono text-[9px] text-[#34796d]; }
 .evidence-refs { display: grid; gap: 5px; margin-top: 12px; }
 .evidence-ref { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .profile-context-control { display: flex; justify-content: flex-end; margin: 10px 0 12px; }
