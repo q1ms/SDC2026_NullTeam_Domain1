@@ -6,6 +6,8 @@
 .pi-cv-upload { padding: 20px; border-color: hsl(var(--primary) / .35); background: hsl(var(--primary) / .06); }
 .pi-cv-upload .button-primary { white-space: normal; text-align: center; min-height: 46px; }
 .pi-cv-upload .pi-helper { margin: 10px 0 0; }
+.pi-cv-upload .cv-upload-success { color: #79d6b1; font-size: 12px; }
+.pi-cv-upload .cv-upload-error { color: #f0a2a2; font-size: 12px; }
 
 .pi-mode { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; border: 1px solid hsl(var(--border)); background: hsl(var(--card) / .7); backdrop-filter: blur(8px); }
 .pi-mode-option { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; cursor: pointer; color: hsl(var(--muted-foreground)); transition: color .2s ease; }

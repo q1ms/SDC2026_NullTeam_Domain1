@@ -8,7 +8,7 @@ import { memoryLocation } from "wouter/memory-location";
 import { createServer } from "vite";
 import { Window } from "happy-dom";
 
-test("CV placeholder never submits; saving preserves core and hidden background records", async () => {
+test("CV upload auto-fills profile fields without submitting; saving preserves hidden background records", async () => {
   const window = new Window({ url: "http://localhost/intake" });
   const previous = new Map();
   for (const [key, value] of Object.entries({
@@ -73,8 +73,42 @@ test("CV placeholder never submits; saving preserves core and hidden background 
         })))));
     const upload = container.querySelector('[data-testid="button-upload-cv"]');
     assert.equal(upload.type, "button");
+    const fileInput = container.querySelector('[data-testid="input-cv-file"]');
+    assert.equal(fileInput.type, "file");
+    assert.equal(fileInput.accept, ".pdf,.docx,.txt");
     await act(async () => upload.click());
-    assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /not available yet/);
+    assert.equal(container.querySelector('[data-testid="status-cv-upload"]'), null);
+    assert.match(container.querySelector("#cv-upload-help").textContent, /Choose a PDF, DOCX, or TXT file/);
+    assert.equal(saves.length, 0);
+    assert.equal(requests.length, 0);
+    const resumeText = [
+      "Current Role: Senior Data Analyst",
+      "Industry: Financial services",
+      "Years of experience: 7",
+      "Skills",
+      "SQL",
+      "Python",
+      "Excel",
+      "Experience",
+      "Senior Data Analyst at Example Company",
+      "2020 - Present",
+    ].join("\n");
+    const resumeFile = {
+      name: "haqim-resume.txt",
+      size: new TextEncoder().encode(resumeText).length,
+      arrayBuffer: async () => new TextEncoder().encode(resumeText).buffer,
+    };
+    Object.defineProperty(fileInput, "files", { configurable: true, value: [resumeFile] });
+    await act(async () => {
+      fileInput.dispatchEvent(new window.Event("change", { bubbles: true }));
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    assert.equal(container.querySelector('[data-testid="input-current-role"]').value, "Senior Data Analyst");
+    assert.equal(container.querySelector('[data-testid="input-industry"]').value, "Financial services");
+    assert.equal(container.querySelector('[data-testid="text-years-value"]').textContent, "7");
+    assert.equal(container.querySelector('[data-testid="input-existing-skills"]').value, "Python, SQL, Excel");
+    assert.match(container.querySelector('[data-testid="status-cv-upload"]').textContent, /CV loaded successfully/);
+    assert.doesNotMatch(container.querySelector('[data-testid="panel-detailed-profile"]').textContent, /not available yet/);
     assert.equal(saves.length, 0);
     assert.equal(requests.length, 0);
     assert.equal(container.querySelectorAll('[data-testid^="button-toggle-profile-"]').length, 4);

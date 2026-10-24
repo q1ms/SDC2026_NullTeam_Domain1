@@ -26,3 +26,9 @@ Areas of interest are open-ended; the suggestions are not an allowed-values list
 **Why:** The user explicitly wants this field to accept answers outside the predefined list.
 
 **How to apply:** Allow custom interests as removable tags in both modes, and preserve them through saving and pathway generation without requiring a known category.
+
+Résumé upload should extract text locally in the browser and map only the user's reviewed profile fields into the existing save flow. Do not send or persist the uploaded document bytes.
+
+**Why:** Career documents can contain sensitive personal information; the user requested field auto-fill, not document storage or server-side processing.
+
+**How to apply:** Keep PDF, DOCX and TXT parsing client-side. Treat extracted values as editable suggestions, avoid duplicate skills, and save only when the user submits the profile form.

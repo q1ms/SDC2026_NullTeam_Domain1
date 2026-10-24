@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import { useLocation } from 'wouter';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -28,6 +28,7 @@ import {
 } from '../data/professional-profile';
 import { SectionEditor } from '../components/profile/SectionEditor';
 import { useUnsavedChanges } from '../hooks/use-unsaved-changes';
+import { readResumeFile } from '../lib/resume-extraction';
 import type { ProfessionalBackground, ProfessionalEntry } from '@workspace/api-client-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import './profile-intake.css';
@@ -131,7 +132,7 @@ export function IntakePage({
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const [validationAttempt, setValidationAttempt] = useState(0);
   const [interestSearch, setInterestSearch] = useState('');
-  const [cvUploadNotice, setCvUploadNotice] = useState(false);
+  const [cvUploadStatus, setCvUploadStatus] = useState<'idle' | 'reading' | 'success' | 'error' | 'too-large'>('idle');
   const [activeInterestIndex, setActiveInterestIndex] = useState(0);
   const [interestDropdownHeight, setInterestDropdownHeight] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -143,6 +144,7 @@ export function IntakePage({
   const initializedFor = useRef<string | null>(profile ? profileId : null);
   const isDirty = useRef(false);
   const interestSuggestionsRef = useRef<HTMLDivElement>(null);
+  const resumeInputRef = useRef<HTMLInputElement>(null);
   const isSubmitting = isSaving || isFormSubmitting;
   const mode = form.profileMode === 'detailed' ? 'detailed' : 'quick';
   // Recompute after the first attempt so corrected or deleted fields never leave stale links.
@@ -222,6 +224,44 @@ export function IntakePage({
     editForm((current) => ({ ...current, professionalBackground: { ...(current.professionalBackground ?? {}), [key]: value } }));
   const updateSection = (key: SectionKey, entries: ProfessionalEntry[]) => updateBackground(key, entries);
   const editSkills = (text: string) => { if (submissionLock.current) return; isDirty.current = true; setSkillsText(text); };
+  const handleResumeFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.currentTarget.files?.[0];
+    event.currentTarget.value = '';
+    if (!file || submissionLock.current) return;
+
+    setCvUploadStatus('reading');
+    setSaved(false);
+    setPathwayError(null);
+    try {
+      const extracted = await readResumeFile(file);
+      const hasExtractedData = Boolean(
+        extracted.currentRole || extracted.industry || extracted.yearsExperience !== undefined || extracted.skills.length,
+      );
+      if (!hasExtractedData) {
+        setCvUploadStatus('error');
+        return;
+      }
+
+      if (extracted.currentRole) update('currentRole', extracted.currentRole);
+      if (extracted.industry) update('industry', extracted.industry);
+      if (extracted.yearsExperience !== undefined) update('yearsExperience', extracted.yearsExperience);
+      if (extracted.skills.length) {
+        const mergedSkills = parseSkills(skillsText);
+        const seen = new Set(mergedSkills.map((skill) => skill.toLocaleLowerCase()));
+        for (const skill of extracted.skills) {
+          if (mergedSkills.length >= MAX_SKILLS) break;
+          if (!seen.has(skill.toLocaleLowerCase())) {
+            mergedSkills.push(skill);
+            seen.add(skill.toLocaleLowerCase());
+          }
+        }
+        editSkills(mergedSkills.join(', '));
+      }
+      setCvUploadStatus('success');
+    } catch (error) {
+      setCvUploadStatus(error instanceof Error && error.message === 'file-too-large' ? 'too-large' : 'error');
+    }
+  };
   const skillCount = parseSkills(skillsText).length;
   const linkedinValue = background.linkedinUrl?.trim() ?? '';
   const linkedinHref = linkedinValue && isLinkedInProfileUrl(linkedinValue) ? safeExternalUrl(linkedinValue) : null;
@@ -529,11 +569,33 @@ export function IntakePage({
         {mode === 'detailed' && (
           <div className="pi-detailed" data-testid="panel-detailed-profile">
             <div className="section-card pi-cv-upload">
-              <button type="button" className="button-primary" onClick={() => setCvUploadNotice(true)} aria-describedby="cv-upload-help" data-testid="button-upload-cv">
+              <input
+                ref={resumeInputRef}
+                className="sr-only"
+                type="file"
+                accept=".pdf,.docx,.txt"
+                aria-label={t('profile.resumeUpload')}
+                tabIndex={-1}
+                onChange={handleResumeFile}
+                data-testid="input-cv-file"
+              />
+              <button
+                type="button"
+                className="button-primary"
+                onClick={() => resumeInputRef.current?.click()}
+                disabled={cvUploadStatus === 'reading'}
+                aria-busy={cvUploadStatus === 'reading'}
+                aria-describedby="cv-upload-help"
+                data-testid="button-upload-cv"
+              >
                 <Upload size={18} aria-hidden="true" /> {t('profile.resumeUpload')}
               </button>
-              <p id="cv-upload-help" className="pi-helper">{t('profile.uploadHint')}</p>
-              {cvUploadNotice && <p className="pi-helper" role="status" data-testid="status-cv-upload">{t('profile.resumeUnavailable')}</p>}
+              <p id="cv-upload-help" className="pi-helper">
+                {cvUploadStatus === 'reading' ? t('profile.resumeProcessing') : t('profile.uploadHint')}
+              </p>
+              {cvUploadStatus === 'success' && <p className="pi-helper cv-upload-success" role="status" data-testid="status-cv-upload">{t('profile.resumeSuccess')}</p>}
+              {cvUploadStatus === 'error' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeError')}</p>}
+              {cvUploadStatus === 'too-large' && <p className="pi-helper cv-upload-error" role="alert" data-testid="status-cv-upload">{t('profile.resumeTooLarge')}</p>}
             </div>
             <section className="section-card form-panel">
               <h2 className="form-section-title">{t('profile.identity')}</h2>
