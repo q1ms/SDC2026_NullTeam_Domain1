@@ -6,8 +6,6 @@ export type RoleComparison = {
   roleTitle: string;
   gradual: ScenarioPlacement;
   faster: ScenarioPlacement;
-  /** faster minus gradual; null unless both scores exist */
-  scoreDelta: number | null;
 };
 
 export const SCENARIO_COPY: Record<string, { label: string; blurb: string }> = {
@@ -38,22 +36,40 @@ export function buildRoleComparisons(analysis: PathwayAnalysis): RoleComparison[
   return roles.map((roleTitle) => {
     const g = placement(gradual?.scenarios, roleTitle);
     const f = placement(faster?.scenarios, roleTitle);
-    return { roleTitle, gradual: g, faster: f, scoreDelta: g && f ? f.score - g.score : null };
+    return { roleTitle, gradual: g, faster: f };
   });
 }
 
-export function describeChange(row: RoleComparison): string {
-  if (row.scoreDelta === null) {
-    if (row.gradual && !row.faster) return "Only a top option with gradual adoption.";
-    if (row.faster && !row.gradual) return "New top option with faster adoption.";
-    return "Not compared.";
-  }
-  const d = row.scoreDelta;
-  if (d === 0) return "No score change between scenarios.";
-  return `Score ${d > 0 ? "up" : "down"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "point" : "points"} with faster adoption.`;
+export function scoreDeltaForScenario(row: RoleComparison, selectedId: string): number | null {
+  const active = selectedId === "fast" ? row.faster : row.gradual;
+  const other = selectedId === "fast" ? row.gradual : row.faster;
+  return active && other ? active.score - other.score : null;
 }
 
-export function changeTone(row: RoleComparison): "up" | "down" | "same" | "only" {
-  if (row.scoreDelta === null) return "only";
-  return row.scoreDelta > 0 ? "up" : row.scoreDelta < 0 ? "down" : "same";
+export function describeChange(row: RoleComparison, selectedId: string): string {
+  const active = selectedId === "fast" ? row.faster : row.gradual;
+  const other = selectedId === "fast" ? row.gradual : row.faster;
+  const activeLabel = scenarioLabel(selectedId, selectedId === "fast" ? "Faster AI adoption" : "Gradual AI adoption");
+  const otherId = selectedId === "fast" ? "moderate" : "fast";
+  const otherLabel = scenarioLabel(otherId, otherId === "fast" ? "Faster AI adoption" : "Gradual AI adoption");
+  const delta = scoreDeltaForScenario(row, selectedId);
+
+  if (delta === null) {
+    if (active && !other) {
+      return selectedId === "fast"
+        ? "New top option with faster adoption."
+        : "Only a top option with gradual adoption.";
+    }
+    if (!active && other) return `Listed only under ${otherLabel} in the comparison.`;
+    return "Not compared.";
+  }
+  if (delta === 0) return "Same fit score in both adoption scenarios.";
+  const points = Math.abs(delta) === 1 ? "point" : "points";
+  return `Score ${delta > 0 ? "up" : "down"} by ${Math.abs(delta)} ${points} for ${activeLabel} compared with ${otherLabel}.`;
+}
+
+export function changeTone(row: RoleComparison, selectedId: string): "up" | "down" | "same" | "only" {
+  const delta = scoreDeltaForScenario(row, selectedId);
+  if (delta === null) return "only";
+  return delta > 0 ? "up" : delta < 0 ? "down" : "same";
 }

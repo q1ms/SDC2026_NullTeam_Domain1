@@ -56,7 +56,8 @@ test("comparison explains scores and missing roles, and scenario selection updat
     const document = parse(renderPanel());
     const text = document.body.textContent.replace(/\s+/g, " ");
     for (const content of ["Gradual AI adoption", "Faster AI adoption", "1st choice",
-      "Fit score", "60", "Outside top 3", "-10 pts", "+13 pts", "New Top Option", "Gradual Only",
+      "Fit score", "60", "Outside top 3", "-13 pts", "+10 pts", "Not in Gradual", "Gradual Only",
+      "Change vs Faster AI",
       "Gradual: Traditional skills remain strong.", "Faster: AI oversight roles take priority.",
       "How this works",
       "How We Score (1-100)", "current skills and interests align",
@@ -73,25 +74,29 @@ test("comparison explains scores and missing roles, and scenario selection updat
       const row = document.querySelector(`[data-testid="row-comparison-${role}"]`);
       assert.equal(row.querySelectorAll(".cmp-score").length, 1, "An absent role must not get an invented score");
     }
-    assert.ok(document.querySelector('[data-testid="badge-change-faster-only"]').textContent.includes("New Top Option"));
+    assert.ok(document.querySelector('[data-testid="badge-change-faster-only"]').textContent.includes("Not in Gradual"));
     assert.ok(document.querySelector('[data-testid="badge-change-gradual-only"]').textContent.includes("Gradual Only"));
     assert.equal(document.querySelector("details").hasAttribute("open"), false);
     assert.match(text, /not.*probabilit/i);
     assert.match(text, /not.*forecast/i);
     assert.equal(document.querySelector('[data-testid="button-comparison-moderate"]').getAttribute("aria-pressed"), "true");
-    // Switching the selected scenario must not reverse what "higher" and "lower" mean.
-    const fastText = parse(renderPanel(analysis, "fast")).body.textContent.replace(/\s+/g, " ");
-    assert.ok(fastText.includes("Score down 10 points with faster adoption."));
-    assert.ok(fastText.includes("Score up 13 points with faster adoption."));
+    // The Change column follows the selected scenario, so its direction and baseline reverse.
+    const fastDocument = parse(renderPanel(analysis, "fast"));
+    const fastText = fastDocument.body.textContent.replace(/\s+/g, " ");
+    assert.ok(fastText.includes("Score down by 10 points for Faster AI adoption compared with Gradual AI adoption."));
+    assert.ok(fastText.includes("Score up by 13 points for Faster AI adoption compared with Gradual AI adoption."));
+    assert.ok(fastText.includes("Change vs Gradual AI"));
+    assert.ok(fastDocument.querySelector('[data-testid="badge-change-faster-only"]').textContent.includes("New Top Option"));
+    assert.ok(fastDocument.querySelector('[data-testid="badge-change-gradual-only"]').textContent.includes("Not in Faster"));
     // Scenario IDs determine the comparison baseline, not the order in the payload.
     const reversed = structuredClone(analysis);
     reversed.comparisons.reverse();
-    assert.ok(parse(renderPanel(reversed)).body.textContent.includes("Score down 10 points with faster adoption."));
+    assert.ok(parse(renderPanel(reversed)).body.textContent.includes("Score up by 10 points for Gradual AI adoption compared with Faster AI adoption."));
     const ties = structuredClone(analysis);
     ties.comparisons[1].scenarios[1].matchScore = 60;
     ties.comparisons[0].scenarios[1].matchScore = 60;
     const tiedText = parse(renderPanel(ties)).body.textContent;
-    assert.ok(tiedText.includes("No score change between scenarios."));
+    assert.ok(tiedText.includes("Same fit score in both adoption scenarios."));
     assert.ok(tiedText.includes("2nd choice"));
     const empty = structuredClone(analysis);
     empty.comparisons.forEach((comparison) => { comparison.scenarios = []; });
@@ -135,8 +140,11 @@ test("comparison explains scores and missing roles, and scenario selection updat
     assert.ok(top().textContent.includes("Beta"));
     assert.ok(top().textContent.includes("Faster AI adoption"));
     assert.ok(container.textContent.includes("Faster only"));
+    assert.ok(container.querySelector('[data-testid="badge-change-alpha"]').textContent.includes("-10 pts"));
+    assert.ok(container.querySelector('[data-testid="label-comparison-direction"]')?.textContent.includes("Change vs Gradual AI"));
     await act(async () => { container.querySelector('[data-testid="button-comparison-moderate"]').click(); });
     assert.ok(top().textContent.includes("Alpha"));
+    assert.ok(container.querySelector('[data-testid="badge-change-alpha"]').textContent.includes("+10 pts"));
     // A saved legacy pathway still renders its roles without an analysis section.
     await act(async () => {
       client.setQueryData(["/api/pathway-demo"], { ...pathway, analysis: undefined });

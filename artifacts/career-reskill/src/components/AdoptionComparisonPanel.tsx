@@ -1,5 +1,5 @@
 import type { PathwayAnalysis } from "@workspace/api-client-react";
-import { SCENARIO_COPY, buildRoleComparisons, changeTone, describeChange, ordinal, scenarioLabel, type ScenarioPlacement } from "../lib/adoption-comparison";
+import { SCENARIO_COPY, buildRoleComparisons, changeTone, describeChange, ordinal, scenarioLabel, scoreDeltaForScenario, type ScenarioPlacement } from "../lib/adoption-comparison";
 
 function slug(s: string) {
   return s.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-");
@@ -23,25 +23,33 @@ function Placement({ p, label, selected }: { p: ScenarioPlacement; label: string
   );
 }
 
-function ChangeBadge({ row, tone }: { row: ReturnType<typeof buildRoleComparisons>[number]; tone: ReturnType<typeof changeTone> }) {
-  const accessibleDescription = describeChange(row);
+function ChangeBadge({ row, selectedId, tone }: { row: ReturnType<typeof buildRoleComparisons>[number]; selectedId: string; tone: ReturnType<typeof changeTone> }) {
+  const accessibleDescription = describeChange(row, selectedId);
+  const active = selectedId === "fast" ? row.faster : row.gradual;
+  const other = selectedId === "fast" ? row.gradual : row.faster;
+  const delta = scoreDeltaForScenario(row, selectedId);
   let icon = "=";
   let label = "0 pts";
 
-  if (row.scoreDelta !== null) {
-    if (row.scoreDelta > 0) {
+  if (delta !== null) {
+    if (delta > 0) {
       icon = "↑";
-      label = `+${row.scoreDelta} pts`;
-    } else if (row.scoreDelta < 0) {
+      label = `+${delta} pts`;
+    } else if (delta < 0) {
       icon = "↓";
-      label = `${row.scoreDelta} pts`;
+      label = `${delta} pts`;
     }
-  } else if (row.faster && !row.gradual) {
-    icon = "✦";
-    label = "New Top Option";
-  } else if (row.gradual && !row.faster) {
-    icon = "→";
-    label = "Gradual Only";
+  } else if (active && !other) {
+    if (selectedId === "fast") {
+      icon = "✦";
+      label = "New Top Option";
+    } else {
+      icon = "→";
+      label = "Gradual Only";
+    }
+  } else if (!active && other) {
+    icon = "—";
+    label = selectedId === "fast" ? "Not in Faster" : "Not in Gradual";
   } else {
     icon = "—";
     label = "Not Compared";
@@ -59,6 +67,11 @@ function ChangeBadge({ row, tone }: { row: ReturnType<typeof buildRoleComparison
 export function AdoptionComparisonPanel({ analysis, selectedId, onSelect }: { analysis: PathwayAnalysis; selectedId: string; onSelect: (id: string) => void }) {
   const comparisons = analysis.comparisons ?? [];
   const rows = buildRoleComparisons(analysis);
+  const otherComparison = comparisons.find((comparison) => comparison.id !== selectedId);
+  const comparisonLabel = otherComparison
+    ? scenarioLabel(otherComparison.id, otherComparison.name)
+    : "other scenario";
+  const comparisonShortLabel = comparisonLabel.startsWith("Faster") ? "Faster AI" : "Gradual AI";
 
   return (
     <section className="section-card fade-in delay-1 cmp-panel" data-testid="card-adoption-comparison" aria-labelledby="cmp-heading">
@@ -104,24 +117,24 @@ export function AdoptionComparisonPanel({ analysis, selectedId, onSelect }: { an
       {rows.length === 0 ? (
         <p className="cmp-empty" data-testid="empty-comparison-roles">No roles are available to compare in this saved pathway.</p>
       ) : (
-        <ul className="cmp-rows" aria-label="Role comparison, gradual versus faster adoption">
+        <ul className="cmp-rows" aria-label={`Role comparison against ${comparisonLabel}`}>
           {rows.map((row) => {
-            const tone = changeTone(row);
+            const tone = changeTone(row, selectedId);
             return (
               <li key={row.roleTitle} className="cmp-row" data-testid={`row-comparison-${slug(row.roleTitle)}`}>
                 <h3 className="cmp-role">{row.roleTitle}</h3>
                 <Placement p={row.gradual} label="Gradual adoption" selected={selectedId === "moderate"} />
                 <Placement p={row.faster} label="Faster adoption" selected={selectedId === "fast"} />
                 <p className={`cmp-change cmp-${tone}`} data-testid={`text-comparison-change-${slug(row.roleTitle)}`}>
-                  <span className="cmp-change-label">Change</span>
-                  <ChangeBadge row={row} tone={tone} />
+                  <span className="cmp-change-label" data-testid="label-comparison-direction">Change vs {comparisonShortLabel}</span>
+                  <ChangeBadge row={row} selectedId={selectedId} tone={tone} />
                 </p>
               </li>
             );
           })}
         </ul>
       )}
-      <p className="cmp-footnote">Order shows how roles rank within each scenario. Score changes always compare faster adoption against gradual adoption.</p>
+      <p className="cmp-footnote">Order shows how roles rank within each scenario. The Change column compares the selected scenario with the other scenario.</p>
 
       <details className="cmp-details" data-testid="text-comparison-disclosure">
         <summary data-testid="button-comparison-how">How this works</summary>
