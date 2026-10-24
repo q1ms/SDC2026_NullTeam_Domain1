@@ -43,7 +43,7 @@ export function ScenarioCard({
     setAcquiredSkills((current) => current.includes(skill) ? current : [...current, skill]);
   };
   return (
-    <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} data-testid={`card-scenario-${index}`}>
+    <article className={`section-card role-card fade-in delay-${Math.min(index + 1, 2)}`} style={{ order: index }} data-testid={`card-scenario-${index}`}>
       <div className="role-head">
         <h3 className="role-title" data-testid={`text-scenario-title-${index}`}>{rank ? <span className="rank-num">#{rank}</span> : null}{scenario.roleTitle}</h3>
         {scenario.scoreBasis ? (

@@ -66,6 +66,9 @@ test("demo, comparisons, evidence chain and direct resource metadata render dete
     const html = render(PathwayPage, { profileId: pathway.profileId, profile: null, profileLoading: false });
     assert.ok(html.includes('class="role-grid items-start"'), "Career cards should align to the top rather than stretch to equal heights.");
     assert.ok(html.includes('class="sdg-grid items-start"'), "Expanded SDG cards should retain independent row heights.");
+    assert.equal((html.match(/class="role-column"/g) ?? []).length, 2, "Career pathways should use independent columns.");
+    assert.equal((html.match(/class="sdg-column"/g) ?? []).length, 2, "SDG goals should use independent columns.");
+    assert.ok(html.includes('style="order:2"'), "Mobile layout should preserve ranking order when columns collapse.");
     for (const text of ["Read-only sample demo", "personal profile is untouched", "Gradual AI adoption", "Faster AI adoption",
       "not probabilities", "Fixture Labor Office",
       "United States", "Aug 27, 2026", "Oct 23, 2026", "Not local vacancies", "SQLBolt", "Free",

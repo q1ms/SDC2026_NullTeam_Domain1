@@ -114,6 +114,11 @@ export function PathwayPage({
   }
 
   const scenarios = activeComparison?.scenarios ?? pathwayQuery.data.scenarios;
+  const rankedScenarios = scenarios.map((scenario, index) => ({ scenario, index }));
+  const roleColumns = [
+    rankedScenarios.filter(({ index }) => index % 2 === 0),
+    rankedScenarios.filter(({ index }) => index % 2 === 1),
+  ];
   const otherComparison = analysis?.comparisons.find((c) => c !== activeComparison);
   const activeComparisonLabel = activeComparison ? scenarioLabel(activeComparison.id, activeComparison.name) : undefined;
   const otherComparisonLabel = otherComparison ? scenarioLabel(otherComparison.id, otherComparison.name) : undefined;
@@ -129,6 +134,11 @@ export function PathwayPage({
   const prioritizedSdgs = sdgsQuery.data
     ? prioritizeSdgMappings(sdgsQuery.data, personalizedSdgNumbers)
     : undefined;
+  const rankedSdgs = prioritizedSdgs?.map((goal, index) => ({ goal, index })) ?? [];
+  const sdgColumns = [
+    rankedSdgs.filter(({ index }) => index % 2 === 0),
+    rankedSdgs.filter(({ index }) => index % 2 === 1),
+  ];
 
   return (
     <div className="page-content">
@@ -189,7 +199,13 @@ export function PathwayPage({
       </div>
       {scenarios.length ? (
         <div className="role-grid items-start">
-          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} weeklyHours={weeklyHours} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />)}
+          {roleColumns.map((column, columnIndex) => (
+            <div className="role-column" key={`role-column-${columnIndex}`}>
+              {column.map(({ scenario, index }) => (
+                <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} profileInterests={profileInterests} weeklyHours={weeklyHours} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparisonLabel} />
+              ))}
+            </div>
+          ))}
         </div>
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">{t('pathway.noScenarios')}</div>
@@ -219,10 +235,12 @@ export function PathwayPage({
       {sdgsQuery.isError && <div className="form-errors" role="alert" data-testid="status-sdgs-error">Could not load the SDG skill mappings.</div>}
       {prioritizedSdgs && (
         <div className="sdg-grid items-start" data-testid="list-sdg-mappings">
-          {prioritizedSdgs.map((goal) => {
+          {sdgColumns.map((column, columnIndex) => (
+            <div className="sdg-column" key={`sdg-column-${columnIndex}`}>
+            {column.map(({ goal, index }) => {
             const isPersonalized = personalizedSdgNumbers.has(goal.number);
             return (
-            <details className={`sdg-card ${isPersonalized ? "sdg-card-personalized" : "sdg-card-muted"}`} key={goal.number} data-personalized={isPersonalized} data-testid={`details-sdg-${goal.number}`}>
+            <details className={`sdg-card ${isPersonalized ? "sdg-card-personalized" : "sdg-card-muted"}`} key={goal.number} style={{ order: index }} data-personalized={isPersonalized} data-testid={`details-sdg-${goal.number}`}>
               <summary>
                 <span className="sdg-number">{String(goal.number).padStart(2, "0")}</span>
                 <span className="sdg-title">{goal.title}</span>
@@ -237,6 +255,8 @@ export function PathwayPage({
               </div>
             </details>
           );})}
+            </div>
+          ))}
         </div>
       )}
 
