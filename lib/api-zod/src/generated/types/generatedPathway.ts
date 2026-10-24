@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { PathwayAnalysis } from './pathwayAnalysis';
 import type { PathwayScenario } from './pathwayScenario';
 
 export interface GeneratedPathway {
@@ -15,4 +16,5 @@ export interface GeneratedPathway {
      */
   scenarios: PathwayScenario[];
   generatedAt: Date;
+  analysis?: PathwayAnalysis;
 }

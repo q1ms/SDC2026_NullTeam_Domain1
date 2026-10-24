@@ -9,6 +9,8 @@ A career planning dashboard that stores experience profiles and job-role learnin
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
+- `pnpm --filter @workspace/api-server test` — deterministic matching, evidence, persistence and service-parser tests
+- `pnpm --filter @workspace/career-reskill test` — deterministic UI rendering and frontend helper tests
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - Optional env: `CAREER_DB_PATH` — override the local SQLite database file path
 
@@ -34,13 +36,22 @@ The SQLite file is created at `artifacts/api-server/data/career-reskilling.sqlit
 ## Architecture decisions
 
 - The dashboard uses a browser-stored UUID to identify a profile; it does not provide authentication or cross-device profile access.
-- Job-role salary bands and trend figures are illustrative examples. The 17 SDG skill links are curated for exploration, not official UN guidance.
+- Job-role salary bands are illustrative examples. The 17 SDG skill links are curated for exploration, not official UN guidance.
+- Career Signal Model 1.0 uses deterministic catalog rules, not RunPod/LLM scores. Saved pathways include moderate/fast adoption comparisons and the evidence snapshot used; legacy pathways remain readable without analysis metadata.
 
 ## Product
 
 - Collects a user's current role, experience, industry, strengths, interests, and weekly learning time.
 - Suggests adjacent roles and learning steps based on that profile.
-- Shows sample AI-related skill trends and expandable skill mappings for each of the 17 UN SDGs.
+- Shows live Google News coverage separately from reviewed workforce reports and policy guidance, plus expandable skill mappings for each of the 17 UN SDGs.
+- `/pathway?demo=1` is a read-only, reproducible sample that never writes a profile or calls a live model/feed.
+
+## Maintaining career evidence and resources
+
+- Review `artifacts/api-server/src/lib/career-signals.ts` to update public evidence. Check the original publication date, source scope, limitations and mapped role IDs together. `fetchedAt` on curated signals means the last manual review, not a new live labor-market fetch.
+- Live news mappings are explicit, recent-only, and bounded to 2 points per role regardless of mention count. A news outage leaves reviewed public evidence available with a visible fallback notice.
+- `artifacts/api-server/src/lib/career-learning.ts` holds checked direct destinations, cost/access caveats and exploration effort (reading, prerequisites, practice, portfolio). Hours do not claim job readiness. Recheck links and costs before changing `checkedAt`.
+- `artifacts/api-server/src/lib/career-matching.ts` contains transparent profile-skill, interest, source and adoption contributions. Changing point weights or assumptions should update the model disclosure and deterministic fixtures together.
 
 ## User preferences
 

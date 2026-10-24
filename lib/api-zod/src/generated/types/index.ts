@@ -6,14 +6,20 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './adoptionComparison';
+export * from './adoptionComparisonId';
 export * from './apiError';
 export * from './careerProfile';
 export * from './careerProfileInput';
+export * from './careerSignal';
+export * from './careerSignalKind';
+export * from './evidenceSnapshot';
 export * from './generatedPathway';
 export * from './healthStatus';
 export * from './jobRole';
 export * from './liveTrend';
 export * from './liveTrendsResponse';
+export * from './pathwayAnalysis';
 export * from './pathwayGenerationInput';
 export * from './pathwayGenerationOutput';
 export * from './pathwayScenario';

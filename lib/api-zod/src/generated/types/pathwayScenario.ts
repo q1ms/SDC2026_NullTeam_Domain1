@@ -11,6 +11,10 @@ import type { ReskillingStep } from './reskillingStep';
 export interface PathwayScenario {
   /** @minLength 1 */
   roleTitle: string;
+  evidenceIds?: string[];
+  scoreBasis?: string;
+  matchedSkills?: string[];
+  paceEstimate?: string;
   /**
      * @minimum 1
      * @maximum 100

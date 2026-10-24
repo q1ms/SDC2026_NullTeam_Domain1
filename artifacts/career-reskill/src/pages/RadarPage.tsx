@@ -1,7 +1,8 @@
 import { Link } from 'wouter';
 import { Activity, ArrowRight, BrainCircuit, ChartNoAxesCombined, RefreshCw, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
 import { CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Cell } from 'recharts';
-import { useGetLiveTrends } from '@workspace/api-client-react';
+import { useGetCareerEvidence, useGetLiveTrends } from '@workspace/api-client-react';
+import { EvidenceList } from '../components/EvidenceList';
 import type { CareerProfile } from '../data/catalog';
 import { CoverageList } from '../components/CoverageList';
 
@@ -11,6 +12,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
   const trendsQuery = useGetLiveTrends({
     query: { staleTime: 10 * 60 * 1000, refetchOnMount: 'always' },
   });
+  const evidenceQuery = useGetCareerEvidence();
   const trends = trendsQuery.data?.trends ?? [];
   const fetchedAt = trendsQuery.data?.fetchedAt
     ? new Date(trendsQuery.data.fetchedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
@@ -48,7 +50,7 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
         <Activity size={15} />
         <span>
           <strong>Live news coverage.</strong> Themes and mention counts come from Google News RSS
-          {fetchedAt ? ` · refreshed at ${fetchedAt}` : ''}. Coverage is not a labor-market forecast.
+          {fetchedAt ? ` · refreshed at ${fetchedAt}` : ''}. US English-language edition; article geography is not independently verified. Coverage is not a labor-market forecast.
         </span>
       </div>
 
@@ -104,6 +106,28 @@ export function RadarPage({ profile }: { profile: CareerProfile | null }) {
           <Signal icon={<ChartNoAxesCombined size={16} />} title="Domain insight" copy="Your knowledge of how work really gets done is a valuable advantage." />
         </section>
       </div>
+      <section className="section-card fade-in delay-2" style={{ padding: 20, marginTop: 17 }} data-testid="card-career-evidence">
+        <div className="card-head">
+          <div>
+            <h2 className="card-title">Evidence behind pathway rankings</h2>
+            <p className="card-description">
+              {evidenceQuery.data ? `Snapshot checked ${new Date(evidenceQuery.data.fetchedAt).toLocaleString()} · ${evidenceQuery.data.newsStatus}` : 'Sources, dates, scope and limitations used to rank roles'}
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Link href="/pathway" className="button-quiet" data-testid="link-radar-pathway">{profile ? 'My pathways' : 'Build pathways'}</Link>
+            <Link href="/pathway?demo=1" className="button-quiet" data-testid="link-radar-demo">Sample demo</Link>
+          </div>
+        </div>
+        {evidenceQuery.isLoading && <div className="trend-state" role="status" data-testid="status-evidence-loading">Loading evidence snapshot…</div>}
+        {evidenceQuery.isError && (
+          <div className="trend-error" role="alert" data-testid="status-evidence-error">
+            <span>The evidence snapshot could not be loaded.</span>
+            <button type="button" className="button-quiet" onClick={() => { void evidenceQuery.refetch(); }} data-testid="button-retry-evidence"><RefreshCw size={14} /> Try again</button>
+          </div>
+        )}
+        {evidenceQuery.data && <EvidenceList signals={evidenceQuery.data.signals} />}
+      </section>
       <div className="footer-note" data-testid="text-radar-footer">News coverage can surface emerging topics, but it does not measure hiring demand. Your experience is the starting point.</div>
     </div>
   );

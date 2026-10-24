@@ -1,8 +1,11 @@
-import { Link } from "wouter";
+import { useMemo, useState } from "react";
+import { Link, useSearch } from "wouter";
 import {
   getGetGeneratedPathwayQueryKey,
   getListSdgSkillMappingsQueryKey,
   useGetGeneratedPathway,
+  useGetPathwayDemo,
+  getGetPathwayDemoQueryKey,
   useListSdgSkillMappings,
 } from "@workspace/api-client-react";
 import {
@@ -15,6 +18,8 @@ import {
 import type { CareerProfile } from "../data/catalog";
 import { PersonalizedReading } from "../components/PersonalizedReading";
 import { ScenarioCard } from "../components/ScenarioCard";
+import { EvidenceList } from "../components/EvidenceList";
+import { AdoptionComparisonPanel } from "../components/AdoptionComparisonPanel";
 import { getPersonalizedSdgNumbers, prioritizeSdgMappings } from "../lib/personalized-sdgs";
 
 export function PathwayPage({
@@ -26,10 +31,13 @@ export function PathwayPage({
   profile: CareerProfile | null;
   profileLoading: boolean;
 }) {
-  const pathwayQuery = useGetGeneratedPathway(profileId, {
+  const search = useSearch();
+  const isDemo = new URLSearchParams(search).get("demo") === "1";
+  const [comparisonId, setComparisonId] = useState<string>("moderate");
+  const personalQuery = useGetGeneratedPathway(profileId, {
     query: {
       queryKey: getGetGeneratedPathwayQueryKey(profileId),
-      enabled: Boolean(profile && !profileLoading),
+      enabled: Boolean(!isDemo && profile && !profileLoading),
       retry: false,
     },
   });
@@ -37,11 +45,22 @@ export function PathwayPage({
     query: { queryKey: getListSdgSkillMappingsQueryKey(), retry: false },
   });
 
-  if (profileLoading) {
+  const demoQuery = useGetPathwayDemo({
+    query: { queryKey: getGetPathwayDemoQueryKey(), enabled: isDemo, retry: false },
+  });
+  const pathwayQuery = isDemo ? demoQuery : personalQuery;
+  const analysis = pathwayQuery.data?.analysis;
+  const activeComparison = analysis?.comparisons.find((c) => c.id === comparisonId) ?? analysis?.comparisons[0];
+  const evidenceMap = useMemo(
+    () => new Map((analysis?.evidence.signals ?? []).map((s) => [s.id, s])),
+    [analysis],
+  );
+
+  if (!isDemo && profileLoading) {
     return <div className="page-content"><div className="section-card loading-card" role="status" data-testid="status-profile-loading">Loading your saved profile…</div></div>;
   }
 
-  if (!profile) {
+  if (!isDemo && !profile) {
     return (
       <div className="page-content">
         <div className="eyebrow">Career pathways</div>
@@ -50,7 +69,7 @@ export function PathwayPage({
           <div className="empty-mark"><Compass size={23} /></div>
           <h2>Your profile helps make this personal.</h2>
           <p>Share your experience, existing skills, and interests first. We’ll use them to rank a few adjacent roles and show the skills to build next.</p>
-          <Link href="/intake" className="button-primary" data-testid="link-pathway-intake">Create your profile <ArrowRight size={15} /></Link>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-intake">Create your profile <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo">View sample demo</Link></div>
         </div>
       </div>
     );
@@ -80,13 +99,14 @@ export function PathwayPage({
           <div className="empty-mark"><Compass size={23} /></div>
           <h2>No career paths have been generated yet.</h2>
           <p>Submit your profile to generate three personalized career scenarios and learning steps.</p>
-          <Link href="/intake" className="button-primary" data-testid="link-pathway-generate">Build your pathways <ArrowRight size={15} /></Link>
+          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}><Link href="/intake" className="button-primary" data-testid="link-pathway-generate">Build your pathways <ArrowRight size={15} /></Link><Link href="/pathway?demo=1" className="button-quiet" data-testid="link-pathway-demo-empty">View sample demo</Link></div>
         </div>
       </div>
     );
   }
 
-  const scenarios = pathwayQuery.data.scenarios;
+  const scenarios = activeComparison?.scenarios ?? pathwayQuery.data.scenarios;
+  const otherComparison = analysis?.comparisons.find((c) => c !== activeComparison);
   const top = scenarios[0];
   const personalizedSdgNumbers = getPersonalizedSdgNumbers(scenarios.map((scenario) => scenario.unSdgTag));
   const prioritizedSdgs = sdgsQuery.data
@@ -104,11 +124,35 @@ export function PathwayPage({
         <Link href="/intake" className="button-quiet" data-testid="button-edit-profile"><BookmarkCheck size={15} /> Edit your profile</Link>
       </div>
 
-      <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
-        <span className="meta-chip"><Sparkles size={13} /> Based on <strong>{profile.currentRole}</strong></span>
-        <span className="meta-chip">{profile.industry}</span>
-        <span className="meta-chip">{profile.weeklyHours} learning hours / week</span>
-      </div>
+      {isDemo && (
+        <div className="sample-banner" role="note" data-testid="status-demo-banner">
+          Read-only sample demo. Nothing here is saved and your personal profile is untouched. <Link href="/pathway" data-testid="link-exit-demo">Back to my pathway</Link>
+        </div>
+      )}
+      {isDemo || !profile ? (
+        <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
+          <span className="meta-chip"><Sparkles size={13} /> Sample profile: <strong>{analysis?.profileSummary ?? "Sample learner"}</strong></span>
+          {top?.paceEstimate && <span className="meta-chip">{top.paceEstimate}</span>}
+        </div>
+      ) : (
+        <div className="personal-strip fade-in delay-1" data-testid="status-pathway-profile">
+          <span className="meta-chip"><Sparkles size={13} /> Based on <strong>{profile.currentRole}</strong></span>
+          <span className="meta-chip">{profile.industry}</span>
+          <span className="meta-chip">{profile.weeklyHours} learning hours / week</span>
+        </div>
+      )}
+
+      {!analysis && (
+        <div className="form-errors" role="note" data-testid="status-legacy-pathway">
+          This saved pathway was generated before evidence-based ranking existed, so it has no adoption scenarios, sources, or limitations. Regenerate it from your <Link href="/intake" data-testid="link-legacy-regenerate">profile intake</Link> to compare scenarios.
+        </div>
+      )}
+      {analysis && activeComparison && (
+        <>
+          {!isDemo && <p className="chart-note" data-testid="text-pathway-snapshot-profile">Recommendation profile snapshot: {analysis.profileSummary} If you have edited your profile since generation, regenerate before comparing these options.</p>}
+          <AdoptionComparisonPanel analysis={analysis} selectedId={activeComparison.id} onSelect={setComparisonId} />
+        </>
+      )}
 
       {top && (
         <section className="rec-banner fade-in delay-1" data-testid="card-top-recommendation">
@@ -117,23 +161,32 @@ export function PathwayPage({
             <h2>{top.roleTitle}</h2>
             <p>{top.explainableReason}</p>
           </div>
-          <div className="banner-figure">{top.matchScore}%<small>profile match</small></div>
+          <div className="banner-figure">{top.matchScore}<small>{activeComparison ? `${activeComparison.name} score` : "profile match"}</small></div>
         </section>
       )}
 
       <div className="section-header fade-in delay-2">
-        <div><h2>Career scenarios</h2><p>Three AI-generated options with the skills and learning steps to explore</p></div>
+        <div><h2>Career scenarios{activeComparison ? ` · ${activeComparison.name}` : ""}</h2><p>Ranked options with the skills and learning steps to explore. Scores are relative estimates, not probabilities.</p></div>
         <span className="field-hint" data-testid="text-scenario-count">{scenarios.length} pathways</span>
       </div>
       {scenarios.length ? (
         <div className="role-grid">
-          {scenarios.map((scenario, index) => <ScenarioCard key={`${scenario.roleTitle}-${index}`} scenario={scenario} index={index} />)}
+          {scenarios.map((scenario, index) => <ScenarioCard key={`${activeComparison?.id ?? "legacy"}-${scenario.roleTitle}-${index}`} scenario={scenario} index={index} rank={analysis ? index + 1 : undefined} evidence={evidenceMap} otherScore={otherComparison?.scenarios.find((o) => o.roleTitle === scenario.roleTitle)?.matchScore} otherLabel={otherComparison?.name} />)}
         </div>
       ) : (
         <div className="section-card loading-card" data-testid="empty-role-recommendations">No career scenarios are available yet.</div>
       )}
 
-      <PersonalizedReading profile={profile} />
+      {analysis && (
+        <>
+          <div className="section-header"><div><h2>Evidence in this snapshot</h2><p>Sources cited by the scenario cards above. Checked {new Date(analysis.evidence.fetchedAt).toLocaleString()} · {analysis.evidence.newsStatus}</p></div><Link href="/radar" className="button-quiet" data-testid="link-pathway-radar">Open radar</Link></div>
+          <section className="section-card" style={{ padding: 20 }}>
+            <EvidenceList signals={analysis.evidence.signals} highlight={new Set(scenarios.flatMap((x) => x.evidenceIds ?? []))} />
+          </section>
+        </>
+      )}
+
+      {!isDemo && profile && <PersonalizedReading profile={profile} />}
 
       <div className="section-header sdg-header fade-in delay-2">
         <div>
@@ -169,8 +222,8 @@ export function PathwayPage({
         </div>
       )}
 
-      <div className="footer-note" data-testid="text-pathway-generated-at">Generated {new Date(pathwayQuery.data.generatedAt).toLocaleString()}</div>
-      <div className="footer-note" data-testid="text-pathway-disclaimer">AI suggestions are starting points, not guarantees. Check local role requirements and learning options before making decisions.</div>
+      <div className="footer-note" data-testid="text-pathway-generated-at">{isDemo ? "Sample generated" : "Generated"} {new Date(pathwayQuery.data.generatedAt).toLocaleString()}</div>
+      <div className="footer-note" data-testid="text-pathway-disclaimer">Career suggestions are starting points, not guarantees. Check local role requirements and learning options before making decisions.</div>
     </div>
   );
 }

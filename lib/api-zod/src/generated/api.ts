@@ -8,6 +8,139 @@
 import * as zod from 'zod';
 
 
+export const getCareerEvidenceResponseSignalsItemWeightMin = 0;
+export const getCareerEvidenceResponseSignalsItemWeightMax = 4;
+
+
+
+export const GetCareerEvidenceResponse = zod.object({
+  "signals": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "source": zod.string(),
+  "url": zod.string(),
+  "publishedAt": zod.string(),
+  "fetchedAt": zod.string(),
+  "scope": zod.string(),
+  "kind": zod.enum(['labor-market', 'employer-survey', 'policy', 'news']),
+  "limitation": zod.string(),
+  "roleIds": zod.array(zod.string()),
+  "skills": zod.array(zod.string()),
+  "weight": zod.number().int().min(getCareerEvidenceResponseSignalsItemWeightMin).max(getCareerEvidenceResponseSignalsItemWeightMax)
+})),
+  "newsStatus": zod.string(),
+  "fetchedAt": zod.string()
+})
+
+
+
+export const getPathwayDemoResponseScenariosItemMatchScoreMax = 100;
+
+export const getPathwayDemoResponseScenariosItemExplainableReasonMax = 500;
+
+
+export const getPathwayDemoResponseScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const getPathwayDemoResponseScenariosItemReskillingPathwayMin = 3;
+export const getPathwayDemoResponseScenariosItemReskillingPathwayMax = 3;
+
+export const getPathwayDemoResponseScenariosMin = 3;
+export const getPathwayDemoResponseScenariosMax = 3;
+
+export const getPathwayDemoResponseAnalysisEvidenceSignalsItemWeightMin = 0;
+export const getPathwayDemoResponseAnalysisEvidenceSignalsItemWeightMax = 4;
+
+
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosItemMatchScoreMax = 100;
+
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosItemExplainableReasonMax = 500;
+
+
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMin = 3;
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMax = 3;
+
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosMin = 3;
+export const getPathwayDemoResponseAnalysisComparisonsItemScenariosMax = 3;
+
+export const getPathwayDemoResponseAnalysisComparisonsMin = 2;
+export const getPathwayDemoResponseAnalysisComparisonsMax = 2;
+
+
+
+export const GetPathwayDemoResponse = zod.object({
+  "profileId": zod.string().uuid(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
+  "matchScore": zod.number().int().min(1).max(getPathwayDemoResponseScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(getPathwayDemoResponseScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(getPathwayDemoResponseScenariosItemReskillingPathwayItemEstimatedHoursMax),
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
+})).min(getPathwayDemoResponseScenariosItemReskillingPathwayMin).max(getPathwayDemoResponseScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(getPathwayDemoResponseScenariosMin).max(getPathwayDemoResponseScenariosMax),
+  "generatedAt": zod.coerce.date(),
+  "analysis": zod.object({
+  "model": zod.string(),
+  "limitations": zod.string(),
+  "profileSummary": zod.string(),
+  "evidence": zod.object({
+  "signals": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "source": zod.string(),
+  "url": zod.string(),
+  "publishedAt": zod.string(),
+  "fetchedAt": zod.string(),
+  "scope": zod.string(),
+  "kind": zod.enum(['labor-market', 'employer-survey', 'policy', 'news']),
+  "limitation": zod.string(),
+  "roleIds": zod.array(zod.string()),
+  "skills": zod.array(zod.string()),
+  "weight": zod.number().int().min(getPathwayDemoResponseAnalysisEvidenceSignalsItemWeightMin).max(getPathwayDemoResponseAnalysisEvidenceSignalsItemWeightMax)
+})),
+  "newsStatus": zod.string(),
+  "fetchedAt": zod.string()
+}),
+  "comparisons": zod.array(zod.object({
+  "id": zod.enum(['moderate', 'fast']),
+  "name": zod.string(),
+  "assumptions": zod.string(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
+  "matchScore": zod.number().int().min(1).max(getPathwayDemoResponseAnalysisComparisonsItemScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(getPathwayDemoResponseAnalysisComparisonsItemScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax),
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
+})).min(getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMin).max(getPathwayDemoResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(getPathwayDemoResponseAnalysisComparisonsItemScenariosMin).max(getPathwayDemoResponseAnalysisComparisonsItemScenariosMax)
+})).min(getPathwayDemoResponseAnalysisComparisonsMin).max(getPathwayDemoResponseAnalysisComparisonsMax)
+}).optional()
+})
+
+
 /**
  * Returns server health status
  * @summary Health check
@@ -96,23 +229,97 @@ export const getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMax = 3
 export const getGeneratedPathwayResponseOneScenariosMin = 3;
 export const getGeneratedPathwayResponseOneScenariosMax = 3;
 
+export const getGeneratedPathwayResponseOneAnalysisEvidenceSignalsItemWeightMin = 0;
+export const getGeneratedPathwayResponseOneAnalysisEvidenceSignalsItemWeightMax = 4;
+
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemMatchScoreMax = 100;
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemExplainableReasonMax = 500;
+
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayMin = 3;
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayMax = 3;
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosMin = 3;
+export const getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosMax = 3;
+
+export const getGeneratedPathwayResponseOneAnalysisComparisonsMin = 2;
+export const getGeneratedPathwayResponseOneAnalysisComparisonsMax = 2;
+
 
 
 export const GetGeneratedPathwayResponse = zod.union([zod.object({
   "profileId": zod.string().uuid(),
   "scenarios": zod.array(zod.object({
   "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
   "matchScore": zod.number().int().min(1).max(getGeneratedPathwayResponseOneScenariosItemMatchScoreMax),
   "explainableReason": zod.string().min(1).max(getGeneratedPathwayResponseOneScenariosItemExplainableReasonMax),
   "skillsGap": zod.array(zod.string()),
   "reskillingPathway": zod.array(zod.object({
   "step": zod.string().min(1),
   "estimatedHours": zod.number().int().min(1).max(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayItemEstimatedHoursMax),
-  "resourceLink": zod.string().optional().describe('Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL.')
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
 })).min(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMin).max(getGeneratedPathwayResponseOneScenariosItemReskillingPathwayMax),
   "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
 })).min(getGeneratedPathwayResponseOneScenariosMin).max(getGeneratedPathwayResponseOneScenariosMax),
-  "generatedAt": zod.coerce.date()
+  "generatedAt": zod.coerce.date(),
+  "analysis": zod.object({
+  "model": zod.string(),
+  "limitations": zod.string(),
+  "profileSummary": zod.string(),
+  "evidence": zod.object({
+  "signals": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "source": zod.string(),
+  "url": zod.string(),
+  "publishedAt": zod.string(),
+  "fetchedAt": zod.string(),
+  "scope": zod.string(),
+  "kind": zod.enum(['labor-market', 'employer-survey', 'policy', 'news']),
+  "limitation": zod.string(),
+  "roleIds": zod.array(zod.string()),
+  "skills": zod.array(zod.string()),
+  "weight": zod.number().int().min(getGeneratedPathwayResponseOneAnalysisEvidenceSignalsItemWeightMin).max(getGeneratedPathwayResponseOneAnalysisEvidenceSignalsItemWeightMax)
+})),
+  "newsStatus": zod.string(),
+  "fetchedAt": zod.string()
+}),
+  "comparisons": zod.array(zod.object({
+  "id": zod.enum(['moderate', 'fast']),
+  "name": zod.string(),
+  "assumptions": zod.string(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
+  "matchScore": zod.number().int().min(1).max(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax),
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
+})).min(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayMin).max(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosMin).max(getGeneratedPathwayResponseOneAnalysisComparisonsItemScenariosMax)
+})).min(getGeneratedPathwayResponseOneAnalysisComparisonsMin).max(getGeneratedPathwayResponseOneAnalysisComparisonsMax)
+}).optional()
 }),zod.null()])
 
 
@@ -171,23 +378,97 @@ export const generatePathwayResponseScenariosItemReskillingPathwayMax = 3;
 export const generatePathwayResponseScenariosMin = 3;
 export const generatePathwayResponseScenariosMax = 3;
 
+export const generatePathwayResponseAnalysisEvidenceSignalsItemWeightMin = 0;
+export const generatePathwayResponseAnalysisEvidenceSignalsItemWeightMax = 4;
+
+
+export const generatePathwayResponseAnalysisComparisonsItemScenariosItemMatchScoreMax = 100;
+
+export const generatePathwayResponseAnalysisComparisonsItemScenariosItemExplainableReasonMax = 500;
+
+
+export const generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax = 200;
+
+export const generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMin = 3;
+export const generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMax = 3;
+
+export const generatePathwayResponseAnalysisComparisonsItemScenariosMin = 3;
+export const generatePathwayResponseAnalysisComparisonsItemScenariosMax = 3;
+
+export const generatePathwayResponseAnalysisComparisonsMin = 2;
+export const generatePathwayResponseAnalysisComparisonsMax = 2;
+
 
 
 export const GeneratePathwayResponse = zod.object({
   "profileId": zod.string().uuid(),
   "scenarios": zod.array(zod.object({
   "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
   "matchScore": zod.number().int().min(1).max(generatePathwayResponseScenariosItemMatchScoreMax),
   "explainableReason": zod.string().min(1).max(generatePathwayResponseScenariosItemExplainableReasonMax),
   "skillsGap": zod.array(zod.string()),
   "reskillingPathway": zod.array(zod.object({
   "step": zod.string().min(1),
   "estimatedHours": zod.number().int().min(1).max(generatePathwayResponseScenariosItemReskillingPathwayItemEstimatedHoursMax),
-  "resourceLink": zod.string().optional().describe('Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL.')
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
 })).min(generatePathwayResponseScenariosItemReskillingPathwayMin).max(generatePathwayResponseScenariosItemReskillingPathwayMax),
   "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
 })).min(generatePathwayResponseScenariosMin).max(generatePathwayResponseScenariosMax),
-  "generatedAt": zod.coerce.date()
+  "generatedAt": zod.coerce.date(),
+  "analysis": zod.object({
+  "model": zod.string(),
+  "limitations": zod.string(),
+  "profileSummary": zod.string(),
+  "evidence": zod.object({
+  "signals": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "source": zod.string(),
+  "url": zod.string(),
+  "publishedAt": zod.string(),
+  "fetchedAt": zod.string(),
+  "scope": zod.string(),
+  "kind": zod.enum(['labor-market', 'employer-survey', 'policy', 'news']),
+  "limitation": zod.string(),
+  "roleIds": zod.array(zod.string()),
+  "skills": zod.array(zod.string()),
+  "weight": zod.number().int().min(generatePathwayResponseAnalysisEvidenceSignalsItemWeightMin).max(generatePathwayResponseAnalysisEvidenceSignalsItemWeightMax)
+})),
+  "newsStatus": zod.string(),
+  "fetchedAt": zod.string()
+}),
+  "comparisons": zod.array(zod.object({
+  "id": zod.enum(['moderate', 'fast']),
+  "name": zod.string(),
+  "assumptions": zod.string(),
+  "scenarios": zod.array(zod.object({
+  "roleTitle": zod.string().min(1),
+  "evidenceIds": zod.array(zod.string()).optional(),
+  "scoreBasis": zod.string().optional(),
+  "matchedSkills": zod.array(zod.string()).optional(),
+  "paceEstimate": zod.string().optional(),
+  "matchScore": zod.number().int().min(1).max(generatePathwayResponseAnalysisComparisonsItemScenariosItemMatchScoreMax),
+  "explainableReason": zod.string().min(1).max(generatePathwayResponseAnalysisComparisonsItemScenariosItemExplainableReasonMax),
+  "skillsGap": zod.array(zod.string()),
+  "reskillingPathway": zod.array(zod.object({
+  "step": zod.string().min(1),
+  "estimatedHours": zod.number().int().min(1).max(generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayItemEstimatedHoursMax),
+  "resourceLink": zod.string().optional().describe('Direct curated learning resource; legacy pathways may omit this.'),
+  "resourceTitle": zod.string().optional(),
+  "cost": zod.string().optional(),
+  "checkedAt": zod.string().optional()
+})).min(generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMin).max(generatePathwayResponseAnalysisComparisonsItemScenariosItemReskillingPathwayMax),
+  "unSdgTag": zod.enum(['SDG 1: No Poverty', 'SDG 2: Zero Hunger', 'SDG 3: Good Health and Well-Being', 'SDG 4: Quality Education', 'SDG 5: Gender Equality', 'SDG 6: Clean Water and Sanitation', 'SDG 7: Affordable and Clean Energy', 'SDG 8: Decent Work and Economic Growth', 'SDG 9: Industry, Innovation and Infrastructure', 'SDG 10: Reduced Inequalities', 'SDG 11: Sustainable Cities and Communities', 'SDG 12: Responsible Consumption and Production', 'SDG 13: Climate Action', 'SDG 14: Life Below Water', 'SDG 15: Life on Land', 'SDG 16: Peace, Justice and Strong Institutions', 'SDG 17: Partnerships for the Goals'])
+})).min(generatePathwayResponseAnalysisComparisonsItemScenariosMin).max(generatePathwayResponseAnalysisComparisonsItemScenariosMax)
+})).min(generatePathwayResponseAnalysisComparisonsMin).max(generatePathwayResponseAnalysisComparisonsMax)
+}).optional()
 })
 
 

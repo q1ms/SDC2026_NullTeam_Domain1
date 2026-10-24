@@ -68,8 +68,11 @@ export interface ReskillingStep {
      * @maximum 200
      */
   estimatedHours: number;
-  /** Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL. */
+  /** Direct curated learning resource; legacy pathways may omit this. */
   resourceLink?: string;
+  resourceTitle?: string;
+  cost?: string;
+  checkedAt?: string;
 }
 
 export type PathwayScenarioUnSdgTag = typeof PathwayScenarioUnSdgTag[keyof typeof PathwayScenarioUnSdgTag];
@@ -98,6 +101,10 @@ export const PathwayScenarioUnSdgTag = {
 export interface PathwayScenario {
   /** @minLength 1 */
   roleTitle: string;
+  evidenceIds?: string[];
+  scoreBasis?: string;
+  matchedSkills?: string[];
+  paceEstimate?: string;
   /**
      * @minimum 1
      * @maximum 100
@@ -125,6 +132,72 @@ export interface PathwayGenerationOutput {
   scenarios: PathwayScenario[];
 }
 
+export type CareerSignalKind = typeof CareerSignalKind[keyof typeof CareerSignalKind];
+
+
+export const CareerSignalKind = {
+  'labor-market': 'labor-market',
+  'employer-survey': 'employer-survey',
+  policy: 'policy',
+  news: 'news',
+} as const;
+
+export interface CareerSignal {
+  id: string;
+  title: string;
+  source: string;
+  url: string;
+  publishedAt: string;
+  fetchedAt: string;
+  scope: string;
+  kind: CareerSignalKind;
+  limitation: string;
+  roleIds: string[];
+  skills: string[];
+  /**
+     * @minimum 0
+     * @maximum 4
+     */
+  weight: number;
+}
+
+export interface EvidenceSnapshot {
+  signals: CareerSignal[];
+  newsStatus: string;
+  fetchedAt: string;
+}
+
+export type AdoptionComparisonId = typeof AdoptionComparisonId[keyof typeof AdoptionComparisonId];
+
+
+export const AdoptionComparisonId = {
+  moderate: 'moderate',
+  fast: 'fast',
+} as const;
+
+export interface AdoptionComparison {
+  id: AdoptionComparisonId;
+  name: string;
+  assumptions: string;
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  scenarios: PathwayScenario[];
+}
+
+export interface PathwayAnalysis {
+  model: string;
+  limitations: string;
+  profileSummary: string;
+  evidence: EvidenceSnapshot;
+  /**
+     * @minItems 2
+     * @maxItems 2
+     */
+  comparisons: AdoptionComparison[];
+}
+
 export interface GeneratedPathway {
   profileId: string;
   /**
@@ -133,6 +206,7 @@ export interface GeneratedPathway {
      */
   scenarios: PathwayScenario[];
   generatedAt: string;
+  analysis?: PathwayAnalysis;
 }
 
 export interface SdgSkillMapping {

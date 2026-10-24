@@ -28,6 +28,7 @@ import type {
   ApiError,
   CareerProfile,
   CareerProfileInput,
+  EvidenceSnapshot,
   GeneratedPathway,
   HealthStatus,
   JobRole,
@@ -62,6 +63,196 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetCareerEvidenceUrl = () => {
+
+
+
+
+  return `/api/career-evidence`
+}
+
+export const getCareerEvidence = async ( options?: Parameters<typeof customFetch>[1]): Promise<EvidenceSnapshot> => {
+
+  return customFetch<EvidenceSnapshot>(getGetCareerEvidenceUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCareerEvidenceQueryKey = () => {
+    return [
+    `/api/career-evidence`
+    ] as const;
+    }
+
+
+export const getGetCareerEvidenceQueryOptions = <TData = Awaited<ReturnType<typeof getCareerEvidence>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCareerEvidenceQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCareerEvidence>>> = ({ signal }) => getCareerEvidence({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetCareerEvidenceQueryResult = NonNullable<Awaited<ReturnType<typeof getCareerEvidence>>>
+export type GetCareerEvidenceQueryError = ErrorType<unknown>
+
+
+export function useGetCareerEvidence<TData = Awaited<ReturnType<typeof getCareerEvidence>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCareerEvidence>>,
+          TError,
+          Awaited<ReturnType<typeof getCareerEvidence>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCareerEvidence<TData = Awaited<ReturnType<typeof getCareerEvidence>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getCareerEvidence>>,
+          TError,
+          Awaited<ReturnType<typeof getCareerEvidence>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetCareerEvidence<TData = Awaited<ReturnType<typeof getCareerEvidence>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetCareerEvidence<TData = Awaited<ReturnType<typeof getCareerEvidence>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCareerEvidence>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetCareerEvidenceQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetPathwayDemoUrl = () => {
+
+
+
+
+  return `/api/pathway-demo`
+}
+
+export const getPathwayDemo = async ( options?: Parameters<typeof customFetch>[1]): Promise<GeneratedPathway> => {
+
+  return customFetch<GeneratedPathway>(getGetPathwayDemoUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetPathwayDemoQueryKey = () => {
+    return [
+    `/api/pathway-demo`
+    ] as const;
+    }
+
+
+export const getGetPathwayDemoQueryOptions = <TData = Awaited<ReturnType<typeof getPathwayDemo>>, TError = ErrorType<unknown>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPathwayDemoQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPathwayDemo>>> = ({ signal }) => getPathwayDemo({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetPathwayDemoQueryResult = NonNullable<Awaited<ReturnType<typeof getPathwayDemo>>>
+export type GetPathwayDemoQueryError = ErrorType<unknown>
+
+
+export function useGetPathwayDemo<TData = Awaited<ReturnType<typeof getPathwayDemo>>, TError = ErrorType<unknown>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPathwayDemo>>,
+          TError,
+          Awaited<ReturnType<typeof getPathwayDemo>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPathwayDemo<TData = Awaited<ReturnType<typeof getPathwayDemo>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getPathwayDemo>>,
+          TError,
+          Awaited<ReturnType<typeof getPathwayDemo>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetPathwayDemo<TData = Awaited<ReturnType<typeof getPathwayDemo>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetPathwayDemo<TData = Awaited<ReturnType<typeof getPathwayDemo>>, TError = ErrorType<unknown>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPathwayDemo>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetPathwayDemoQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getHealthCheckUrl = () => {
 

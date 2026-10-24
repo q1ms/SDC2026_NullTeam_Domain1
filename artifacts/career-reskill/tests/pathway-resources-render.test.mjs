@@ -37,8 +37,10 @@ test("career pathways render safe resource links beside steps and preserve legac
     assert.match(html, /href="https:\/\/www\.edx\.org\/learn\/course-0-0"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/);
     assert.match(html, /data-testid="link-scenario-step-resource-0-0"/);
     assert.match(html, /hours<\/span>/);
-    assert.match(html, /href="https:\/\/www\.youtube\.com\/results\?search_query=Complete%20learning%20step%202"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/);
-    assert.equal((html.match(/data-testid="link-scenario-step-resource-/g) ?? []).length, 3);
+    assert.match(html, /data-testid="status-scenario-step-resource-0-1"/);
+    assert.match(html, /Resource link unavailable/);
+    assert.ok(!html.includes("youtube.com/results"));
+    assert.equal((html.match(/data-testid="link-scenario-step-resource-/g) ?? []).length, 2);
   } finally {
     await server.close();
   }

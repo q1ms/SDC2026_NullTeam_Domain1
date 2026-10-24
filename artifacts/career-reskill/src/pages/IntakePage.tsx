@@ -17,7 +17,7 @@ const EMPTY_PROFILE: CareerProfile = { currentRole: '', yearsExperience: 5, indu
 const SUBMISSION_MESSAGES = [
   'Saving profile…',
   'Analyzing your skills…',
-  'Generating AI career pathways…',
+  'Comparing evidence-grounded adoption scenarios…',
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {

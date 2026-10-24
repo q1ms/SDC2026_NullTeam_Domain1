@@ -13,6 +13,28 @@ tags:
   - name: career
     description: Career profiles, job roles, and sustainable-development skills
 paths:
+  /career-evidence:
+    get:
+      operationId: getCareerEvidence
+      tags: [career]
+      responses:
+        "200":
+          description: Curated public evidence and bounded live-news mappings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvidenceSnapshot"
+  /pathway-demo:
+    get:
+      operationId: getPathwayDemo
+      tags: [career]
+      responses:
+        "200":
+          description: Read-only deterministic sample; never saves over a personal profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeneratedPathway"
   /healthz:
     get:
       operationId: healthCheck
@@ -129,20 +151,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
-        "502":
-          description: RunPod returned an error or an invalid pathway response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiError"
-        "503":
-          description: RunPod credentials are not configured
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiError"
-        "504":
-          description: RunPod pathway generation timed out
+        "409":
+          description: Profile changed while evidence was loading
           content:
             application/json:
               schema:
@@ -316,7 +326,13 @@ components:
           maximum: 200
         resourceLink:
           type: string
-          description: Optional free-form learning-resource link; missing or blank links are replaced with a step-specific YouTube search URL.
+          description: Direct curated learning resource; legacy pathways may omit this.
+        resourceTitle:
+          type: string
+        cost:
+          type: string
+        checkedAt:
+          type: string
       required:
         - step
         - estimatedHours
@@ -327,6 +343,18 @@ components:
         roleTitle:
           type: string
           minLength: 1
+        evidenceIds:
+          type: array
+          items:
+            type: string
+        scoreBasis:
+          type: string
+        matchedSkills:
+          type: array
+          items:
+            type: string
+        paceEstimate:
+          type: string
         matchScore:
           type: integer
           minimum: 1
@@ -400,10 +428,94 @@ components:
         generatedAt:
           type: string
           format: date-time
+        analysis:
+          $ref: "#/components/schemas/PathwayAnalysis"
       required:
         - profileId
         - scenarios
         - generatedAt
+    CareerSignal:
+      type: object
+      required: [id, title, source, url, publishedAt, fetchedAt, scope, kind, limitation, roleIds, skills, weight]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        source:
+          type: string
+        url:
+          type: string
+        publishedAt:
+          type: string
+        fetchedAt:
+          type: string
+        scope:
+          type: string
+        kind:
+          type: string
+          enum: [labor-market, employer-survey, policy, news]
+        limitation:
+          type: string
+        roleIds:
+          type: array
+          items:
+            type: string
+        skills:
+          type: array
+          items:
+            type: string
+        weight:
+          type: integer
+          minimum: 0
+          maximum: 4
+    EvidenceSnapshot:
+      type: object
+      required: [signals, newsStatus, fetchedAt]
+      properties:
+        signals:
+          type: array
+          items:
+            $ref: "#/components/schemas/CareerSignal"
+        newsStatus:
+          type: string
+        fetchedAt:
+          type: string
+    AdoptionComparison:
+      type: object
+      required: [id, name, assumptions, scenarios]
+      properties:
+        id:
+          type: string
+          enum: [moderate, fast]
+        name:
+          type: string
+        assumptions:
+          type: string
+        scenarios:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            $ref: "#/components/schemas/PathwayScenario"
+    PathwayAnalysis:
+      type: object
+      required: [model, limitations, evidence, comparisons, profileSummary]
+      properties:
+        model:
+          type: string
+        limitations:
+          type: string
+        profileSummary:
+          type: string
+        evidence:
+          $ref: "#/components/schemas/EvidenceSnapshot"
+        comparisons:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            $ref: "#/components/schemas/AdoptionComparison"
     SdgSkillMapping:
       type: object
       properties:

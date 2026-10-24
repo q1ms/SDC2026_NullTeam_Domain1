@@ -1,7 +1,7 @@
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import type { PathwayScenario } from "@workspace/api-zod";
+import type { PathwayAnalysis, PathwayScenario } from "@workspace/api-zod";
 import { JOB_ROLES, SDGS } from "./career-seed";
 
 export type CareerProfileInput = {
@@ -39,6 +39,7 @@ export type StoredGeneratedPathway = {
   profileId: string;
   scenarios: unknown;
   generatedAt: string;
+  analysis?: PathwayAnalysis;
 };
 
 const databasePath =
@@ -121,6 +122,12 @@ database.exec(`
   CREATE INDEX IF NOT EXISTS idx_sdg_skills_goal
     ON sdg_skills(goal_number);
 `);
+
+// Additive migration: preserve all existing profiles and legacy pathways.
+const pathwayColumns = database.prepare("PRAGMA table_info(generated_pathways)").all() as { name: string }[];
+if (!pathwayColumns.some((column) => column.name === "analysis_json")) {
+  database.exec("ALTER TABLE generated_pathways ADD COLUMN analysis_json TEXT");
+}
 
 function seedCatalog(): void {
   database.exec("BEGIN IMMEDIATE");
@@ -315,10 +322,10 @@ export function listSdgSkillMappings(): SdgSkillMapping[] {
 export function getGeneratedPathway(profileId: string): StoredGeneratedPathway | null {
   const row = database
     .prepare(
-      "SELECT profile_id, scenarios_json, generated_at FROM generated_pathways WHERE profile_id = ?",
+      "SELECT profile_id, scenarios_json, generated_at, analysis_json FROM generated_pathways WHERE profile_id = ?",
     )
     .get(profileId) as
-    | { profile_id: string; scenarios_json: string; generated_at: string }
+    | { profile_id: string; scenarios_json: string; generated_at: string; analysis_json: string | null }
     | undefined;
 
   if (!row) return null;
@@ -328,23 +335,26 @@ export function getGeneratedPathway(profileId: string): StoredGeneratedPathway |
     profileId: row.profile_id,
     scenarios,
     generatedAt: row.generated_at,
+    ...(row.analysis_json ? { analysis: JSON.parse(row.analysis_json) as PathwayAnalysis } : {}),
   };
 }
 
 export function saveGeneratedPathway(
   profileId: string,
   scenarios: PathwayScenario[],
+  analysis?: PathwayAnalysis,
 ): StoredGeneratedPathway {
   const generatedAt = new Date().toISOString();
   database
     .prepare(`
-      INSERT INTO generated_pathways (profile_id, scenarios_json, generated_at)
-      VALUES (?, ?, ?)
+      INSERT INTO generated_pathways (profile_id, scenarios_json, generated_at, analysis_json)
+      VALUES (?, ?, ?, ?)
       ON CONFLICT(profile_id) DO UPDATE SET
         scenarios_json = excluded.scenarios_json,
-        generated_at = excluded.generated_at
+        generated_at = excluded.generated_at,
+        analysis_json = excluded.analysis_json
     `)
-    .run(profileId, JSON.stringify(scenarios), generatedAt);
+    .run(profileId, JSON.stringify(scenarios), generatedAt, analysis ? JSON.stringify(analysis) : null);
 
   const saved = getGeneratedPathway(profileId);
   if (!saved) throw new Error("Generated pathway could not be read back.");
