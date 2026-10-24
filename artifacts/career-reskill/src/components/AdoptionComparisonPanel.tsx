@@ -16,18 +16,49 @@ function Placement({ p, label, selected }: { p: ScenarioPlacement; label: string
         </div>
       ) : (
         <div className="cmp-cell-values">
-          <span className="cmp-outside">Outside the top 3</span>
-          <span className="cmp-outside-note">Not among the three best-fit roles here, so no score is shown.</span>
+          <span className="cmp-outside">Outside top 3</span>
         </div>
       )}
     </div>
   );
 }
 
+function ChangeBadge({ row, tone }: { row: ReturnType<typeof buildRoleComparisons>[number]; tone: ReturnType<typeof changeTone> }) {
+  const accessibleDescription = describeChange(row);
+  let icon = "=";
+  let label = "0 pts";
+
+  if (row.scoreDelta !== null) {
+    if (row.scoreDelta > 0) {
+      icon = "↑";
+      label = `+${row.scoreDelta} pts`;
+    } else if (row.scoreDelta < 0) {
+      icon = "↓";
+      label = `${row.scoreDelta} pts`;
+    }
+  } else if (row.faster && !row.gradual) {
+    icon = "✦";
+    label = "New Top Option";
+  } else if (row.gradual && !row.faster) {
+    icon = "→";
+    label = "Gradual Only";
+  } else {
+    icon = "—";
+    label = "Not Compared";
+  }
+
+  return (
+    <span className={`cmp-delta-badge cmp-delta-${tone}`} data-testid={`badge-change-${slug(row.roleTitle)}`}>
+      <span aria-hidden="true" className="cmp-delta-icon">{icon}</span>
+      <span>{label}</span>
+      <span className="sr-only">{accessibleDescription}</span>
+    </span>
+  );
+}
+
 export function AdoptionComparisonPanel({ analysis, selectedId, onSelect }: { analysis: PathwayAnalysis; selectedId: string; onSelect: (id: string) => void }) {
   const comparisons = analysis.comparisons ?? [];
   const rows = buildRoleComparisons(analysis);
-  const hasBoth = comparisons.some((c) => c.id === "moderate") && comparisons.some((c) => c.id === "fast");
 
   return (
     <section className="section-card fade-in delay-1 cmp-panel" data-testid="card-adoption-comparison" aria-labelledby="cmp-heading">
@@ -83,7 +114,7 @@ export function AdoptionComparisonPanel({ analysis, selectedId, onSelect }: { an
                 <Placement p={row.faster} label="Faster adoption" selected={selectedId === "fast"} />
                 <p className={`cmp-change cmp-${tone}`} data-testid={`text-comparison-change-${slug(row.roleTitle)}`}>
                   <span className="cmp-change-label">Change</span>
-                  {hasBoth ? describeChange(row) : "Only one scenario is available."}
+                  <ChangeBadge row={row} tone={tone} />
                 </p>
               </li>
             );

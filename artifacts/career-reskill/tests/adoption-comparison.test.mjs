@@ -56,8 +56,9 @@ test("comparison explains scores and missing roles, and scenario selection updat
     const document = parse(renderPanel());
     const text = document.body.textContent.replace(/\s+/g, " ");
     for (const content of ["Gradual AI adoption", "Faster AI adoption", "1st choice",
-      "Fit score", "60", "Outside the top 3", "10 fit-score points lower with faster adoption",
-      "13 fit-score points higher with faster adoption", "How this works",
+      "Fit score", "60", "Outside top 3", "-10 pts", "+13 pts", "New Top Option", "Gradual Only",
+      "Gradual: Traditional skills remain strong.", "Faster: AI oversight roles take priority.",
+      "How this works",
       "How We Score (1-100)", "current skills and interests align",
       "not a probability of getting a job offer", "The Two AI Futures",
       "Gradual AI:", "Faster AI:", "Things to Keep in Mind (Limitations)",
@@ -65,30 +66,32 @@ test("comparison explains scores and missing roles, and scenario selection updat
       assert.ok(text.includes(content), `Missing explanation: ${content}`);
     }
     assert.doesNotMatch(text, /Gradual automation assumption|Faster automation assumption|No hiring guarantees/);
+    assert.doesNotMatch(text, /fit-score points (?:lower|higher) with faster adoption/);
     assert.doesNotMatch(text, /#1 ·|Not ranked|n\/a/);
     assert.equal(document.querySelector("table"), null);
     for (const role of ["gradual-only", "faster-only"]) {
       const row = document.querySelector(`[data-testid="row-comparison-${role}"]`);
       assert.equal(row.querySelectorAll(".cmp-score").length, 1, "An absent role must not get an invented score");
-      assert.match(row.textContent, /No score difference to compare/);
     }
+    assert.ok(document.querySelector('[data-testid="badge-change-faster-only"]').textContent.includes("New Top Option"));
+    assert.ok(document.querySelector('[data-testid="badge-change-gradual-only"]').textContent.includes("Gradual Only"));
     assert.equal(document.querySelector("details").hasAttribute("open"), false);
     assert.match(text, /not.*probabilit/i);
     assert.match(text, /not.*forecast/i);
     assert.equal(document.querySelector('[data-testid="button-comparison-moderate"]').getAttribute("aria-pressed"), "true");
     // Switching the selected scenario must not reverse what "higher" and "lower" mean.
     const fastText = parse(renderPanel(analysis, "fast")).body.textContent.replace(/\s+/g, " ");
-    assert.ok(fastText.includes("10 fit-score points lower with faster adoption"));
-    assert.ok(fastText.includes("13 fit-score points higher with faster adoption"));
+    assert.ok(fastText.includes("Score down 10 points with faster adoption."));
+    assert.ok(fastText.includes("Score up 13 points with faster adoption."));
     // Scenario IDs determine the comparison baseline, not the order in the payload.
     const reversed = structuredClone(analysis);
     reversed.comparisons.reverse();
-    assert.ok(parse(renderPanel(reversed)).body.textContent.includes("10 fit-score points lower with faster adoption"));
+    assert.ok(parse(renderPanel(reversed)).body.textContent.includes("Score down 10 points with faster adoption."));
     const ties = structuredClone(analysis);
     ties.comparisons[1].scenarios[1].matchScore = 60;
     ties.comparisons[0].scenarios[1].matchScore = 60;
     const tiedText = parse(renderPanel(ties)).body.textContent;
-    assert.ok(tiedText.includes("Same fit score"));
+    assert.ok(tiedText.includes("No score change between scenarios."));
     assert.ok(tiedText.includes("2nd choice"));
     const empty = structuredClone(analysis);
     empty.comparisons.forEach((comparison) => { comparison.scenarios = []; });

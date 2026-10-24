@@ -11,8 +11,8 @@ export type RoleComparison = {
 };
 
 export const SCENARIO_COPY: Record<string, { label: string; blurb: string }> = {
-  moderate: { label: "Gradual AI adoption", blurb: "AI and automation spread steadily over several years." },
-  fast: { label: "Faster AI adoption", blurb: "AI and automation are adopted more quickly across workplaces." },
+  moderate: { label: "Gradual AI adoption", blurb: "Gradual: Traditional skills remain strong." },
+  fast: { label: "Faster AI adoption", blurb: "Faster: AI oversight roles take priority." },
 };
 
 export function scenarioLabel(id: string, fallback: string): string {
@@ -44,14 +44,13 @@ export function buildRoleComparisons(analysis: PathwayAnalysis): RoleComparison[
 
 export function describeChange(row: RoleComparison): string {
   if (row.scoreDelta === null) {
-    if (row.gradual && !row.faster) return "A top-3 option only with gradual adoption. No score difference to compare.";
-    if (row.faster && !row.gradual) return "A top-3 option only with faster adoption. No score difference to compare.";
-    return "No comparison available.";
+    if (row.gradual && !row.faster) return "Only a top option with gradual adoption.";
+    if (row.faster && !row.gradual) return "New top option with faster adoption.";
+    return "Not compared.";
   }
   const d = row.scoreDelta;
-  if (d === 0) return "Same fit score in both scenarios";
-  const pts = Math.abs(d) === 1 ? "fit-score point" : "fit-score points";
-  return `${Math.abs(d)} ${pts} ${d > 0 ? "higher" : "lower"} with faster adoption`;
+  if (d === 0) return "No score change between scenarios.";
+  return `Score ${d > 0 ? "up" : "down"} ${Math.abs(d)} ${Math.abs(d) === 1 ? "point" : "points"} with faster adoption.`;
 }
 
 export function changeTone(row: RoleComparison): "up" | "down" | "same" | "only" {
